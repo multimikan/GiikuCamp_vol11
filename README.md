@@ -3,4 +3,4 @@
 # チーム
 高橋 @multimikan
 Haruka Hidari @rikopin32
-Sosuke Nakagawa @
+Sosuke Nakagawa @insssssside
