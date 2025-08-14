@@ -13,11 +13,15 @@ class DirDatabaseRepository extends ChangeNotifier{
     fetchDirectory();
   }
 
-  void fetchDirectory(){ /* ディレクトリ情報を同期 */
+  void fetchDirectory(/* target: String */){ /* ディレクトリ情報を同期 */
+     try{
     dirList.clear();
     dir.listSync().forEach((entity) {
       dirList.add(entity);
     });
+     }catch(e){
+      print("エラー：$e");
+     }
     notifyListeners(); /* 変更を通知 */
   }
 }
