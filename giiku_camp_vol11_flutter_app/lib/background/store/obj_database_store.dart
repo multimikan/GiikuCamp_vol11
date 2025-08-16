@@ -1,6 +1,8 @@
 /*
 
 家具のデータベースを扱うファイル
+永続保存の機能はまだない
+(ターゲットチェンジでデータが損失する問題あり)
 
 */
 
@@ -16,12 +18,7 @@ enum ObjType{ /*家具の種類*/
   clock
 }
 
-enum ObjExtention{ /*拡張子*/
-  directory,
-  file
-}
-
-class Obj{
+class Obj{ /* Model */
   String path; /*ディレクトリの絶対パスを取得*/
   String name;
   ObjType type;
@@ -33,7 +30,12 @@ class Obj{
 
 class ObjDatabaseStore extends ChangeNotifier{
   static List<Obj> objects = [];
-  final repo = DirDatabaseRepository();
+  late final repo = DirDatabaseRepository();
+
+  /*
+  methodName() <- viewで使っても良い
+  _methodName() <- viewで使ってはいけない
+  */
 
   void fetchObjects(){ /* パソコンのディレクトリ情報と同期して家具リストを更新 */
     repo.fetchDirectory();
@@ -46,8 +48,12 @@ class ObjDatabaseStore extends ChangeNotifier{
     notifyListeners();
   }
 
-  /*
+  void changeTarget(String targetPass){
+    repo.dir = Directory(targetPass);
+    repo.fetchDirectory();
+  }
 
+  /*
   このアプリの外でリネームされた場合にファイルの追跡ができなくなります。
   現在、FileSystemEntity型の変数でディレクトリ情報を取得していますが、この型にはidが存在しません。
   対処法として考えたのはハッシュ値とパスの両方で判定をすることです。
@@ -55,10 +61,9 @@ class ObjDatabaseStore extends ChangeNotifier{
   しかし、アプリ外でリネーム&内容を変更された際には追跡ができません。
   dartの標準モジュールでは完全自動追跡ができないそうなので、最終スプリントで改善or妥協を決めましょう。
   *現状ではパスのみでの判定です
-
   */
 
-  void updateObj(Obj obj, [String? name, ObjType? type, String? extension, double? x, double? y]){ /*既存のオブジェクトを更新*/
+  void _updateObj(Obj obj, [String? name, ObjType? type, String? extension, double? x, double? y]){ /*既存のオブジェクトを更新*/
     final index = _findObjectsIndexFromPath(obj.path);
 
     name = name ?? obj.name;
@@ -72,19 +77,13 @@ class ObjDatabaseStore extends ChangeNotifier{
     notifyListeners();
   }
 
-  void appendObj(FileSystemEntity f){ /* 新規オブジェクトを追加 */
-    final name = p.basename(f.path);
-    final type = ObjType.clock; //判定は後で実装
-    final extention = p.extension(f.path);
-    final x = 0.0; //ここも後で実装
-    final y = 0.0; //ここも後で実装
-
-    final instance = Obj(f.path,name,type,extention,x,y);
+  void _appendObj(FileSystemEntity f){ /* 新規オブジェクトを追加 */
+    final instance = _convertObjFromFileSystemEntity(f);
     objects.add(instance);
     notifyListeners();
   }
 
-  void deleteObj(Obj obj){ /* オブジェクトリストからobjを削除 */
+  void _deleteObj(Obj obj){ /* オブジェクトリストからobjを削除 */
     final index = _findObjectsIndexFromPath(obj.path);
     objects.removeAt(index);
     notifyListeners();
@@ -92,12 +91,29 @@ class ObjDatabaseStore extends ChangeNotifier{
 
   void _convertDirListToObjList(List<FileSystemEntity> dirList){ /* OSから取得したdirリストをobjリストに変換 */
     for(var f in dirList){
-      if(!_isAleadyAddedObjectsList(f.path)) appendObj(f);//過去に登録したことがないファイルは登録
+      if(!_isAleadyAddedObjectsList(f.path)){
+        _appendObj(f);
+        } //過去に登録したことがないファイルは登録
+      else{
+        final instance = _convertObjFromFileSystemEntity(f);
+        _updateObj(instance);
+      }
     }
     for(var obj in objects){//objectリストを全探索
       final index = dirList.indexWhere((d) => d.path == obj.path); //dirリストにobjパスがあるか確認
-      if(index == -1) deleteObj(obj); //見つからなかったら削除
+      if(index == -1) _deleteObj(obj); //見つからなかったら削除
     }
+  }
+
+  Obj _convertObjFromFileSystemEntity(FileSystemEntity f){ /* システムエンティティをオブジェ型に変換 */
+    final name = p.basename(f.path);
+    final type = ObjType.clock; //判定は後で実装
+    final extention = p.extension(f.path);
+    final x = 0.0; //ここも後で実装
+    final y = 0.0; //ここも後で実装
+
+    final instance = Obj(f.path,name,type,extention,x,y);
+    return instance;
   }
 
   int _findObjectsIndexFromPath(String path){ /* pathが既存オブジェクトリストに登録済みならそのインデックスを返す */
