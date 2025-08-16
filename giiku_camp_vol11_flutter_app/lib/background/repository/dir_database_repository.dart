@@ -14,7 +14,7 @@ class DirDatabaseRepository extends ChangeNotifier{
   }
 
   void fetchDirectory(/* target: String */){ /* ディレクトリ情報を同期 */
-     try{
+    try{
     dirList.clear();
     dir.listSync().forEach((entity) {
       dirList.add(entity);
