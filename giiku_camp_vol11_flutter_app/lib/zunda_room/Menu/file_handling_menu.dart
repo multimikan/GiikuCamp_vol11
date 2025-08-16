@@ -1,0 +1,109 @@
+import 'package:flutter/material.dart';
+
+void showFileItemMenu(BuildContext context, Offset position) {
+    final overlay = Overlay.of(context); // ボタン用オーバーレイ
+    OverlayEntry? entry;
+    entry = OverlayEntry(
+        builder: (context) {
+            return Stack(
+                children: [
+                    Positioned.fill( // 別の場所クリック時
+                        child: Listener(
+                            behavior: HitTestBehavior.translucent, // 検知用に透明なオーバーレイで覆っているため、下ウィジェットに操作を伝達
+                            onPointerDown: (_) {
+                                entry!.remove();
+                            },
+                        ),
+                    ),
+                    Positioned( // メニュー表示
+                        left: position.dx,
+                        top: position.dy - 50,
+                        child: ContextMenuOverlay(
+                            onClose: () {
+                                entry!.remove();
+                            },
+                        ),
+                    ),
+                ],
+            );
+        },
+    );
+    overlay.insert(entry);
+}
+
+class ContextMenuOverlay extends StatelessWidget { // メニュー内容
+    final VoidCallback onClose;
+    const ContextMenuOverlay({super.key, required this.onClose});
+    @override
+    Widget build(BuildContext context) {
+        return Material(
+            color: Colors.transparent, // 透明なウィジェット
+            child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                    _buildButton(context, Icons.edit, '名前変更'),
+                    const SizedBox(width: 8),
+                    _buildButton(context, Icons.drive_file_move, '移動'),
+                    const SizedBox(width: 8),
+                    _buildButton(context, Icons.delete, '削除'),
+                ],
+            ),
+        );
+    }
+
+    Widget _buildButton(BuildContext context, IconData icon, String tooltip) {
+        return GestureDetector(
+            onTap: () {
+                onClose(); // クリックしたらメニューを閉じる
+                print('$tooltip tapped');
+                switch (tooltip) {
+                    case '名前変更':
+                        break;
+                    case '移動':
+                        break;
+                    case '削除':
+                        break;
+                }
+            },
+            child: Container( // 操作アイコン見た目
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(4),
+                    boxShadow: const [
+                        BoxShadow(color: Colors.black26, blurRadius: 4),
+                    ],
+                ),
+                child: Icon(icon, size: 24),
+            ),
+        );
+    }
+}
+
+class TestFileIcon extends StatelessWidget { // 表示テスト用
+    final String name;
+    final IconData icon;
+    const TestFileIcon({
+        super.key,
+        required this.name,
+        required this.icon,
+    });
+
+    @override
+    Widget build(BuildContext context) {
+        return GestureDetector(
+            onTap: () {
+                final renderBox = context.findRenderObject() as RenderBox;
+                final position = renderBox.localToGlobal(Offset.zero);
+                showFileItemMenu(context, position);
+            },
+            child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                    Icon(icon, size: 48),
+                    Text(name),
+                ],
+            ),
+        );
+    }
+}
