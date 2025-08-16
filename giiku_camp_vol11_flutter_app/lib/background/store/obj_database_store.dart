@@ -30,7 +30,7 @@ class Obj{ /* Model */
 
 class ObjDatabaseStore extends ChangeNotifier{
   static List<Obj> objects = [];
-  late final repo = DirDatabaseRepository();
+  final repo = DirDatabaseRepository();
 
   /*
   methodName() <- viewで使っても良い
