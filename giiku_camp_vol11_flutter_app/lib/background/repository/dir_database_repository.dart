@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store.dart';
 import 'dart:io'; /* ディレクトリ検索モジュール */
 import 'package:path/path.dart' as p; 
 
@@ -35,6 +36,7 @@ class DirDatabaseRepository extends ChangeNotifier{
   */
 
   void rename(FileSystemEntity f, String name) async{
+    final store = ObjDatabaseStore();
     final dirName = p.dirname(f.path);
     final extension = p.extension(f.path);
     if(p.extension(f.path)!='') {
@@ -53,10 +55,13 @@ class DirDatabaseRepository extends ChangeNotifier{
         print("エラー：$e");
       }
     }
+    store.fetchObjects();
     notifyListeners();
   }
 
   void move(FileSystemEntity f, String newPath)async{
+    final store = ObjDatabaseStore();
+    store.fetchObjects();
     await f.rename(newPath);
   }
 
