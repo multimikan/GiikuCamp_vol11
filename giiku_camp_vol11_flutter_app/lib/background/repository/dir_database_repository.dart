@@ -7,7 +7,7 @@ import 'package:path/path.dart' as p;
 class DirDatabaseRepository extends ChangeNotifier{
   late String? target;
   late Directory dir;
-  late List<FileSystemEntity> dirList;
+  late List<FileSystemEntity> dirList = [];
   late final String home; 
 
   DirDatabaseRepository([target]){ //オプションでターゲットのディレクトリを指定できる
