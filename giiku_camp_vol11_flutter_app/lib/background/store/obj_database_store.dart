@@ -30,14 +30,15 @@ class Obj{ /* Model */
 
 class ObjDatabaseStore extends ChangeNotifier{
   static List<Obj> objects = [];
-  late final repo = DirDatabaseRepository();
+  late DirDatabaseRepository repo;
 
   /*
   methodName() <- viewで使っても良い
   _methodName() <- viewで使ってはいけない
   */
 
-  void fetchObjects(){ /* パソコンのディレクトリ情報と同期して家具リストを更新 */
+  void fetchObjects() async { /* パソコンのディレクトリ情報と同期して家具リストを更新 */
+    await repo.init();
     repo.fetchDirectory();
     /*
     -更新後に必要な判定-
@@ -49,7 +50,7 @@ class ObjDatabaseStore extends ChangeNotifier{
   }
 
   void changeTarget(String targetPass){
-    repo.dir = Directory(targetPass);
+    repo.target = Directory(targetPass);
     repo.fetchDirectory();
   }
 
