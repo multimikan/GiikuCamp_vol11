@@ -1,0 +1,50 @@
+import 'package:flutter/material.dart';
+import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store.dart';
+import 'dart:io';
+import 'package:path/path.dart' as p; 
+
+class DirHandler extends ChangeNotifier{
+  void rename(FileSystemEntity f, String name) async{
+    final store = ObjDatabaseStore();
+    final dirName = p.dirname(f.path);
+    final extension = p.extension(f.path);
+    if(p.extension(f.path)!='') {
+      try{
+        final newPath = '$dirName/$name/$extension';
+        await f.rename(newPath);
+      }catch(e){
+        print("エラー：$e");
+      }
+    }
+    else{
+      try{
+        final newPath = '$dirName/$name';
+        await f.rename(newPath);
+      }catch(e){
+        print("エラー：$e");
+      }
+    }
+    store.fetchObjects();
+    notifyListeners();
+  }
+
+  void move(FileSystemEntity f, String newPath)async{
+    final store = ObjDatabaseStore();
+    store.fetchObjects();
+
+    await f.rename(newPath);
+
+    store.fetchObjects();
+    notifyListeners();
+  }
+
+  void del(FileSystemEntity f) async {
+    final store = ObjDatabaseStore();
+    store.fetchObjects();
+    
+    await f.delete();
+
+    store.fetchObjects();
+    notifyListeners();
+  }
+}
