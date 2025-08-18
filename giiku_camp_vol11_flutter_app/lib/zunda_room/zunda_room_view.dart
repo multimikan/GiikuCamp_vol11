@@ -16,11 +16,7 @@ class ZundaRoomView extends StatelessWidget{
           backgroundColor: Colors.black,
       ),
       body: Center(
-          child: Column(
-              children: [
-                Text("ずんだもんのお部屋")
-              ],
-          ),
+          child: Container()
       ),
     );
   }
