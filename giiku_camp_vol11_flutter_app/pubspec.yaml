@@ -89,5 +89,5 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
 
-# dependencies:
-#   path_provider: ^2.1.2   # (最新版でOK)
+ dependencies:
+   path_provider: ^2.1.2   # (最新版でOK)
