@@ -23,7 +23,7 @@ class DirDatabaseRepository extends ChangeNotifier{
     return DirDatabaseRepository._(t, [],null);
   }
 
-  void fetchDirectory([Directory? t]){ /* ディレクトリ情報を同期 */
+  Future<void> fetchDirectory([Directory? t]) async{ /* ディレクトリ情報を同期 */
     if(t!=null) target = t;
     try{
     dirList.clear();
