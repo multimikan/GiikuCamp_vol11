@@ -39,7 +39,8 @@ class ObjDatabaseStore extends ChangeNotifier{
     repo = await DirDatabaseRepository.init();
   }
 
-  void fetchObjects([Directory? target]) async { /* パソコンのディレクトリ情報と同期して家具リストを更新 */
+  Future<void> fetchObjects([Directory? target]) async { /* パソコンのディレクトリ情報と同期して家具リストを更新 */
+    init();
     repo.fetchDirectory(target);
     /*
     -更新後に必要な判定-
