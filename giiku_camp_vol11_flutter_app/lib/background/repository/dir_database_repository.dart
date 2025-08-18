@@ -1,25 +1,36 @@
 import 'package:flutter/material.dart';
 import 'dart:io'; /* ディレクトリ検索モジュール */
 import 'package:path/path.dart' as p; 
+import 'package:path_provider/path_provider.dart';
 
 
 class DirDatabaseRepository extends ChangeNotifier{
-  late String? target;
-  late Directory dir;
-  late List<FileSystemEntity> dirList;
-  late final String home; 
+  late String? selectTarget; //オプショナルtarget(指定する場合に初期化)
+  late Directory target; //表示対象dir
+  late List<FileSystemEntity> dirList; //対象dirの子階層を格納
+  
+  /*
+  dirListは[Directory:OO,File:OO.extention]のように辞書形式のような形
+  */
 
-  DirDatabaseRepository([target]){ //オプションでターゲットのディレクトリを指定できる
-    home = Platform.environment['HOME'] ?? Platform.environment['USERPROFILE']!;
-    target = target ?? home;
-    dir  = Directory(target);
-    fetchDirectory();
+  DirDatabaseRepository._(this.target,this.dirList,this.selectTarget); // private constructor
+  /*
+
+  ！！！このクラスをインスタンス化する際はawait DirDatabaseRepository.init();としてください！！！
+
+  */
+  static Future<DirDatabaseRepository> init([target]) async {
+    var t = await getApplicationDocumentsDirectory();
+    if(target != null) t = Directory(target);
+    
+    return DirDatabaseRepository._(t, [],null);
   }
 
-  void fetchDirectory(){ /* ディレクトリ情報を同期 */
+  void fetchDirectory([Directory? t]){ /* ディレクトリ情報を同期 */
+    if(t!=null) target = t;
     try{
     dirList.clear();
-    dir.listSync().forEach((entity) {
+    target.listSync().forEach((entity) {
       dirList.add(entity);
     });
      }catch(e){

@@ -5,9 +5,7 @@
 (ターゲットチェンジでデータが損失する問題あり)
 
 */
-
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
 import 'package:path/path.dart' as p;
@@ -30,27 +28,32 @@ class Obj{ /* Model */
 
 class ObjDatabaseStore extends ChangeNotifier{
   static List<Obj> objects = [];
-  late final repo = DirDatabaseRepository();
+  late DirDatabaseRepository repo;
 
   /*
   methodName() <- viewで使っても良い
   _methodName() <- viewで使ってはいけない
   */
 
-  void fetchObjects(){ /* パソコンのディレクトリ情報と同期して家具リストを更新 */
-    repo.fetchDirectory();
+  Future<void> init() async{
+    repo = await DirDatabaseRepository.init();
+  }
+
+  Future<void> fetchObjects([Directory? target]) async { /* パソコンのディレクトリ情報と同期して家具リストを更新 */
+    await init(); //イニシャライズ完了まで待機
+    repo.fetchDirectory(target); //同期関数のためawait必要なし
     /*
     -更新後に必要な判定-
     1.オブジェクトリストにない新規fileをオブジェクトリストに追加
     2.オブジェクトリストにはあるがディレクトリ情報にないものをオブジェクトリストから削除
     */
     _convertDirListToObjList(repo.dirList); // 1 & 2
+    print(repo.dirList);
     notifyListeners();
   }
 
-  void changeTarget(String targetPass){
-    repo.dir = Directory(targetPass);
-    repo.fetchDirectory();
+  void changeTarget(String targetPass){ /* 引数の型は扱いやすいように変えて良い */
+    fetchObjects(Directory(targetPass));
   }
 
   /*
