@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/rename_menu_view.dart';
-import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/move_menu_view.dart';
-import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/delete_menu_view.dart';
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/sub_menu/rename_menu_view.dart';
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/sub_menu/move_menu_view.dart';
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/sub_menu/delete_menu_view.dart';
 
 void showFileItemMenu(BuildContext context, Offset position) {
     final overlay = Overlay.of(context); // ボタン用オーバーレイ
