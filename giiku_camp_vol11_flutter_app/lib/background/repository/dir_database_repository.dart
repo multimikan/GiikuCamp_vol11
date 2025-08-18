@@ -17,7 +17,7 @@ class DirDatabaseRepository extends ChangeNotifier{
 
   */
   static Future<DirDatabaseRepository> init([target]) async {
-    var t = await getLibraryDirectory();
+    var t = await getApplicationDocumentsDirectory();
     if(target != null) t = Directory(target);
     
     return DirDatabaseRepository._(t, [],null);
