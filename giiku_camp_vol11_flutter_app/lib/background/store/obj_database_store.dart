@@ -5,9 +5,7 @@
 (ターゲットチェンジでデータが損失する問題あり)
 
 */
-
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
 import 'package:path/path.dart' as p;
@@ -37,9 +35,9 @@ class ObjDatabaseStore extends ChangeNotifier{
   _methodName() <- viewで使ってはいけない
   */
 
-  void fetchObjects() async { /* パソコンのディレクトリ情報と同期して家具リストを更新 */
+  void fetchObjects([Directory? target]) async { /* パソコンのディレクトリ情報と同期して家具リストを更新 */
     await repo.init();
-    repo.fetchDirectory();
+    repo.fetchDirectory(target);
     /*
     -更新後に必要な判定-
     1.オブジェクトリストにない新規fileをオブジェクトリストに追加
@@ -50,8 +48,7 @@ class ObjDatabaseStore extends ChangeNotifier{
   }
 
   void changeTarget(String targetPass){
-    repo.target = Directory(targetPass);
-    repo.fetchDirectory();
+    fetchObjects(Directory(targetPass));
   }
 
   /*

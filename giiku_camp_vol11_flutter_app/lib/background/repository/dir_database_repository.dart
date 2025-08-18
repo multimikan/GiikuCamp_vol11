@@ -11,13 +11,11 @@ class DirDatabaseRepository extends ChangeNotifier{
   late List<FileSystemEntity> dirList; //対象dirの子階層を格納
 
   DirDatabaseRepository._(this.target,this.dirList); // private constructor
-
   /*
 
   ！！！このクラスをインスタンス化する際はawait DirDatabaseRepository.init();としてください！！！
 
   */
-
   Future<DirDatabaseRepository> init([target]) async {
     var t = await getLibraryDirectory();
     if(target != null) t = Directory(target);
@@ -26,7 +24,8 @@ class DirDatabaseRepository extends ChangeNotifier{
     return DirDatabaseRepository._(t, dirList);
   }
 
-  void fetchDirectory(){ /* ディレクトリ情報を同期 */
+  void fetchDirectory([Directory? t]){ /* ディレクトリ情報を同期 */
+    if(t!=null) target = t;
     try{
     dirList.clear();
     target.listSync().forEach((entity) {
