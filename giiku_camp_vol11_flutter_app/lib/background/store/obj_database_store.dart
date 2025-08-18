@@ -47,7 +47,7 @@ class ObjDatabaseStore extends ChangeNotifier{
     notifyListeners();
   }
 
-  void changeTarget(String targetPass){
+  void changeTarget(String targetPass){ /* 引数の型は扱いやすいように変えて良い */
     fetchObjects(Directory(targetPass));
   }
 
