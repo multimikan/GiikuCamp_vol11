@@ -35,8 +35,11 @@ class ObjDatabaseStore extends ChangeNotifier{
   _methodName() <- viewで使ってはいけない
   */
 
+  Future<void> init() async{
+    repo = await DirDatabaseRepository.init();
+  }
+
   void fetchObjects([Directory? target]) async { /* パソコンのディレクトリ情報と同期して家具リストを更新 */
-    await repo.init();
     repo.fetchDirectory(target);
     /*
     -更新後に必要な判定-
