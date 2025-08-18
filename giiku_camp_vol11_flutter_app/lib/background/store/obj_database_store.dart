@@ -40,8 +40,8 @@ class ObjDatabaseStore extends ChangeNotifier{
   }
 
   Future<void> fetchObjects([Directory? target]) async { /* パソコンのディレクトリ情報と同期して家具リストを更新 */
-    await init();
-    repo.fetchDirectory(target);
+    await init(); //イニシャライズ完了まで待機
+    repo.fetchDirectory(target); //同期関数のためawait必要なし
     /*
     -更新後に必要な判定-
     1.オブジェクトリストにない新規fileをオブジェクトリストに追加
