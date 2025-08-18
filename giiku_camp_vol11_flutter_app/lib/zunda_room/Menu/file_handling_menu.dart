@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/rename_menu_view.dart';
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/move_menu_view.dart';
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/delete_menu_view.dart';
 
 void showFileItemMenu(BuildContext context, Offset position) {
     final overlay = Overlay.of(context); // ボタン用オーバーレイ
@@ -19,6 +22,7 @@ void showFileItemMenu(BuildContext context, Offset position) {
                         left: position.dx,
                         top: position.dy - 50,
                         child: ContextMenuOverlay(
+                            position: position,
                             onClose: () {
                                 entry!.remove();
                             },
@@ -32,8 +36,9 @@ void showFileItemMenu(BuildContext context, Offset position) {
 }
 
 class ContextMenuOverlay extends StatelessWidget { // メニュー内容
+    final Offset position;
     final VoidCallback onClose;
-    const ContextMenuOverlay({super.key, required this.onClose});
+    const ContextMenuOverlay({super.key, required this.onClose, required this.position});
     @override
     Widget build(BuildContext context) {
         return Material(
@@ -41,27 +46,30 @@ class ContextMenuOverlay extends StatelessWidget { // メニュー内容
             child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                    _buildButton(context, Icons.edit, '名前変更'),
+                    _buildButton(context, Icons.edit, '名前変更', position),
                     const SizedBox(width: 8),
-                    _buildButton(context, Icons.drive_file_move, '移動'),
+                    _buildButton(context, Icons.drive_file_move, '移動', position),
                     const SizedBox(width: 8),
-                    _buildButton(context, Icons.delete, '削除'),
+                    _buildButton(context, Icons.delete, '削除', position),
                 ],
             ),
         );
     }
 
-    Widget _buildButton(BuildContext context, IconData icon, String tooltip) {
+    Widget _buildButton(BuildContext context, IconData icon, String tooltip, Offset position) {
         return GestureDetector(
             onTap: () {
                 onClose(); // クリックしたらメニューを閉じる
-                print('$tooltip tapped');
+                debugPrint('$tooltip tapped');
                 switch (tooltip) {
                     case '名前変更':
+                        showRenameOverlay(context, position);
                         break;
                     case '移動':
+                        showMoveOverlay(context, position);
                         break;
                     case '削除':
+                        showDeleteOverlay(context, position);
                         break;
                 }
             },
@@ -69,7 +77,7 @@ class ContextMenuOverlay extends StatelessWidget { // メニュー内容
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                     color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(8),
                     boxShadow: const [
                         BoxShadow(color: Colors.black26, blurRadius: 4),
                     ],
