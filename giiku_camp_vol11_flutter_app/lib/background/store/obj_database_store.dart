@@ -53,13 +53,8 @@ class ObjDatabaseStore extends ChangeNotifier{
     _isloaded = true;
   }
 
-  ObjDatabaseStore(){
-    init();
-  }
-
   /*別クラスでfetchObjectを使うときはasync{await fetchObject}を推奨(特に同期が重要な場面では必須)*/
   Future<void> fetchObjects([Directory? target]) async { /* パソコンのディレクトリ情報と同期して家具リストを更新 */
-    if(!_isloaded) fetchObjects(target);
     repo.fetchDirectory(target); //同期関数のためawait必要なし
     /*
     -更新後に必要な判定-
@@ -183,11 +178,12 @@ class TestView extends StatefulWidget{
 }
 
 class _TestViewState extends State<TestView>{
-  final store = ObjDatabaseStore();
+  final ObjDatabaseStore store;
   bool loaded = false;
 
   @override
-  void initState() {
+  void initState() async {
+    await store.init();
     super.initState();
     _loadObjects();
   }
