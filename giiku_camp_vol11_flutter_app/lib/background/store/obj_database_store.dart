@@ -181,11 +181,12 @@ class TestView extends StatefulWidget{
 class _TestViewState extends State<TestView>{
   late ObjDatabaseStore store;
   bool loaded = false;
+  bool initialized = false;
 
   @override
-  void initState() async {
-    store = await ObjDatabaseStore.init();
+  void initState(){
     super.initState();
+    _initObjects();
     _loadObjects();
   }
 
@@ -194,6 +195,12 @@ class _TestViewState extends State<TestView>{
     setState(() {
       loaded = true;
     });
+  }
+
+  Future<void> _initObjects()async{
+    while(!initialized){}
+    store = await ObjDatabaseStore.init();
+    initialized = true;
   }
 
   @override
