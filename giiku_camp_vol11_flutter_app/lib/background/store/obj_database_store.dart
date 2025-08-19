@@ -186,11 +186,11 @@ class _TestViewState extends State<TestView>{
   @override
   void initState(){
     super.initState();
-    _initObjects();
     _loadObjects();
   }
 
   Future<void> _loadObjects()async{
+    store = await ObjDatabaseStore.init();
     await store.fetchObjects();
     setState(() {
       loaded = true;
@@ -198,7 +198,6 @@ class _TestViewState extends State<TestView>{
   }
 
   Future<void> _initObjects()async{
-    store = await ObjDatabaseStore.init();
   }
 
   @override
