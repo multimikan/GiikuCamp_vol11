@@ -174,7 +174,8 @@ class TestView extends StatelessWidget{
 
   TestView({super.key});
     @override
-    Widget build(BuildContext context) {
+    Future<Widget> build(BuildContext context) async {
+      await store.fetchObjects();
         // TODO: implement build
         return Scaffold(
             body: Center(
