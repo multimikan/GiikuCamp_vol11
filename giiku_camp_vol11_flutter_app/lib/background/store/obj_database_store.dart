@@ -117,8 +117,8 @@ class ObjDatabaseStore extends ChangeNotifier{
         _appendObj(f);
         } //過去に登録したことがないファイルは登録
       else{
-        final instance = _convertObjFromFileSystemEntity(f);
-        _updateObj(instance);
+        final index = _findObjectsIndexFromPath(f.path);
+        _updateObj(objects[index]);
       }
     }
     for(var obj in objects){//objectリストを全探索
