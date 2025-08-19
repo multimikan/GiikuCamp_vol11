@@ -187,6 +187,7 @@ class _TestViewState extends State<TestView>{
   void initState(){
     super.initState();
     _initObjects();
+    while(!initialized){}ß
     _loadObjects();
   }
 
