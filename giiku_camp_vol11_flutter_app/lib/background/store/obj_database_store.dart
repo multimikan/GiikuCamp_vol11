@@ -39,6 +39,7 @@ class ObjDatabaseStore extends ChangeNotifier{
     repo = await DirDatabaseRepository.init();
   }
 
+  /*別クラスでfetchObjectを使うときはasync{await fetchObject}を推奨(特に同期が重要な場面では必須)*/
   Future<void> fetchObjects([Directory? target]) async { /* パソコンのディレクトリ情報と同期して家具リストを更新 */
     await init(); //イニシャライズ完了まで待機
     repo.fetchDirectory(target); //同期関数のためawait必要なし
@@ -52,8 +53,8 @@ class ObjDatabaseStore extends ChangeNotifier{
     notifyListeners();
   }
 
-  void changeTarget(String targetPass){ /* 引数の型は扱いやすいように変えて良い */
-    fetchObjects(Directory(targetPass));
+  Future<void> changeTarget(String targetPass) async { /* 引数の型は扱いやすいように変えて良い */
+    await fetchObjects(Directory(targetPass));
   }
 
   /*

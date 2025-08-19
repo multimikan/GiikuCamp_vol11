@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:path/path.dart' as p; 
 
 class DirHandler extends ChangeNotifier{
-  void rename(FileSystemEntity f, String name) async{
+  Future<void> rename(FileSystemEntity f, String name) async{
     final store = ObjDatabaseStore();
     final dirName = p.dirname(f.path);
     final extension = p.extension(f.path);
@@ -24,27 +24,27 @@ class DirHandler extends ChangeNotifier{
         print("エラー：$e");
       }
     }
-    store.fetchObjects();
+    await store.fetchObjects();
     notifyListeners();
   }
 
-  void move(FileSystemEntity f, String newPath)async{
+  Future<void> move(FileSystemEntity f, String newPath) async {
     final store = ObjDatabaseStore();
     store.fetchObjects();
 
     await f.rename(newPath);
 
-    store.fetchObjects();
+    await store.fetchObjects();
     notifyListeners();
   }
 
-  void del(FileSystemEntity f) async {
+  Future<void> del(FileSystemEntity f) async {
     final store = ObjDatabaseStore();
     store.fetchObjects();
     
     await f.delete();
 
-    store.fetchObjects();
+    await store.fetchObjects();
     notifyListeners();
   }
 }
