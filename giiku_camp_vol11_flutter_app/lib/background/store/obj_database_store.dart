@@ -22,8 +22,8 @@ class Obj{ /* Model */
   String name;
   ObjType type;
   String extention;
-  double x;
-  double y;
+  int x;
+  int y;
   Obj(this.path, this.name, this.type, this.extention, this.x, this.y);
 
   dynamic field(String key) { /* 構造体の要素を文字列を受け取って変換し返す */
@@ -83,7 +83,7 @@ class ObjDatabaseStore extends ChangeNotifier{
   *現状ではパスのみでの判定です
   */
 
-  void _updateObj(Obj obj, [String? name, ObjType? type, String? extension, double? x, double? y]){ /*既存のオブジェクトを更新*/
+  void _updateObj(Obj obj, [String? name, ObjType? type, String? extension, int? x, int? y]){ /*既存のオブジェクトを更新*/
     final index = _findObjectsIndexFromPath(obj.path);
 
     name = name ?? obj.name;
@@ -158,10 +158,10 @@ class ObjDatabaseStore extends ChangeNotifier{
     return index != -1 ? true: false;
   }
 
-  Map<String,double> _getPlace(){ /* 床とか壁の判定はまだ未実装 */
+  Map<String,int> _getPlace(){ /* 床とか壁の判定はまだ未実装 */
     final double margin = 5.0; /* 座標の誤差 */
-    var x = Random().nextDouble()*721;
-    var y = Random().nextDouble()*721;
+    var x = Random().nextInt(721);
+    var y = Random().nextInt(721);
     for(var i = -margin; i<margin; i++){ // O(n*margin)のため動作が重いかも
       if(_isAddedPlaceFromObjects("x", x+i) || _isAddedPlaceFromObjects("y", y+i)) continue;
     }
@@ -180,7 +180,15 @@ class TestView extends StatelessWidget{
             body: Center(
                 child: Column(
                   children: [
-                    IconButton(onPressed: ()=>{store.fetchObjects()}, icon: Icon(Icons.access_alarm_outlined)),
+                    for(var o in ObjDatabaseStore.objects)
+                    Positioned(
+                      left: (o.x).toDouble(),
+                      top: (o.y).toDouble(),
+                      child: Container(
+                        decoration: BoxDecoration(),
+                        child: Text(o.name),
+                      ),
+                    ),
                   ],
                 ),
             )
