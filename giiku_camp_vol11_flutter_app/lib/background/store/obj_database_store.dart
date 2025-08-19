@@ -41,6 +41,7 @@ class Obj{ /* Model */
 class ObjDatabaseStore extends ChangeNotifier{
   static List<Obj> objects = [];
   late DirDatabaseRepository repo;
+  bool _isloaded = false;
 
   /*
   methodName() <- viewで使っても良い
@@ -49,11 +50,16 @@ class ObjDatabaseStore extends ChangeNotifier{
 
   Future<void> init() async{
     repo = await DirDatabaseRepository.init();
+    _isloaded = true;
+  }
+
+  ObjDatabaseStore(){
+    init();
   }
 
   /*別クラスでfetchObjectを使うときはasync{await fetchObject}を推奨(特に同期が重要な場面では必須)*/
   Future<void> fetchObjects([Directory? target]) async { /* パソコンのディレクトリ情報と同期して家具リストを更新 */
-    await init(); //イニシャライズ完了まで待機
+    if(!_isloaded) fetchObjects(target);
     repo.fetchDirectory(target); //同期関数のためawait必要なし
     /*
     -更新後に必要な判定-
