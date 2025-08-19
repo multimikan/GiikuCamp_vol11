@@ -191,6 +191,7 @@ class _TestViewState extends State<TestView>{
   }
 
   Future<void> _loadObjects()async{
+    while(!initialized){}
     await store.fetchObjects();
     setState(() {
       loaded = true;
@@ -198,9 +199,11 @@ class _TestViewState extends State<TestView>{
   }
 
   Future<void> _initObjects()async{
-    while(!initialized){}
     store = await ObjDatabaseStore.init();
-    initialized = true;
+    setState(() {
+      initialized = true;
+    });
+    
   }
 
   @override
