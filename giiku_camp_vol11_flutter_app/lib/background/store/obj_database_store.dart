@@ -231,7 +231,8 @@ class _TestViewState extends State<TestView>{
                     color: Colors.amber
                   ),
                   child: TextButton(onPressed: ()=>{
-                    store.fetchObjects()
+                    store.fetchObjects(),
+                    setState(() {})
                   }, child: Text("fetch")),
                 ),
                 )
