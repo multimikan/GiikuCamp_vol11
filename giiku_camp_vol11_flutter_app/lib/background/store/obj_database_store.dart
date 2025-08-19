@@ -161,7 +161,7 @@ class ObjDatabaseStore extends ChangeNotifier{
   }
 
   Map<String,int> _getPlace(){ /* 床とか壁の判定はまだ未実装 */
-    final double margin = 5.0; /* 座標の誤差 */
+    final double margin = 20; /* 座標の誤差 */
     var x = Random().nextInt(721);
     var y = Random().nextInt(721);
     for(var i = -margin; i<margin; i++){ // O(n*margin)のため動作が重いかも
