@@ -169,30 +169,57 @@ class ObjDatabaseStore extends ChangeNotifier{
   }
 }
 
-class TestView extends StatelessWidget{
-  final store = ObjDatabaseStore();
+class TestView extends StatefulWidget{
+  const TestView({super.key});
 
-  TestView({super.key});
-    @override
-    Widget build(BuildContext context) {
-      store.fetchObjects();
-        // TODO: implement build
-        return Scaffold(
-            body: Center(
-                child: Column(
-                  children: [
-                    for(var o in ObjDatabaseStore.objects)
-                    Positioned(
-                      left: (o.x).toDouble(),
-                      top: (o.y).toDouble(),
-                      child: Container(
-                        decoration: BoxDecoration(),
-                        child: Text(o.name),
-                      ),
-                    ),
-                  ],
-                ),
-            )
-        );
+  @override
+  _TestViewState createState()=>_TestViewState();
+}
+
+class _TestViewState extends State<TestView>{
+  final store = ObjDatabaseStore();
+  bool loaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadObjects();
+  }
+
+  Future<void> _loadObjects()async{
+    await store.fetchObjects();
+    setState(() {
+      loaded = true;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    store.fetchObjects();
+      // TODO: implement build
+
+    if(!loaded){
+    return Scaffold(
+      body: Center(child: CircularProgressIndicator(),)
+    );
     }
+    
+    return Scaffold(
+        body: Center(
+            child: Stack(
+              children: [
+                for(var o in ObjDatabaseStore.objects)
+                  Positioned(
+                    left: (o.x).toDouble(),
+                    top: (o.y).toDouble(),
+                    child: Container(
+                      decoration: BoxDecoration(),
+                      child: Text(o.name),
+                    ),
+                  ),
+              ],
+            ),
+        )
+    );
+  }
 }
