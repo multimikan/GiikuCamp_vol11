@@ -195,7 +195,6 @@ class _TestViewState extends State<TestView>{
 
   @override
   Widget build(BuildContext context) {
-    store.fetchObjects();
       // TODO: implement build
 
     if(!loaded){
@@ -208,14 +207,6 @@ class _TestViewState extends State<TestView>{
         body: Center(
             child: Stack(
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.amber
-                  ),
-                  child: TextButton(onPressed: ()=>{
-                    _loadObjects()
-                  }, child: Text("fetch")),
-                ),
                 for(var o in ObjDatabaseStore.objects)
                   Positioned(
                     left: (o.x).toDouble(),
@@ -225,6 +216,15 @@ class _TestViewState extends State<TestView>{
                       child: Text(o.name),
                     ),
                   ),
+
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.amber
+                  ),
+                  child: TextButton(onPressed: ()=>{
+                    _loadObjects()
+                  }, child: Text("fetch")),
+                ),
               ],
             ),
         )
