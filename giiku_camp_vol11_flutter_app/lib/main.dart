@@ -1,7 +1,30 @@
+import 'dart:io'; 
+import 'dart:ui' as ui;  
 import 'package:flutter/material.dart';
-import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/file_handling_menu.dart';
+import 'package:flutter/services.dart';
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_view.dart';
+import 'package:window_size/window_size.dart';
 
-void main() {
+
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final ByteData data = await rootBundle.load('images/zundamonnoie1.png');
+  final ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+  final ui.FrameInfo frame = await codec.getNextFrame();
+  final double imageWidth = frame.image.width.toDouble();
+  final double imageHeight = frame.image.height.toDouble();
+
+
+
+  if (Platform.isWindows|| Platform.isMacOS || Platform.isLinux){
+    setWindowTitle('Image Sized Window');
+    print(imageWidth);
+    //setWindowMinSize(Size(imageWidth, imageHeight));
+    setWindowMaxSize(Size(720, 720));
+  }
+
   runApp(const MyApp());
 }
 
@@ -31,7 +54,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: TestFileIcon(name: "a", icon: Icons.abc_outlined)
+      home: ZundaRoomView(),
     );
   }
 }
