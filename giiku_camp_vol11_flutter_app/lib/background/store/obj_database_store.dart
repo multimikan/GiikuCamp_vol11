@@ -208,6 +208,14 @@ class _TestViewState extends State<TestView>{
         body: Center(
             child: Stack(
               children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.amber
+                  ),
+                  child: TextButton(onPressed: ()=>{
+                    _loadObjects()
+                  }, child: Text("fetch")),
+                ),
                 for(var o in ObjDatabaseStore.objects)
                   Positioned(
                     left: (o.x).toDouble(),
