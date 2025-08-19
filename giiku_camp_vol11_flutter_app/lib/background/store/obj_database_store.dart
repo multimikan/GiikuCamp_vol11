@@ -197,8 +197,6 @@ class _TestViewState extends State<TestView>{
     });
   }
 
-  Future<void> _initObjects()async{
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -233,7 +231,7 @@ class _TestViewState extends State<TestView>{
                     color: Colors.amber
                   ),
                   child: TextButton(onPressed: ()=>{
-                    _loadObjects()
+                    store.fetchObjects()
                   }, child: Text("fetch")),
                 ),
                 )
