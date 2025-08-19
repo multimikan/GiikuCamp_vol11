@@ -1,7 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:giiku_camp_vol11_flutter_app/background/dir_handler.dart';
 
 OverlayEntry? entry;
-void showRenameOverlay(BuildContext context, Offset position) {
+DirHandler handler = DirHandler();
+void showRenameOverlay(BuildContext context, Offset position, FileSystemEntity file) {
+  final TextEditingController controller = TextEditingController();
   final overlay = Overlay.of(context);
   entry?.remove();
   entry = null;
@@ -44,8 +48,8 @@ void showRenameOverlay(BuildContext context, Offset position) {
                         hintText: "新しい名前を入力",
                         border: OutlineInputBorder(),
                         isDense: true,
-
                       ),
+                      controller: controller,
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -60,8 +64,8 @@ void showRenameOverlay(BuildContext context, Offset position) {
                         ),
                         const SizedBox(width: 8),
                         ElevatedButton(
-                          onPressed: () {
-                            // Renameメソッド
+                          onPressed: () async {
+                            await handler.rename(file, controller.text);
                             entry!.remove();
                             entry = null;
                           },
