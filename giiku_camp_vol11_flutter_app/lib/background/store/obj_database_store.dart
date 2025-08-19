@@ -218,6 +218,8 @@ class _TestViewState extends State<TestView>{
                   ),
 
                 Container(
+                  width: 100,
+                  height: 30,
                   decoration: BoxDecoration(
                     color: Colors.amber
                   ),
