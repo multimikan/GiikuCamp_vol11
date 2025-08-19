@@ -6,6 +6,7 @@
 
 */
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
 import 'package:path/path.dart' as p;
@@ -24,7 +25,18 @@ class Obj{ /* Model */
   double x;
   double y;
   Obj(this.path, this.name, this.type, this.extention, this.x, this.y);
+
+  dynamic field(String key) { /* 構造体の要素を文字列を受け取って変換し返す */
+    switch(key){
+      case "x":
+        return x;
+      case "y":
+        return y;
+    }
+  }
+
 }
+
 
 class ObjDatabaseStore extends ChangeNotifier{
   static List<Obj> objects = [];
@@ -49,7 +61,11 @@ class ObjDatabaseStore extends ChangeNotifier{
     2.オブジェクトリストにはあるがディレクトリ情報にないものをオブジェクトリストから削除
     */
     _convertDirListToObjList(repo.dirList); // 1 & 2
-    print(repo.dirList);
+    for(var i = 0; i< objects.length; i++){
+      print(objects[i].path);
+      print(objects[i].x);
+      print(objects[i].y);
+    }
     notifyListeners();
   }
 
@@ -113,10 +129,12 @@ class ObjDatabaseStore extends ChangeNotifier{
     final name = p.basename(f.path);
     final type = ObjType.clock; //判定は後で実装
     final extention = p.extension(f.path);
-    final x = 0.0; //ここも後で実装
-    final y = 0.0; //ここも後で実装
 
-    final instance = Obj(f.path,name,type,extention,x,y);
+    final notAlreadyAddedPlacesMap = _getPlace();
+    final x = notAlreadyAddedPlacesMap["x"];
+    final y = notAlreadyAddedPlacesMap["y"];
+
+    final instance = Obj(f.path,name,type,extention,x!,y!);
     return instance;
   }
 
@@ -124,10 +142,30 @@ class ObjDatabaseStore extends ChangeNotifier{
     final index = objects.indexWhere((d)=> d.path == path);
     return index; //見つからない場合-1を返す
   }
+  
+  bool _isAddedPlaceFromObjects(String xyz, double place){ /* objectsにすでにxyzが格納済みかを判定 */
+    var isAdded = false;
+    for(var o in objects){ /* objectsを全探索 */
+      if (o.field(xyz) == place) isAdded = true;
+    }
+    return isAdded;
+  }
+
+
 
   bool _isAleadyAddedObjectsList(String path){ /* 過去に読み込んだディレクトリ情報かを判定 */
     final index = _findObjectsIndexFromPath(path);
     return index != -1 ? true: false;
+  }
+
+  Map<String,double> _getPlace(){ /* 床とか壁の判定はまだ未実装 */
+    final double margin = 5.0; /* 座標の誤差 */
+    var x = Random().nextDouble()*721;
+    var y = Random().nextDouble()*721;
+    for(var i = -margin; i<margin; i++){ // O(n*margin)のため動作が重いかも
+      if(_isAddedPlaceFromObjects("x", x+i) || _isAddedPlaceFromObjects("y", y+i)) continue;
+    }
+    return {"x":x,"y":y};
   }
 }
 
