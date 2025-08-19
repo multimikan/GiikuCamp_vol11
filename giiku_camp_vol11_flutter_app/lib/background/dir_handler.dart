@@ -5,7 +5,7 @@ import 'package:path/path.dart' as p;
 
 class DirHandler extends ChangeNotifier{
   Future<void> rename(FileSystemEntity f, String name) async{
-    final store = ObjDatabaseStore();
+    final store = await ObjDatabaseStore.init();
     final dirName = p.dirname(f.path);
     final extension = p.extension(f.path);
     if(p.extension(f.path)!='') {
@@ -29,7 +29,7 @@ class DirHandler extends ChangeNotifier{
   }
 
   Future<void> move(FileSystemEntity f, String newPath) async {
-    final store = ObjDatabaseStore();
+    final store = await ObjDatabaseStore.init();
     store.fetchObjects();
 
     await f.rename(newPath);
@@ -39,7 +39,7 @@ class DirHandler extends ChangeNotifier{
   }
 
   Future<void> del(FileSystemEntity f) async {
-    final store = ObjDatabaseStore();
+    final store = await ObjDatabaseStore.init();
     store.fetchObjects();
     
     await f.delete();
