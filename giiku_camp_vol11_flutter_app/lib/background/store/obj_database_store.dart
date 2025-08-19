@@ -216,8 +216,10 @@ class _TestViewState extends State<TestView>{
                       child: Text(o.name),
                     ),
                   ),
-
-                Container(
+                Positioned(
+                left: 30,
+                top: 30,
+                child: Container(
                   width: 100,
                   height: 30,
                   decoration: BoxDecoration(
@@ -227,6 +229,7 @@ class _TestViewState extends State<TestView>{
                     _loadObjects()
                   }, child: Text("fetch")),
                 ),
+                )
               ],
             ),
         )
