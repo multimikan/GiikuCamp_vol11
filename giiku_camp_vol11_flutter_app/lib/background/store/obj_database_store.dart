@@ -41,16 +41,17 @@ class Obj{ /* Model */
 class ObjDatabaseStore extends ChangeNotifier{
   static List<Obj> objects = [];
   late DirDatabaseRepository repo;
-  bool _isloaded = false;
 
   /*
   methodName() <- viewで使っても良い
   _methodName() <- viewで使ってはいけない
   */
 
-  Future<void> init() async{
-    repo = await DirDatabaseRepository.init();
-    _isloaded = true;
+  ObjDatabaseStore._(this.repo);
+
+  static Future<ObjDatabaseStore> init() async{
+    var s = await DirDatabaseRepository.init();
+    return ObjDatabaseStore._(s);
   }
 
   /*別クラスでfetchObjectを使うときはasync{await fetchObject}を推奨(特に同期が重要な場面では必須)*/
@@ -178,12 +179,12 @@ class TestView extends StatefulWidget{
 }
 
 class _TestViewState extends State<TestView>{
-  final ObjDatabaseStore store;
+  late ObjDatabaseStore store;
   bool loaded = false;
 
   @override
   void initState() async {
-    await store.init();
+    store = await ObjDatabaseStore.init();
     super.initState();
     _loadObjects();
   }
