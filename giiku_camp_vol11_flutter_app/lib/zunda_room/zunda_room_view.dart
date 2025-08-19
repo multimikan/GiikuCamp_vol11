@@ -12,12 +12,18 @@ class ZundaRoomView extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          backgroundColor: Colors.black,
-      ),
-      body: Center(
-          child: Container()
-      ),
+      body: Container(
+        decoration: BoxDecoration(
+        ),
+        child: Image.asset("images/zundamonnoie1.png"),
+
+      )
+      // appBar: AppBar(
+      //     backgroundColor: Colors.black,
+      // ),
+      // body: Center(
+      //     child: Container()
+      // ),
     );
   }
 }

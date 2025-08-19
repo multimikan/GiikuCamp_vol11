@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:io'; /* ディレクトリ検索モジュール */
-import 'package:path/path.dart' as p; 
 import 'package:path_provider/path_provider.dart';
 
 
