@@ -2,10 +2,9 @@ import 'dart:io';
 import 'dart:ui' as ui;  
 import 'package:flutter/material.dart';                                  
 import 'package:flutter/services.dart';
-import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_view.dart';
 import 'package:window_size/window_size.dart';
-
-
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_view.dart';
+//import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
