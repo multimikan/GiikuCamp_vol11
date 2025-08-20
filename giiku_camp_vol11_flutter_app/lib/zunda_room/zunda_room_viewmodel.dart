@@ -58,6 +58,14 @@ class ZundaRoomViewModel extends ChangeNotifier{
     yield getAnimationImages()[i?1:0];
     yield* ImageIte(!i);
   }
+
+  Image resize(Image img, int percent){
+    return Image(
+      image: img.image,
+      width: img.width!*percent/100,
+      height: img.height!*percent/100,
+    );
+  }
 }
 
 class MyAnimatedImage extends StatefulWidget{
@@ -83,7 +91,7 @@ class _MyAnimatedImageState extends State<MyAnimatedImage> {
 
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 0),
-      child: vm.nowImage,
+      child: vm.resize(vm.nowImage,40),
     );
   }
 }
