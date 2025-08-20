@@ -92,7 +92,7 @@ class _MyAnimatedImageState extends State<MyAnimatedImage> {
 
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 0),
-      child: vm.resize(nowImage,40),
+      child: vm.resize(nowImage,45),
     );
   }
 }
