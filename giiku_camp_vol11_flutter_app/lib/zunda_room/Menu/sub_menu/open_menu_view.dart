@@ -4,8 +4,7 @@ import 'package:giiku_camp_vol11_flutter_app/background/dir_handler.dart';
 
 OverlayEntry? entry;
 DirHandler handler = DirHandler();
-void showRenameOverlay(BuildContext context, Offset position, FileSystemEntity file) {
-  final TextEditingController controller = TextEditingController();
+void showOpenOverlay(BuildContext context, Offset position, FileSystemEntity file) {
   final overlay = Overlay.of(context);
   entry?.remove();
   entry = null;
@@ -26,32 +25,21 @@ void showRenameOverlay(BuildContext context, Offset position, FileSystemEntity f
             left: position.dx,
             top: position.dy - 50,
             child: Material(
-              color: Colors.transparent,
+              elevation: 8,
+              borderRadius: BorderRadius.circular(8),
+              color: Colors.white,
               child: Container(
                 padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 4,
-                    )
-                  ],
-                ),
                 width: 250,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextField(
-                      decoration: const InputDecoration(
-                        hintText: "新しい名前を入力",
-                        border: OutlineInputBorder(),
-                        isDense: true,
-                      ),
-                      controller: controller,
+                    const Text(
+                      "ファイルを開きますか？",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -62,17 +50,16 @@ void showRenameOverlay(BuildContext context, Offset position, FileSystemEntity f
                           },
                           child: const Text("キャンセル"),
                         ),
-                        const SizedBox(width: 8),
                         ElevatedButton(
                           onPressed: () async {
-                            await handler.rename(file, controller.text);
+                            //openメソッド
                             entry!.remove();
                             entry = null;
                           },
                           child: const Text("実行"),
                         ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),

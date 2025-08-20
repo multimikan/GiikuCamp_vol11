@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:giiku_camp_vol11_flutter_app/background/dir_handler.dart';
 
 OverlayEntry? entry;
-void showDeleteOverlay(BuildContext context, Offset position) {
+DirHandler handler = DirHandler();
+void showDeleteOverlay(BuildContext context, Offset position, FileSystemEntity file) {
   final overlay = Overlay.of(context);
   entry?.remove();
   entry = null;
@@ -49,7 +52,7 @@ void showDeleteOverlay(BuildContext context, Offset position) {
                         ),
                         ElevatedButton(
                           onPressed: () async {
-                            // deleteメソッド
+                            await handler.del(file);
                             entry!.remove();
                             entry = null;
                           },

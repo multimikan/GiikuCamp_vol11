@@ -1,7 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:giiku_camp_vol11_flutter_app/background/dir_handler.dart';
+import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
 
 OverlayEntry? entry;
-void showMoveOverlay(BuildContext context, Offset position) {
+DirHandler handler = DirHandler();
+void showMoveOverlay(BuildContext context, Offset position, FileSystemEntity file) {
   final overlay = Overlay.of(context);
   entry?.remove();
   entry = null;
@@ -38,7 +42,10 @@ void showMoveOverlay(BuildContext context, Offset position) {
                     ),
                     ElevatedButton(
                       onPressed: () async {
-                        // moveメソッド
+                        await DirDatabaseRepository.init().then((repo) async {
+                          repo.fetchDirectory();
+                          await handler.move(file, repo.target.path);
+                        });
                         entry!.remove();
                         entry = null;
                       },

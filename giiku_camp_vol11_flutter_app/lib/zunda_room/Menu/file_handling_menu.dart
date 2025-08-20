@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/sub_menu/open_menu_view.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/sub_menu/rename_menu_view.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/sub_menu/move_menu_view.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/sub_menu/delete_menu_view.dart';
 
-void showFileItemMenu(BuildContext context, Offset position) {
+void showFileItemMenu(BuildContext context, Offset position, FileSystemEntity file) {
     final overlay = Overlay.of(context); // ボタン用オーバーレイ
     OverlayEntry? entry;
     entry = OverlayEntry(
@@ -22,6 +24,7 @@ void showFileItemMenu(BuildContext context, Offset position) {
                         left: position.dx,
                         top: position.dy - 50,
                         child: ContextMenuOverlay(
+                            file: file,
                             position: position,
                             onClose: () {
                                 entry!.remove();
@@ -37,8 +40,14 @@ void showFileItemMenu(BuildContext context, Offset position) {
 
 class ContextMenuOverlay extends StatelessWidget { // メニュー内容
     final Offset position;
+    final FileSystemEntity file;
     final VoidCallback onClose;
-    const ContextMenuOverlay({super.key, required this.onClose, required this.position});
+    const ContextMenuOverlay({
+      super.key,
+      required this.onClose,
+      required this.position,
+      required this.file,
+    });
     @override
     Widget build(BuildContext context) {
         return Material(
@@ -46,30 +55,37 @@ class ContextMenuOverlay extends StatelessWidget { // メニュー内容
             child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                    _buildButton(context, Icons.edit, '名前変更', position),
+                    if (file.statSync().type == FileSystemEntityType.file) ...[
+                      _buildButton(context, Icons.open_in_new, '開く', position, file),
+                      const SizedBox(width: 8),
+                    ],
+                    _buildButton(context, Icons.edit, '名前変更', position, file),
                     const SizedBox(width: 8),
-                    _buildButton(context, Icons.drive_file_move, '移動', position),
+                    _buildButton(context, Icons.drive_file_move, '移動', position, file),
                     const SizedBox(width: 8),
-                    _buildButton(context, Icons.delete, '削除', position),
+                    _buildButton(context, Icons.delete, '削除', position, file),
                 ],
             ),
         );
     }
 
-    Widget _buildButton(BuildContext context, IconData icon, String tooltip, Offset position) {
+    Widget _buildButton(BuildContext context, IconData icon, String tooltip, Offset position, FileSystemEntity file) {
         return GestureDetector(
             onTap: () {
                 onClose(); // クリックしたらメニューを閉じる
                 debugPrint('$tooltip tapped');
                 switch (tooltip) {
+                    case '開く':
+                        showOpenOverlay(context, position, file);
+                        break;
                     case '名前変更':
-                        showRenameOverlay(context, position);
+                        showRenameOverlay(context, position, file);
                         break;
                     case '移動':
-                        showMoveOverlay(context, position);
+                        showMoveOverlay(context, position, file);
                         break;
                     case '削除':
-                        showDeleteOverlay(context, position);
+                        showDeleteOverlay(context, position, file);
                         break;
                 }
             },
@@ -89,12 +105,12 @@ class ContextMenuOverlay extends StatelessWidget { // メニュー内容
 }
 
 class TestFileIcon extends StatelessWidget { // 表示テスト用
-    final String name;
     final IconData icon;
+    final FileSystemEntity file;
     const TestFileIcon({
         super.key,
-        required this.name,
         required this.icon,
+        required this.file,
     });
 
     @override
@@ -103,13 +119,12 @@ class TestFileIcon extends StatelessWidget { // 表示テスト用
             onTap: () {
                 final renderBox = context.findRenderObject() as RenderBox;
                 final position = renderBox.localToGlobal(Offset.zero);
-                showFileItemMenu(context, position);
+                showFileItemMenu(context, position, file);
             },
             child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                     Icon(icon, size: 48),
-                    Text(name),
                 ],
             ),
         );
