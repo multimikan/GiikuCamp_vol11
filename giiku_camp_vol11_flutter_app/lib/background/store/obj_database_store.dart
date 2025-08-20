@@ -129,7 +129,7 @@ class ObjDatabaseStore extends ChangeNotifier{
 
   Obj _convertObjFromFileSystemEntity(FileSystemEntity f){ /* システムエンティティをオブジェ型に変換 */
     final name = p.basename(f.path);
-    final type = ObjType.clock; //判定は後で実装
+    final type = p.extension(f.path)==""? ObjType.door: ObjType.clock;
     final extention = p.extension(f.path);
 
     final notAlreadyAddedPlacesMap = _getPlace();
