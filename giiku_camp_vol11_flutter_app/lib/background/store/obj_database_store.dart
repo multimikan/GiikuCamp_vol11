@@ -181,7 +181,7 @@ class ObjDatabaseStore extends ChangeNotifier{
 
   Map<String,int> _dirPlace(){
     final intWW = (windowWidth-20/* ずんだもんのサイズ分 */).toInt();
-    final y = 100; 
+    final y = 300; 
     final x = Random().nextInt(intWW)+10;
     return {"x":x,"y":y};
   }
