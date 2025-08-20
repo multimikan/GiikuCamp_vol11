@@ -13,11 +13,18 @@ enum Status{
   surprize3,
   look,
 }
+enum Axis{
+  //top,
+  right,
+  left,
+  //bottom
+}
 
 class ZundaRoomViewModel extends ChangeNotifier{
   bool _showFirst = true;
   bool get showFirst => _showFirst; //getter
   Status nowStatus = Status.walk;
+  Axis nowAxis = Axis.right;
   Image nowImage = Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1));
 
   ZundaRoomViewModel(){
@@ -33,29 +40,33 @@ class ZundaRoomViewModel extends ChangeNotifier{
   }
 
   List<Image> getAnimationImages(){
+    final List<Image>tmp;
+
     switch(nowStatus){
       case (Status.stop):
-        return [Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(2))];
+        tmp = [Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(2))];
       case (Status.walk):
-        return [Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon2.png",key: const ValueKey(2))];
+        tmp = [Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon2.png",key: const ValueKey(2))];
       case (Status.cry):
-        return [Image.asset("images/ZUNDA/zundamon23.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon24.png",key: const ValueKey(2))];
+        tmp = [Image.asset("images/ZUNDA/zundamon23.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon24.png",key: const ValueKey(2))];
       case (Status.bad):
-        return [Image.asset("images/ZUNDA/zundamon27.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon30.png",key: const ValueKey(2))];
+        tmp = [Image.asset("images/ZUNDA/zundamon27.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon30.png",key: const ValueKey(2))];
       case (Status.surprize1):
-        return [Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon.png",key: const ValueKey(2))];
+        tmp = [Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon.png",key: const ValueKey(2))];
       case (Status.surprize2):
-        return [Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon12.png",key: const ValueKey(2))];
+        tmp = [Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon12.png",key: const ValueKey(2))];
       case (Status.surprize3):
-        return [Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon21.png",key: const ValueKey(2))];
+        tmp = [Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon21.png",key: const ValueKey(2))];
       case (Status.look):
-        return [Image.asset("images/ZUNDA/zundamon17.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon18.png",key: const ValueKey(2))];
+        tmp = [Image.asset("images/ZUNDA/zundamon17.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon18.png",key: const ValueKey(2))];
     }
+    return tmp;
   }
 
-  Iterable<Image> ImageIte([bool? i]) sync*{
+  Iterable<Widget> ImageIte([bool? i]) sync*{
     i = i??true;
-    yield getAnimationImages()[i?1:0];
+    final img = getAnimationImages()[i?1:0];
+    yield _changeImageWidgetWithNowAxis(img);
     yield* ImageIte(!i);
   }
 
@@ -66,6 +77,26 @@ class ZundaRoomViewModel extends ChangeNotifier{
       height: (img.height??256)*percent/100,
     );
   }
+
+  Widget _changeImageWidgetWithNowAxis(Image img){
+    final transeformedImg;
+    if (nowAxis==Axis.left){
+      transeformedImg = Transform(
+        alignment: Alignment.center, // 回転軸を画像の中心に
+        transform: Matrix4.identity()..scale(-1.0, 1.0, 1.0), // x軸を反転
+        child: img,
+        );
+    }
+    else{
+      transeformedImg = Transform(
+        alignment: Alignment.center,
+        transform: Matrix4.identity()..scale(1.0, 1.0, 1.0),
+        child: img,
+        );
+    }
+    return transeformedImg;
+  }
+  
 }
 
 class MyAnimatedImage extends StatefulWidget{
