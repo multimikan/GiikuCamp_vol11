@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store.dart';
 import 'dart:io'; /* ディレクトリ検索モジュール */
 import 'package:path_provider/path_provider.dart';
 
@@ -36,6 +37,12 @@ class DirDatabaseRepository extends ChangeNotifier{
       print("エラー：$e");
      }
     notifyListeners(); /* 変更を通知 */
+  }
+
+  Future<FileSystemEntity> convertFileSystemEntityFromObj(Obj obj) async {
+    final type = await FileSystemEntity.type(obj.path);
+    if(type == FileSystemEntityType.file) return File(obj.path);
+    return Directory(obj.path);
   }
 
   /*
