@@ -12,11 +12,13 @@ class ZundaRoomView extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-        ),
-        child: Image.asset("images/zundamonnoie2.png"),
+      backgroundColor: Colors.transparent,
 
+      body: SizedBox.expand(
+        child: Image.asset(
+          'images/zundamonnoie2.png',
+        fit: BoxFit.fill,
+        ),
       )
       // appBar: AppBar(
       //     backgroundColor: Colors.black,
