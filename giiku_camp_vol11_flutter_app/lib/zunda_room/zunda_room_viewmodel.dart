@@ -88,10 +88,11 @@ class _MyAnimatedImageState extends State<MyAnimatedImage> {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<ZundaRoomViewModel>();
+    final nowImage = vm.nowImage;
 
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 0),
-      child: vm.resize(vm.nowImage,40),
+      child: vm.resize(nowImage,40),
     );
   }
 }
