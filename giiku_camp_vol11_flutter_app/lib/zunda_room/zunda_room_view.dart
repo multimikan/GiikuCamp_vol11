@@ -12,16 +12,20 @@ class ZundaRoomView extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          backgroundColor: Colors.black,
-      ),
-      body: Center(
-          child: Column(
-              children: [
-                Text("ずんだもんのお部屋")
-              ],
-          ),
-      ),
+      backgroundColor: Colors.transparent,
+
+      body: SizedBox.expand(
+        child: Image.asset(
+          'images/zundamonnoie2.png',
+        fit: BoxFit.fill,
+        ),
+      )
+      // appBar: AppBar(
+      //     backgroundColor: Colors.black,
+      // ),
+      // body: Center(
+      //     child: Container()
+      // ),
     );
   }
 }
