@@ -15,7 +15,7 @@ class ZundaRoomView extends StatelessWidget{
       body: Container(
         decoration: BoxDecoration(
         ),
-        child: Image.asset("images/zundamonnoie1.png"),
+        child: Image.asset("images/zundamonnoie2.png"),
 
       )
       // appBar: AppBar(
