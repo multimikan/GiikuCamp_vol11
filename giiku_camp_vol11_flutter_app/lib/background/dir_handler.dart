@@ -45,11 +45,12 @@ class DirHandler extends ChangeNotifier{
 
   Future<void> del(FileSystemEntity f) async {
     final store = await ObjDatabaseStore.init();
-    final trushPath;
+    final String trushPath;
     store.fetchObjects();
     
     if(Platform.isWindows) {trushPath = _getWinTrush();}
     else {trushPath = "${Platform.environment["HOME"]}/.Trush";}
+
     await move(f, trushPath);
 
     await store.fetchObjects();
