@@ -24,7 +24,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
     Iterable<Image> imageIte = ImageIte();
     final image =imageIte.iterator;
 
-    Timer.periodic(Duration(microseconds: 500), (_) {
+    Timer.periodic(Duration(milliseconds: 500), (_) {
       _showFirst = !_showFirst; //0.5sごとにshowFirstが切り替わる
       image.moveNext();
       nowImage = image.current;
