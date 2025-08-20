@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_view.dart';
 
 void main() {
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: ZundaRoomView(),
+      home: TestView(),
     );
   }
 }
