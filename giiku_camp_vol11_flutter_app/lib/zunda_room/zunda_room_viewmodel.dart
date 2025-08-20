@@ -62,8 +62,8 @@ class ZundaRoomViewModel extends ChangeNotifier{
   Image resize(Image img, int percent){
     return Image(
       image: img.image,
-      width: img.width!*percent/100,
-      height: img.height!*percent/100,
+      width: (img.width??256)*percent/100,
+      height: (img.height??256)*percent/100,
     );
   }
 }
