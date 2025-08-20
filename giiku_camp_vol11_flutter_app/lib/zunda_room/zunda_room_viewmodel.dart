@@ -68,12 +68,21 @@ class MyAnimatedImage extends StatefulWidget{
 }
 
 class _MyAnimatedImageState extends State<MyAnimatedImage> {
+
+  @override
+  void initState(){
+    super.initState();
+    for(var i=1; i<33; i++) {
+      precacheImage(AssetImage("images/ZUNDA/zundamon$i.png"), context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<ZundaRoomViewModel>();
 
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 0),
       child: vm.nowImage,
     );
   }
