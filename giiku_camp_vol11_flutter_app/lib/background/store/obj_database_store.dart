@@ -75,20 +75,6 @@ class ObjDatabaseStore extends ChangeNotifier{
     await fetchObjects(Directory(targetPass));
   }
 
-
-  Obj convertObjFromFileSystemEntity(FileSystemEntity f){ /* システムエンティティをオブジェ型に変換 */
-    final name = p.basename(f.path);
-    final type = ObjType.clock; //判定は後で実装
-    final extention = p.extension(f.path);
-
-    final notAlreadyAddedPlacesMap = _getPlace();
-    final x = notAlreadyAddedPlacesMap["x"];
-    final y = notAlreadyAddedPlacesMap["y"];
-
-    final instance = Obj(f.path,name,type,extention,x!,y!);
-    return instance;
-  }
-
   /*
   このアプリの外でリネームされた場合にファイルの追跡ができなくなります。
   現在、FileSystemEntity型の変数でディレクトリ情報を取得していますが、この型にはidが存在しません。
@@ -114,7 +100,7 @@ class ObjDatabaseStore extends ChangeNotifier{
   }
 
   void _appendObj(FileSystemEntity f){ /* 新規オブジェクトを追加 */
-    final instance = convertObjFromFileSystemEntity(f);
+    final instance = _convertObjFromFileSystemEntity(f);
     objects.add(instance);
     notifyListeners();
   }
@@ -141,6 +127,19 @@ class ObjDatabaseStore extends ChangeNotifier{
     }
   }
 
+  Obj _convertObjFromFileSystemEntity(FileSystemEntity f){ /* システムエンティティをオブジェ型に変換 */
+    final name = p.basename(f.path);
+    final type = ObjType.clock; //判定は後で実装
+    final extention = p.extension(f.path);
+
+    final notAlreadyAddedPlacesMap = _getPlace();
+    final x = notAlreadyAddedPlacesMap["x"];
+    final y = notAlreadyAddedPlacesMap["y"];
+
+    final instance = Obj(f.path,name,type,extention,x!,y!);
+    return instance;
+  }
+
   int _findObjectsIndexFromPath(String path){ /* pathが既存オブジェクトリストに登録済みならそのインデックスを返す */
     final index = objects.indexWhere((d)=> d.path == path);
     return index; //見つからない場合-1を返す
@@ -153,8 +152,6 @@ class ObjDatabaseStore extends ChangeNotifier{
     }
     return isAdded;
   }
-
-
 
   bool _isAleadyAddedObjectsList(String path){ /* 過去に読み込んだディレクトリ情報かを判定 */
     final index = _findObjectsIndexFromPath(path);
