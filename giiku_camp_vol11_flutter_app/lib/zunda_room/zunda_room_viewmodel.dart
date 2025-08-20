@@ -24,11 +24,12 @@ class ZundaRoomViewModel extends ChangeNotifier{
   bool _showFirst = true;
   bool get showFirst => _showFirst; //getter
   Status nowStatus = Status.walk;
-  Axis nowAxis = Axis.right;
-  Image nowImage = Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1));
+  Axis nowAxis = Axis.left;
+  
+  Widget nowImage = Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1));
 
   ZundaRoomViewModel(){
-    Iterable<Image> imageIte = ImageIte();
+    Iterable<Widget> imageIte = ImageIte();
     final image =imageIte.iterator;
 
     Timer.periodic(Duration(milliseconds: 300), (_) {
@@ -70,12 +71,17 @@ class ZundaRoomViewModel extends ChangeNotifier{
     yield* ImageIte(!i);
   }
 
-  Image resize(Image img, int percent){
-    return Image(
-      image: img.image,
-      width: (img.width??256)*percent/100,
-      height: (img.height??256)*percent/100,
-    );
+  Image resize(Widget w, int percent){
+    final Image img;
+    if(w is Image){
+      img = w;
+      return Image(
+        image: img.image,
+        width: (img.width??256)*percent/100,
+        height: (img.height??256)*percent/100,
+      );
+    }
+    throw Exception("イメージをリサイズできませんでした。");
   }
 
   Widget _changeImageWidgetWithNowAxis(Image img){
