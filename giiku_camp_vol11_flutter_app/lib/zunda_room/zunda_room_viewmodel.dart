@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 enum Status{
+  stop,
   walk,
   cry,
   bad,
@@ -15,16 +17,25 @@ enum Status{
 class ZundaRoomViewModel extends ChangeNotifier{
   bool _showFirst = true;
   bool get showFirst => _showFirst; //getter
+  Status nowStatus = Status.walk;
+  Image nowImage = Image.asset("images/ZUNDA/zundamon1",key: const ValueKey(1));
 
   ZundaRoomViewModel(){
+    Iterable<Image> imageIte = ImageIte();
+    final image =imageIte.iterator;
+
     Timer.periodic(Duration(microseconds: 500), (_) {
       _showFirst = !_showFirst; //0.5sごとにshowFirstが切り替わる
+      image.moveNext();
+      nowImage = image.current;
       notifyListeners();
     });
   }
 
-  List<Image> getAnimationImages(Status status){
-    switch(status){
+  List<Image> getAnimationImages(){
+    switch(nowStatus){
+      case (Status.stop):
+        return [Image.asset("images/ZUNDA/zundamon1",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon1",key: const ValueKey(2))];
       case (Status.walk):
         return [Image.asset("images/ZUNDA/zundamon1",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon2",key: const ValueKey(2))];
       case (Status.cry):
@@ -41,22 +52,29 @@ class ZundaRoomViewModel extends ChangeNotifier{
         return [Image.asset("images/ZUNDA/zundamon17",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon18",key: const ValueKey(2))];
     }
   }
+
+  Iterable<Image> ImageIte([bool? i]) sync*{
+    i = i??true;
+    yield getAnimationImages()[i?1:0];
+    yield* ImageIte(!i);
+  }
 }
 
-/*viewで実装
-class _MyAnimatedImageState extends State<MyAnimatedImage> {
-  final vm = ZundaRoomView
+class MyAnimatedImage extends StatefulWidget{
+  const MyAnimatedImage({super.key});
 
   @override
+  State<MyAnimatedImage> createState()=>_MyAnimatedImageState();
+}
+
+class _MyAnimatedImageState extends State<MyAnimatedImage> {
+  @override
   Widget build(BuildContext context) {
-    final animevm = context.watch<ZundaRoomViewmodel>();
+    final vm = context.watch<ZundaRoomViewModel>();
+
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 300),
-      child: animevm.showFirst
-          ? Image.asset('assets/image1.png', key: const ValueKey(1))
-          : Image.asset('assets/image2.png', key: const ValueKey(2)),
-      ),
+      child: vm.nowImage,
     );
   }
 }
-*/
