@@ -70,8 +70,8 @@ class MyAnimatedImage extends StatefulWidget{
 class _MyAnimatedImageState extends State<MyAnimatedImage> {
 
   @override
-  void initState(){
-    super.initState();
+  void didChangeDependencies(){
+    super.didChangeDependencies();
     for(var i=1; i<33; i++) {
       precacheImage(AssetImage("images/ZUNDA/zundamon$i.png"), context);
     }
