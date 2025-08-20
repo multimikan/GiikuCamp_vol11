@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/sub_menu/open_menu_view.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/sub_menu/rename_menu_view.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/sub_menu/move_menu_view.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/sub_menu/delete_menu_view.dart';
@@ -54,6 +55,10 @@ class ContextMenuOverlay extends StatelessWidget { // メニュー内容
             child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                    if (file.statSync().type == FileSystemEntityType.file) ...[
+                      _buildButton(context, Icons.open_in_new, '開く', position, file),
+                      const SizedBox(width: 8),
+                    ],
                     _buildButton(context, Icons.edit, '名前変更', position, file),
                     const SizedBox(width: 8),
                     _buildButton(context, Icons.drive_file_move, '移動', position, file),
@@ -70,6 +75,9 @@ class ContextMenuOverlay extends StatelessWidget { // メニュー内容
                 onClose(); // クリックしたらメニューを閉じる
                 debugPrint('$tooltip tapped');
                 switch (tooltip) {
+                    case '開く':
+                        showOpenOverlay(context, position, file);
+                        break;
                     case '名前変更':
                         showRenameOverlay(context, position, file);
                         break;
