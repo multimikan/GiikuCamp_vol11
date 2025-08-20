@@ -9,6 +9,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
+import 'package:giiku_camp_vol11_flutter_app/main.dart';
 import 'package:path/path.dart' as p;
 
 
@@ -132,7 +133,7 @@ class ObjDatabaseStore extends ChangeNotifier{
     final type = ObjType.clock; //判定は後で実装
     final extention = p.extension(f.path);
 
-    final notAlreadyAddedPlacesMap = _getPlace();
+    final notAlreadyAddedPlacesMap = _getPlace(f);
     final x = notAlreadyAddedPlacesMap["x"];
     final y = notAlreadyAddedPlacesMap["y"];
 
@@ -158,13 +159,38 @@ class ObjDatabaseStore extends ChangeNotifier{
     return index != -1 ? true: false;
   }
 
-  Map<String,int> _getPlace(){ /* 床とか壁の判定はまだ未実装 */
+  Map<String,int> _getPlace(FileSystemEntity f){
     final double margin = 20; /* 座標の誤差 */
-    var x = Random().nextInt(721);
-    var y = Random().nextInt(721);
+
+    var x;
+    var y;
+    if(p.extension(f.path)==""){
+      x = _dirPlace()["x"];
+      y = _dirPlace()["y"];
+    }
+    else{
+      x = _filePlace()["x"];
+      y = _filePlace()["y"];
+    }
+
     for(var i = -margin; i<margin; i++){ // O(n*margin)のため動作が重いかも
       if(_isAddedPlaceFromObjects("x", x+i) || _isAddedPlaceFromObjects("y", y+i)) continue;
     }
+    return {"x":x,"y":y};
+  }
+
+  Map<String,int> _dirPlace(){
+    final intWW = (windowWidth-20/* ずんだもんのサイズ分 */).toInt();
+    final y = 100; 
+    final x = Random().nextInt(intWW)+10;
+    return {"x":x,"y":y};
+  }
+
+  Map<String,int> _filePlace(){
+    final intWW = (windowWidth-20).toInt();
+    final intWH = (windowHeight).toInt();
+    final y = Random().nextInt(intWH)+100; 
+    final x = Random().nextInt(intWW)+10;
     return {"x":x,"y":y};
   }
 }
