@@ -13,16 +13,16 @@ void main() async {
   final ByteData data = await rootBundle.load('images/zundamonnoie2.png');
   final ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
   final ui.FrameInfo frame = await codec.getNextFrame();
-  final double imageWidth = frame.image.width.toDouble();
-  final double imageHeight = frame.image.height.toDouble();
+  final double imageWidth = frame.image.width.toDouble()*0.4;
+  final double imageHeight = frame.image.height.toDouble()*0.4;
 
 
 
   if (Platform.isWindows|| Platform.isMacOS || Platform.isLinux){
     setWindowTitle('Image Sized Window');
     print(imageWidth);
-    //setWindowMinSize(Size(imageWidth, imageHeight));
-    setWindowMaxSize(Size(720, 720));
+    setWindowMaxSize(Size(imageWidth, imageHeight));
+    setWindowMinSize(Size(imageWidth, imageHeight));
   }
 
   runApp(const MyApp());
