@@ -153,8 +153,6 @@ class ObjDatabaseStore extends ChangeNotifier{
     return isAdded;
   }
 
-
-
   bool _isAleadyAddedObjectsList(String path){ /* 過去に読み込んだディレクトリ情報かを判定 */
     final index = _findObjectsIndexFromPath(path);
     return index != -1 ? true: false;
