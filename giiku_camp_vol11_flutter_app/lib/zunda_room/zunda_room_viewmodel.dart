@@ -24,7 +24,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
     Iterable<Image> imageIte = ImageIte();
     final image =imageIte.iterator;
 
-    Timer.periodic(Duration(milliseconds: 500), (_) {
+    Timer.periodic(Duration(milliseconds: 300), (_) {
       _showFirst = !_showFirst; //0.5sごとにshowFirstが切り替わる
       image.moveNext();
       nowImage = image.current;
@@ -37,7 +37,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
       case (Status.stop):
         return [Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(2))];
       case (Status.walk):
-        return [Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon2.png",key: const ValueKey(2))];
+        return [Image.asset("images/ZUNDA/zundamon1（大）.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon2（大）.png",key: const ValueKey(2))];
       case (Status.cry):
         return [Image.asset("images/ZUNDA/zundamon23.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon24.png",key: const ValueKey(2))];
       case (Status.bad):
