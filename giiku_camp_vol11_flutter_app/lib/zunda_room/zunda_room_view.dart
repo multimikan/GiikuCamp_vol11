@@ -7,6 +7,9 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store.dart';
+import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
+
+late ObjDatabaseStore store;
 
 class ZundaRoomView extends StatefulWidget {
   const ZundaRoomView({super.key});
@@ -16,7 +19,6 @@ class ZundaRoomView extends StatefulWidget {
 }
 
 class _ZundaRoomViewState extends State<ZundaRoomView> {
-  late ObjDatabaseStore store;
   bool loaded = false;
 
   @override
@@ -62,19 +64,15 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
             Positioned(
               left: (o.x).toDouble(),
               top: (o.y).toDouble(),
-              child: ObjIcon(obj: o),
+              child: ObjIcon(
+                obj: o,
+                onTap: () async {
+                  await store.changeTarget(o.path);
+                  print("変更完了");
+                  setState(() {});
+                }
+              ),
             ),
-          Positioned(
-            left: 30,
-            top: 30,
-            child: ElevatedButton(
-              onPressed: () async {
-                await store.fetchObjects();
-                setState(() {});
-              },
-              child: const Text("fetch"),
-            ),
-          ),
         ],
       ),
     );
@@ -83,7 +81,8 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
 
 class ObjIcon extends StatefulWidget {
   final Obj obj;
-  const ObjIcon({super.key, required this.obj});
+  final VoidCallback onTap;
+  const ObjIcon({super.key, required this.obj, required this.onTap});
 
   @override
   _ObjIconState createState() => _ObjIconState();
@@ -96,7 +95,9 @@ class _ObjIconState extends State<ObjIcon> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        print("変更開始");
+        widget.onTap();
         //showFileItemMenu
       },
       child: Column(
