@@ -18,7 +18,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
   bool _showFirst = true;
   bool get showFirst => _showFirst; //getter
   Status nowStatus = Status.walk;
-  Image nowImage = Image.asset("images/ZUNDA/zundamon1",key: const ValueKey(1));
+  Image nowImage = Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1));
 
   ZundaRoomViewModel(){
     Iterable<Image> imageIte = ImageIte();
@@ -35,21 +35,21 @@ class ZundaRoomViewModel extends ChangeNotifier{
   List<Image> getAnimationImages(){
     switch(nowStatus){
       case (Status.stop):
-        return [Image.asset("images/ZUNDA/zundamon1",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon1",key: const ValueKey(2))];
+        return [Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(2))];
       case (Status.walk):
-        return [Image.asset("images/ZUNDA/zundamon1",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon2",key: const ValueKey(2))];
+        return [Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon2.png",key: const ValueKey(2))];
       case (Status.cry):
-        return [Image.asset("images/ZUNDA/zundamon23",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon24",key: const ValueKey(2))];
+        return [Image.asset("images/ZUNDA/zundamon23.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon24.png",key: const ValueKey(2))];
       case (Status.bad):
-        return [Image.asset("images/ZUNDA/zundamon27",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon30",key: const ValueKey(2))];
+        return [Image.asset("images/ZUNDA/zundamon27.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon30.png",key: const ValueKey(2))];
       case (Status.surprize1):
-        return [Image.asset("images/ZUNDA/zundamon1",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon4",key: const ValueKey(2))];
+        return [Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon.png",key: const ValueKey(2))];
       case (Status.surprize2):
-        return [Image.asset("images/ZUNDA/zundamon1",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon12",key: const ValueKey(2))];
+        return [Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon12.png",key: const ValueKey(2))];
       case (Status.surprize3):
-        return [Image.asset("images/ZUNDA/zundamon1",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon21",key: const ValueKey(2))];
+        return [Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon21.png",key: const ValueKey(2))];
       case (Status.look):
-        return [Image.asset("images/ZUNDA/zundamon17",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon18",key: const ValueKey(2))];
+        return [Image.asset("images/ZUNDA/zundamon17.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon18.png",key: const ValueKey(2))];
     }
   }
 
