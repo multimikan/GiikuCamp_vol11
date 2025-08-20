@@ -71,7 +71,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
     yield* ImageIte(!i);
   }
 
-  Image resize(Widget w, int percent){
+  Widget resize(Widget w, int percent){
     final Image img;
     if(w is Image){
       img = w;
@@ -81,7 +81,13 @@ class ZundaRoomViewModel extends ChangeNotifier{
         height: (img.height??256)*percent/100,
       );
     }
-    throw Exception("イメージをリサイズできませんでした。");
+    else {
+      return SizedBox(
+        width: (256)*percent/100,
+        height: (256)*percent/100,
+        child: w,
+      );
+    }
   }
 
   Widget _changeImageWidgetWithNowAxis(Image img){
