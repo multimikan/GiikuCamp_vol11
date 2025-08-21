@@ -7,26 +7,24 @@ import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dar
 import 'package:provider/provider.dart';
 import 'package:window_size/window_size.dart';
 
-late final ByteData data;
-late final ui.Codec codec;
-late final ui.FrameInfo frame;
-late final double windowWidth;
-late final double windowHeight;
+class AppConfig {
+  static late double windowWidth;
+  static late double windowHeight;
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  data = await rootBundle.load('images/zundamonnoie2.png');
-  codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
-  frame = await codec.getNextFrame();
-  windowWidth = frame.image.width.toDouble()*0.4;
-  windowHeight = frame.image.height.toDouble()*0.4;
+  final ByteData data = await rootBundle.load('images/zundamonnoie2.png');
+  final ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+  final ui.FrameInfo frame = await codec.getNextFrame();
+  AppConfig.windowWidth = frame.image.width.toDouble()*0.4;
+  AppConfig.windowHeight = frame.image.height.toDouble()*0.4;
 
   if (Platform.isWindows|| Platform.isMacOS || Platform.isLinux){
     setWindowTitle('Image Sized Window');
-    print(windowWidth);
-    setWindowMaxSize(Size(windowWidth, windowHeight));
-    setWindowMinSize(Size(windowWidth, windowHeight));
+    setWindowMaxSize(Size(AppConfig.windowWidth, AppConfig.windowHeight));
+    setWindowMinSize(Size(AppConfig.windowWidth, AppConfig.windowHeight));
   }
 
   runApp(MultiProvider(

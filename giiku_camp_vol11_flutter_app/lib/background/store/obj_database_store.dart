@@ -180,15 +180,15 @@ class ObjDatabaseStore{
   }
 
   Map<String,int> _dirPlace(){
-    final intWW = (windowWidth-20/* ずんだもんのサイズ分 */).toInt();
+    final intWW = (AppConfig.windowWidth-20/* ずんだもんのサイズ分 */).toInt();
     final y = 300; 
     final x = Random().nextInt(intWW)+10;
     return {"x":x,"y":y};
   }
 
   Map<String,int> _filePlace(){
-    final intWW = (windowWidth-20).toInt();
-    final intWH = (windowHeight).toInt();
+    final intWW = (AppConfig.windowWidth-20).toInt();
+    final intWH = (AppConfig.windowHeight).toInt();
     final y = Random().nextInt(intWH)+100; 
     final x = Random().nextInt(intWW)+10;
     return {"x":x,"y":y};
