@@ -1,8 +1,40 @@
-import 'package:flutter/material.dart';
+import 'dart:io'; 
+import 'dart:ui' as ui;  
+import 'package:flutter/material.dart';                                  
+import 'package:flutter/services.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_view.dart';
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dart';
+import 'package:provider/provider.dart';
+import 'package:window_size/window_size.dart';
 
-void main() {
-  runApp(const MyApp());
+late final ByteData data;
+late final ui.Codec codec;
+late final ui.FrameInfo frame;
+late final double windowWidth;
+late final double windowHeight;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  data = await rootBundle.load('images/zundamonnoie2.png');
+  codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+  frame = await codec.getNextFrame();
+  windowWidth = frame.image.width.toDouble()*0.4;
+  windowHeight = frame.image.height.toDouble()*0.4;
+
+  if (Platform.isWindows|| Platform.isMacOS || Platform.isLinux){
+    setWindowTitle('Image Sized Window');
+    print(windowWidth);
+    setWindowMaxSize(Size(windowWidth, windowHeight));
+    setWindowMinSize(Size(windowWidth, windowHeight));
+  }
+
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_)=>ZundaRoomViewModel()),
+    ],
+    child: const MyApp(),
+    ));
 }
 
 class MyApp extends StatelessWidget {

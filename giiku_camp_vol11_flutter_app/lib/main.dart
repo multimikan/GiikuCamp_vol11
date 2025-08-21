@@ -3,6 +3,8 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';                                  
 import 'package:flutter/services.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_view.dart';
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dart';
+import 'package:provider/provider.dart';
 import 'package:window_size/window_size.dart';
 
 late final ByteData data;
@@ -20,8 +22,6 @@ void main() async {
   windowWidth = frame.image.width.toDouble()*0.4;
   windowHeight = frame.image.height.toDouble()*0.4;
 
-
-
   if (Platform.isWindows|| Platform.isMacOS || Platform.isLinux){
     setWindowTitle('Image Sized Window');
     print(windowWidth);
@@ -29,7 +29,12 @@ void main() async {
     setWindowMinSize(Size(windowWidth, windowHeight));
   }
 
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_)=>ZundaRoomViewModel()),
+    ],
+    child: const MyApp(),
+    ));
 }
 
 class MyApp extends StatelessWidget {

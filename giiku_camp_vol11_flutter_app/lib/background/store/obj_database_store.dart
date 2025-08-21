@@ -10,6 +10,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
 import 'package:giiku_camp_vol11_flutter_app/main.dart';
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dart';
 import 'package:path/path.dart' as p;
 
 
@@ -23,23 +24,22 @@ class Obj{ /* Model */
   String name;
   ObjType type;
   String extention;
-  int x;
-  int y;
-  Obj(this.path, this.name, this.type, this.extention, this.x, this.y);
+  Location location;
+  Obj(this.path, this.name, this.type, this.extention, this.location);
 
   dynamic field(String key) { /* 構造体の要素を文字列を受け取って変換し返す */
     switch(key){
       case "x":
-        return x;
+        return location.x;
       case "y":
-        return y;
+        return location.y;
     }
   }
 
 }
 
 
-class ObjDatabaseStore extends ChangeNotifier{
+class ObjDatabaseStore{
   static List<Obj> objects = [];
   late DirDatabaseRepository repo;
 
@@ -66,10 +66,9 @@ class ObjDatabaseStore extends ChangeNotifier{
     _convertDirListToObjList(repo.dirList); // 1 & 2
     for(var i = 0; i< objects.length; i++){
       print(objects[i].path);
-      print(objects[i].x);
-      print(objects[i].y);
+      print(objects[i].location.x);
+      print(objects[i].location.y);
     }
-    notifyListeners();
   }
 
   Future<void> changeTarget(String targetPass) async { /* 引数の型は扱いやすいように変えて良い */
@@ -86,32 +85,6 @@ class ObjDatabaseStore extends ChangeNotifier{
   *現状ではパスのみでの判定です
   */
 
-  void _updateObj(Obj obj, [String? name, ObjType? type, String? extension, int? x, int? y]){ /*既存のオブジェクトを更新*/
-    final index = _findObjectsIndexFromPath(obj.path);
-
-    name = name ?? obj.name;
-    type = type ?? obj.type;
-    extension = extension ?? obj.extention;
-    x = x ?? obj.x;
-    y = y ?? obj.y;
-
-    final instance = Obj(obj.path, name, type, extension, x, y);
-    objects[index] = instance;
-    notifyListeners();
-  }
-
-  void _appendObj(FileSystemEntity f){ /* 新規オブジェクトを追加 */
-    final instance = _convertObjFromFileSystemEntity(f);
-    objects.add(instance);
-    notifyListeners();
-  }
-
-  void _deleteObj(Obj obj){ /* オブジェクトリストからobjを削除 */
-    final index = _findObjectsIndexFromPath(obj.path);
-    objects.removeAt(index);
-    notifyListeners();
-  }
-
   void _convertDirListToObjList(List<FileSystemEntity> dirList){ /* OSから取得したdirリストをobjリストに変換 */
     for(var f in dirList){
       if(!_isAleadyAddedObjectsList(f.path)){
@@ -122,10 +95,6 @@ class ObjDatabaseStore extends ChangeNotifier{
         _updateObj(objects[index]);
       }
     }
-    /*for(var obj in objects){//objectリストを全探索
-      final index = dirList.indexWhere((d) => d.path == obj.path); //dirリストにobjパスがあるか確認
-      if(index == -1) _deleteObj(obj); //見つからなかったら削除 
-    }*/
     final toDelete = <Obj>[]; // 削除対象集め
     for (var obj in objects) {
       final index = dirList.indexWhere((d) => d.path == obj.path);
@@ -134,6 +103,29 @@ class ObjDatabaseStore extends ChangeNotifier{
     for (var obj in toDelete) {// 削除フェーズ
       _deleteObj(obj);
     }
+  }
+
+  void _updateObj(Obj obj, [String? name, ObjType? type, String? extension, int? x, int? y]){ /*既存のオブジェクトを更新*/
+    final index = _findObjectsIndexFromPath(obj.path);
+
+    name = name ?? obj.name;
+    type = type ?? obj.type;
+    extension = extension ?? obj.extention;
+    x = x ?? obj.location.x;
+    y = y ?? obj.location.y;
+
+    final instance = Obj(obj.path, name, type, extension, Location(x,y));
+    objects[index] = instance;
+  }
+
+  void _appendObj(FileSystemEntity f){ /* 新規オブジェクトを追加 */
+    final instance = _convertObjFromFileSystemEntity(f);
+    objects.add(instance);
+  }
+
+  void _deleteObj(Obj obj){ /* オブジェクトリストからobjを削除 */
+    final index = _findObjectsIndexFromPath(obj.path);
+    objects.removeAt(index);
   }
 
   Obj _convertObjFromFileSystemEntity(FileSystemEntity f){ /* システムエンティティをオブジェ型に変換 */
@@ -145,7 +137,7 @@ class ObjDatabaseStore extends ChangeNotifier{
     final x = notAlreadyAddedPlacesMap["x"];
     final y = notAlreadyAddedPlacesMap["y"];
 
-    final instance = Obj(f.path,name,type,extention,x!,y!);
+    final instance = Obj(f.path,name,type,extention,Location(x!,y!));
     return instance;
   }
 
@@ -246,8 +238,8 @@ class _TestViewState extends State<TestView>{
               children: [
                 for(var o in ObjDatabaseStore.objects)
                   Positioned(
-                    left: (o.x).toDouble(),
-                    top: (o.y).toDouble(),
+                    left: (o.location.x).toDouble(),
+                    top: (o.location.y).toDouble(),
                     child: Container(
                       decoration: BoxDecoration(),
                       child: Text(o.name),
