@@ -25,6 +25,7 @@ void main() async {
     setWindowTitle('Image Sized Window');
     setWindowMaxSize(Size(AppConfig.windowWidth, AppConfig.windowHeight));
     setWindowMinSize(Size(AppConfig.windowWidth, AppConfig.windowHeight));
+    setWindowFrame(Rect.fromLTWH(100, 100, AppConfig.windowWidth, AppConfig.windowHeight));
   }
 
   runApp(MultiProvider(
