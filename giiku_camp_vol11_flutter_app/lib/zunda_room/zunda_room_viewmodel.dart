@@ -48,7 +48,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
   bool _showFirst = true;
   bool get showFirst => _showFirst; //getter
 
-  late Zundamon zundamon;
+  static late Zundamon zundamon;
 
   ZundaRoomViewModel(){
     Iterable<Widget> imageIte = ImageIte();
@@ -139,61 +139,36 @@ class ZundaRoomViewModel extends ChangeNotifier{
 class ZundaMoveController extends ChangeNotifier{
   static List<Job> jobList = [];
   Location? location;
-  Job? job;
-  bool moveStackIsNotEmpty = false;
-  List<Location> moveStack = [];
   Zundamon zundamon;
+  bool isMoveing = false;
+
+  Completer<void>? _completer;
   
   ZundaMoveController(this.zundamon);
 
-  void fetchJobList(){
-    if(jobList.isNotEmpty){
-      final job = _popJobList();
-      _pushMVStackFromJob(job);
-      moveStackIsNotEmpty = true;
-    }
-    else{
-      moveStackIsNotEmpty = false;
-    }
-  }
-
   void move(){
-    fetchJobList();
-    if(moveStackIsNotEmpty){
-      Location destination;
-      destination = _popMVStack();
-      _moveStartToMiddle(destination);
+    if(!isMoveing) return;
+    if(jobList.isNotEmpty){
+      isMoveing = true;
+      Job job = _popJobList();
+      _setmove(job.middle);
+      //middleまで待つ
       //time.sleep()
-      _moveMiddleToGoal(destination);
+      _setmove(job.goal);
       //time.sleep()
       move();
     }
     else{
       print("全ての動作が完了しました");
+      isMoveing = false;
     }
   }
-
-  void move(){
-    if(jobList.isNotEmpty){
-      Job job = _popJobList();
-      _moveStartToMiddle(job.middle);
-      //middleまで待つ
-      //time.sleep()
-      _moveMiddleToGoal(job.goal);
-      //time.sleep()
-      move();
+  
+  void completeIfNeeded() { /* コンプリタが呼ばれたら */
+    if (_completer != null && !_completer!.isCompleted) {
+      _completer!.complete();
+      _completer = null;
     }
-  }
-
-  void _pushMVStackFromJob(Job job){
-    moveStack.add(job.goal);
-    moveStack.add(job.middle);
-  }
-
-  Location _popMVStack(){
-    final tmp = moveStack.last;
-    moveStack.removeLast();
-    return tmp;
   }
 
   Job _popJobList(){
@@ -202,41 +177,9 @@ class ZundaMoveController extends ChangeNotifier{
     return tmp;
   }
 
-  void _moveStartToMiddle(Location destination){
+  Future<void> _setmove(Location destination){
     location = destination;
-  }
-
-  void _moveMiddleToGoal(Location destination){
     notifyListeners();
-    location = destination;
-  }
-}
-
-class MyAnimatedImage extends StatefulWidget{
-  const MyAnimatedImage({super.key});
-
-  @override
-  State<MyAnimatedImage> createState()=>_MyAnimatedImageState();
-}
-
-class _MyAnimatedImageState extends State<MyAnimatedImage> {
-
-  @override
-  void didChangeDependencies(){ /* キャッシュで先読み込み */
-    super.didChangeDependencies();
-    for(var i=1; i<33; i++) {
-      precacheImage(AssetImage("images/ZUNDA/zundamon$i.png"), context);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final vm = context.watch<ZundaRoomViewModel>();
-    final skin = vm.zundamon.skin;
-
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 0),
-      child: vm.resize(skin,45),
-    );
+    return _completer!.future;
   }
 }
