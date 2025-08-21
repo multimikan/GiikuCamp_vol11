@@ -3,6 +3,8 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store.dart';
+import 'package:giiku_camp_vol11_flutter_app/main.dart';
+import 'package:giiku_camp_vol11_flutter_app/main_dev.dart';
 import 'package:provider/provider.dart';
 
 enum Status{
@@ -22,10 +24,30 @@ enum Axis{
   //bottom
 }
 
+enum RoomDirection{
+  left,
+  right,
+  center
+}
+
 class ImageHelper{
   Image image;
-  int floor_x;
-  int floor_y;
+  Map<String,int> floor_x; //[min:OO,maxOO]
+  Map<String,int> floor_y;
+  ImageHelper(this.image,this.floor_x,this.floor_y);
+}
+
+class HomeImages{
+  final home1 = {
+    RoomDirection.left: ImageHelper(Image.asset("name"),
+  {"min":0,"max":(AppConfig.windowWidth*0.8).toInt()},
+  {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
+  
+    RoomDirection.right: ImageHelper(Image.asset("name"),
+  {"min":0,"max":(AppConfig.windowWidth*0.8).toInt()},
+  {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
+  
+  };
 }
 
 class Location{
@@ -53,6 +75,7 @@ class Zundamon{
 class ZundaRoomViewModel extends ChangeNotifier{
   bool _showFirst = true;
   bool get showFirst => _showFirst; //getter
+  ImageHelper home = ImageHelper(Image.asset(""), floor_x, floor_y)
 
   static late Zundamon zundamon;
 
