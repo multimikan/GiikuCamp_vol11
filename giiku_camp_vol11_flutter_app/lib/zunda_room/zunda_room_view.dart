@@ -87,6 +87,11 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
           LayoutBuilder(builder: (context,constraints){
             print({"constraints.maxWidth:${constraints.maxWidth}"});
             print("constraints.maxHeight:${constraints.maxHeight}");
+            double screenWidth = MediaQuery.of(context).size.width;
+double screenHeight = MediaQuery.of(context).size.height;
+
+print("MediaQuery width: $screenWidth");
+print("MediaQuery height: $screenHeight");
             print("windowsWidth:${AppConfig.windowWidth}");
             print("windowsHidth:${AppConfig.windowHeight}");
             return Container();
