@@ -32,7 +32,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
     Iterable<Widget> imageIte = ImageIte();
     final image =imageIte.iterator;
 
-    Timer.periodic(Duration(milliseconds: 300), (_) {
+    Timer.periodic(Duration(milliseconds: 500), (_) {
       _showFirst = !_showFirst; //0.5sごとにshowFirstが切り替わる
       image.moveNext();
       nowImage = image.current;
@@ -47,17 +47,17 @@ class ZundaRoomViewModel extends ChangeNotifier{
       case (Status.stop):
         tmp = [Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(2))];
       case (Status.walk):
-        tmp = [Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon2.png",key: const ValueKey(2))];
+        tmp = [Image.asset("images/ZUNDA/zundamon18.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon2.png",key: const ValueKey(2))];
       case (Status.cry):
         tmp = [Image.asset("images/ZUNDA/zundamon23.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon24.png",key: const ValueKey(2))];
       case (Status.bad):
         tmp = [Image.asset("images/ZUNDA/zundamon27.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon30.png",key: const ValueKey(2))];
       case (Status.surprize1):
-        tmp = [Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon.png",key: const ValueKey(2))];
+        tmp = [Image.asset("images/ZUNDA/zundamon18.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon4.png",key: const ValueKey(2))];
       case (Status.surprize2):
-        tmp = [Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon12.png",key: const ValueKey(2))];
+        tmp = [Image.asset("images/ZUNDA/zundamon18.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon12.png",key: const ValueKey(2))];
       case (Status.surprize3):
-        tmp = [Image.asset("images/ZUNDA/zundamon1.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon21.png",key: const ValueKey(2))];
+        tmp = [Image.asset("images/ZUNDA/zundamon18.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon21.png",key: const ValueKey(2))];
       case (Status.look):
         tmp = [Image.asset("images/ZUNDA/zundamon17.png",key: const ValueKey(1)),Image.asset("images/ZUNDA/zundamon18.png",key: const ValueKey(2))];
     }
