@@ -22,6 +22,12 @@ enum Axis{
   //bottom
 }
 
+class ImageHelper{
+  Image image;
+  int floor_x;
+  int floor_y;
+}
+
 class Location{
   int x;
   int y;
