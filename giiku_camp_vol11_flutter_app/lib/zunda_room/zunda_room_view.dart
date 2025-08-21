@@ -77,8 +77,8 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
               ),
             ),
             Positioned(
-              left:AppConfig.windowWidth,
-              top: AppConfig.windowHeight,
+              left:AppConfig.windowWidth-10,
+              top: AppConfig.windowHeight-10,
               child: ZundamonWidget()
             ),
         ],
