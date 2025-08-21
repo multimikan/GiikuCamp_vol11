@@ -102,8 +102,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
   final homeImages = HomeImages();
   static var home = HomeImages().home1[RoomDirection.left];
   late final ZundaMoveController controller;
-
-  static late Zundamon zundamon;
+  static Zundamon zundamon = Zundamon(Location(0,0), Image.asset("images/ZUNDA/zundamon1.png"), Axis.left, Status.stop);
 
   ZundaRoomViewModel(){
     Iterable<Widget> imageIte = ImageIte();
