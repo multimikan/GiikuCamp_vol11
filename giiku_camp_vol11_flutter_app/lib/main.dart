@@ -15,7 +15,7 @@ class AppConfig {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final ByteData data = await rootBundle.load('images/brick(L).png');
+  final ByteData data = await rootBundle.load('images/brick(R).png');
   final ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
   final ui.FrameInfo frame = await codec.getNextFrame();
   AppConfig.windowWidth = frame.image.width.toDouble()*0.4;
