@@ -5,27 +5,107 @@
 */
 
 import 'package:flutter/material.dart';
+import 'dart:math';
+import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store.dart';
+import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
 
-class ZundaRoomView extends StatelessWidget{
+late ObjDatabaseStore store;
+
+class ZundaRoomView extends StatefulWidget {
   const ZundaRoomView({super.key});
 
   @override
+  _ZundaRoomViewState createState() => _ZundaRoomViewState();
+}
+
+class _ZundaRoomViewState extends State<ZundaRoomView> {
+  bool loaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadObjects();
+  }
+
+  Future<void> _loadObjects() async {
+    store = await ObjDatabaseStore.init();
+    await store.fetchObjects();
+    setState(() {
+      loaded = true;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (!loaded) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+    
     return Scaffold(
       backgroundColor: Colors.transparent,
-
-      body: SizedBox.expand(
-        child: Image.asset(
-          'images/zundamonnoie2.png',
-        fit: BoxFit.fill,
-        ),
-      )
+      body: Stack(
+        children: [
+          SizedBox.expand(
+            child: Image.asset(
+              'images/zundamonnoie2.png',
+            fit: BoxFit.fill,
+            ),
+          ),
+      // もともとこの位置に書いてあったもの、一応残しておきます。
       // appBar: AppBar(
       //     backgroundColor: Colors.black,
       // ),
       // body: Center(
       //     child: Container()
       // ),
+          for(var o in ObjDatabaseStore.objects)
+            Positioned(
+              left: (o.x).toDouble(),
+              top: (o.y).toDouble(),
+              child: ObjIcon(
+                obj: o,
+                onTap: () async {
+                  await store.changeTarget(o.path);
+                  print("変更完了");
+                  setState(() {});
+                }
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class ObjIcon extends StatefulWidget {
+  final Obj obj;
+  final VoidCallback onTap;
+  const ObjIcon({super.key, required this.obj, required this.onTap});
+
+  @override
+  _ObjIconState createState() => _ObjIconState();
+}
+
+class _ObjIconState extends State<ObjIcon> {
+  void initState() {
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () async {
+        print("変更開始");
+        widget.onTap();
+        //showFileItemMenu
+      },
+      child: Column(
+        children: [
+          Icon(size: 20, widget.obj.type == ObjType.door ? Icons.folder : Icons.insert_drive_file, ),
+          Text(widget.obj.name),
+        ],
+      ),
     );
   }
 }
