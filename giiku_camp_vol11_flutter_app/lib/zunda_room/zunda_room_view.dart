@@ -84,6 +84,12 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
             child: SizedBox(child: ZundamonWidget(),),
             onEnd:(){ vm.controller.completer!.complete();},
           ),
+          LayoutBuilder(builder: (context,constraints){
+            print({"constraints.maxWidth:${constraints.maxWidth}"});
+            print("constraints.maxHeight:${constraints.maxHeight}");
+            print("windowsWidth:${AppConfig.windowWidth}");
+            print("windowsHidth:${AppConfig.windowHeight}");
+          })
         ],
       ),
     );
