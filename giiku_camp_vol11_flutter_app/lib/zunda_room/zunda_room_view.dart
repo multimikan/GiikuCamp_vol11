@@ -5,6 +5,7 @@
 */
 
 import 'package:flutter/material.dart';
+import 'package:giiku_camp_vol11_flutter_app/main_dev.dart';
 import 'dart:math';
 import 'package:provider/provider.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store.dart';
@@ -74,6 +75,11 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                   setState(() {});
                 }
               ),
+            ),
+            Positioned(
+              left:windowWidth,
+              top: windowHeight,
+              child: ZundamonWidget()
             ),
         ],
       ),
