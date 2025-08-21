@@ -18,14 +18,14 @@ void main() async {
   final ByteData data = await rootBundle.load('images/home1(R).png');
   final ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
   final ui.FrameInfo frame = await codec.getNextFrame();
-  AppConfig.windowWidth = frame.image.width.toDouble()*0.4;
-  AppConfig.windowHeight = frame.image.height.toDouble()*0.4;
+  double windowWidth = frame.image.width.toDouble()*0.4;
+  double windowHeight = frame.image.height.toDouble()*0.4;
 
   if (Platform.isWindows|| Platform.isMacOS || Platform.isLinux){
     setWindowTitle('Image Sized Window');
-    setWindowMaxSize(Size(AppConfig.windowWidth, AppConfig.windowHeight));
-    setWindowMinSize(Size(AppConfig.windowWidth, AppConfig.windowHeight));
-    setWindowFrame(Rect.fromLTWH(100, 100, AppConfig.windowWidth, AppConfig.windowHeight));
+    setWindowMaxSize(Size(windowWidth, windowHeight));
+    setWindowMinSize(Size(windowWidth, windowHeight));
+    setWindowFrame(Rect.fromLTWH(100, 100, windowWidth, windowHeight));
   }
 
   runApp(MultiProvider(
@@ -42,6 +42,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    AppConfig.windowWidth = screenWidth;
+    AppConfig.windowHeight = screenHeight;
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
