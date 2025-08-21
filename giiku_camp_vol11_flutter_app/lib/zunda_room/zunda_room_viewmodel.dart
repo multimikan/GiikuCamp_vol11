@@ -32,21 +32,45 @@ enum RoomDirection{
 
 class ImageHelper{
   Image image;
+  int door_Y;
   Map<String,int> floor_x; //[min:OO,maxOO]
   Map<String,int> floor_y;
-  ImageHelper(this.image,this.floor_x,this.floor_y);
+  ImageHelper(this.image,this.door_Y,this.floor_x,this.floor_y);
 }
 
 class HomeImages{
   final home1 = {
-    RoomDirection.left: ImageHelper(Image.asset("name"),
+    RoomDirection.left: ImageHelper(Image.asset("images/ZUNDA/home1(L).png",fit: BoxFit.fill,),
+    (AppConfig.windowHeight*0.4).toInt(),
   {"min":0,"max":(AppConfig.windowWidth*0.8).toInt()},
   {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
-  
-    RoomDirection.right: ImageHelper(Image.asset("name"),
+
+    RoomDirection.right: ImageHelper(Image.asset("images/ZUNDA/home1(R).png",fit: BoxFit.fill,),
+    (AppConfig.windowHeight*0.4).toInt(),
+  {"min":(AppConfig.windowWidth*0.2).toInt(),"max":(AppConfig.windowWidth*0.8).toInt()},
+  {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
+
+  RoomDirection.center: ImageHelper(Image.asset("images/ZUNDA/home1(C).png",fit: BoxFit.fill,),
+    (AppConfig.windowHeight*0.4).toInt(),
+  {"min":(AppConfig.windowWidth).toInt(),"max":(AppConfig.windowWidth*0.8).toInt()},
+  {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
+  };
+
+  final home2 = {
+    RoomDirection.left: ImageHelper(Image.asset("images/ZUNDA/home2(L).png",fit: BoxFit.fill,),
+    (AppConfig.windowHeight*0.4).toInt(),
   {"min":0,"max":(AppConfig.windowWidth*0.8).toInt()},
   {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
-  
+
+    RoomDirection.right: ImageHelper(Image.asset("images/ZUNDA/home2(R).png",fit: BoxFit.fill,),
+    (AppConfig.windowHeight*0.4).toInt(),
+  {"min":(AppConfig.windowWidth*0.2).toInt(),"max":(AppConfig.windowWidth*0.8).toInt()},
+  {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
+
+  RoomDirection.center: ImageHelper(Image.asset("images/ZUNDA/home2(C).png",fit: BoxFit.fill,),
+    (AppConfig.windowHeight*0.4).toInt(),
+  {"min":(AppConfig.windowWidth).toInt(),"max":(AppConfig.windowWidth*0.8).toInt()},
+  {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
   };
 }
 
@@ -75,7 +99,9 @@ class Zundamon{
 class ZundaRoomViewModel extends ChangeNotifier{
   bool _showFirst = true;
   bool get showFirst => _showFirst; //getter
-  ImageHelper home = ImageHelper(Image.asset(""), floor_x, floor_y)
+  final homeImages = HomeImages();
+  static var home = HomeImages().home1[RoomDirection.left];
+  late final ZundaMoveController controller;
 
   static late Zundamon zundamon;
 
@@ -84,6 +110,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
     final image =imageIte.iterator;
     image.moveNext();
     zundamon = Zundamon(Location(0,0), image.current, Axis.left, Status.stop);
+    controller = ZundaMoveController(zundamon);
 
     Timer.periodic(Duration(milliseconds: 500), (_) {
       _showFirst = !_showFirst; //0.5sごとにshowFirstが切り替わる
@@ -171,9 +198,11 @@ class ZundaMoveController extends ChangeNotifier{
   Zundamon zundamon;
   bool isMoveing = false;
 
-  Completer<void>? _completer;
+  Completer<void>? completer;
   
-  ZundaMoveController(this.zundamon);
+  ZundaMoveController(this.zundamon){
+    location = Location(zundamon.location.x, zundamon.location.y);
+  }
 
   void move(){
     if(!isMoveing) return;
@@ -194,9 +223,9 @@ class ZundaMoveController extends ChangeNotifier{
   }
   
   void completeIfNeeded() { /* コンプリタが呼ばれたら */
-    if (_completer != null && !_completer!.isCompleted) {
-      _completer!.complete();
-      _completer = null;
+    if (completer != null && !completer!.isCompleted) {
+      completer!.complete();
+      completer = null;
     }
   }
 
@@ -209,6 +238,6 @@ class ZundaMoveController extends ChangeNotifier{
   Future<void> _setmove(Location destination){
     location = destination;
     notifyListeners();
-    return _completer!.future;
+    return completer!.future;
   }
 }

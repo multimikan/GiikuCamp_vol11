@@ -23,7 +23,6 @@ class ZundaRoomView extends StatefulWidget {
 
 class _ZundaRoomViewState extends State<ZundaRoomView> {
   bool loaded = false;
-  Image home = Image.asset("images/brick(R)1.png",fit: BoxFit.fill,);
 
   @override
   void initState() {
@@ -41,6 +40,10 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
 
   @override
   Widget build(BuildContext context) {
+  final vm = context.watch<ZundaRoomViewModel>();
+  final home = ZundaRoomViewModel.home!.image;
+  final location = vm.controller.location??Location(0,0);
+
     if (!loaded) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
@@ -52,7 +55,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
       body: Stack(
         children: [
           SizedBox.expand(
-            child: home
+            child: home, 
           ),
       // もともとこの位置に書いてあったもの、一応残しておきます。
       // appBar: AppBar(
@@ -74,11 +77,13 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                 }
               ),
             ),
-            Positioned(
-              left:AppConfig.windowWidth-10,
-              top: AppConfig.windowHeight-10,
-              child: ZundamonWidget()
-            ),
+          AnimatedPositioned(
+            duration: Duration(seconds: 2),
+            left:location.x.toDouble(),
+            top: location.y.toDouble(),
+            child: SizedBox(child: ZundamonWidget(),),
+            onEnd:(){ vm.controller.completer!.complete();},
+          ),
         ],
       ),
     );
