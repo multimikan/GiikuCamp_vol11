@@ -25,8 +25,8 @@ void main() async {
   if (Platform.isWindows|| Platform.isMacOS || Platform.isLinux){
     setWindowTitle('Image Sized Window');
     print(windowWidth);
-    setWindowMaxSize(Size(720,720));
-    setWindowMinSize(Size(720,720));
+    setWindowMaxSize(Size(windowWidth, windowHeight));
+    setWindowMinSize(Size(windowWidth, windowHeight));
   }
 
   runApp(MultiProvider(

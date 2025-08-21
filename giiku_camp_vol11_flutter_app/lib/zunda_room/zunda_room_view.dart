@@ -23,6 +23,7 @@ class ZundaRoomView extends StatefulWidget {
 
 class _ZundaRoomViewState extends State<ZundaRoomView> {
   bool loaded = false;
+  Image home = Image.asset("images/brick(R)1.png",fit: BoxFit.fill,);
 
   @override
   void initState() {
@@ -51,10 +52,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
       body: Stack(
         children: [
           SizedBox.expand(
-            child: Image.asset(
-              'images/zundamonnoie2.png',
-            fit: BoxFit.fill,
-            ),
+            child: home
           ),
       // もともとこの位置に書いてあったもの、一応残しておきます。
       // appBar: AppBar(
