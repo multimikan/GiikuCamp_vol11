@@ -108,7 +108,6 @@ class ZundaRoomViewModel extends ChangeNotifier{
     Iterable<Widget> imageIte = ImageIte();
     final image =imageIte.iterator;
     image.moveNext();
-    zundamon = Zundamon(Location(0,0), image.current, Axis.left, Status.stop);
     controller = ZundaMoveController(zundamon);
 
     Timer.periodic(Duration(milliseconds: 500), (_) {
