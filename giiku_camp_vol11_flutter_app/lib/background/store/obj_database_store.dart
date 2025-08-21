@@ -126,31 +126,6 @@ class ObjDatabaseStore{
   void _deleteObj(Obj obj){ /* オブジェクトリストからobjを削除 */
     final index = _findObjectsIndexFromPath(obj.path);
     objects.removeAt(index);
-    notifyListeners();
-  }
-
-  void _convertDirListToObjList(List<FileSystemEntity> dirList){ /* OSから取得したdirリストをobjリストに変換 */
-    for(var f in dirList){
-      if(!_isAleadyAddedObjectsList(f.path)){
-        _appendObj(f);
-        } //過去に登録したことがないファイルは登録
-      else{
-        final index = _findObjectsIndexFromPath(f.path);
-        _updateObj(objects[index]);
-      }
-    }
-    /*for(var obj in objects){//objectリストを全探索
-      final index = dirList.indexWhere((d) => d.path == obj.path); //dirリストにobjパスがあるか確認
-      if(index == -1) _deleteObj(obj); //見つからなかったら削除 
-    }*/
-    final toDelete = <Obj>[]; // 削除対象集め
-    for (var obj in objects) {
-      final index = dirList.indexWhere((d) => d.path == obj.path);
-      if (index == -1) toDelete.add(obj);
-    }
-    for (var obj in toDelete) {// 削除フェーズ
-      _deleteObj(obj);
-    }
   }
 
   Obj _convertObjFromFileSystemEntity(FileSystemEntity f){ /* システムエンティティをオブジェ型に変換 */

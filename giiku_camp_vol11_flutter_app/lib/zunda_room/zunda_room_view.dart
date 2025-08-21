@@ -6,8 +6,10 @@
 
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'package:provider/provider.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dart';
 
 late ObjDatabaseStore store;
 
@@ -62,8 +64,8 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
       // ),
           for(var o in ObjDatabaseStore.objects)
             Positioned(
-              left: (o.x).toDouble(),
-              top: (o.y).toDouble(),
+              left: (o.location.x).toDouble(),
+              top: (o.location.y).toDouble(),
               child: ObjIcon(
                 obj: o,
                 onTap: () async {
@@ -106,6 +108,36 @@ class _ObjIconState extends State<ObjIcon> {
           Text(widget.obj.name),
         ],
       ),
+    );
+  }
+}
+
+
+class ZundamonWidget extends StatefulWidget{
+  const ZundamonWidget({super.key});
+
+  @override
+  State<ZundamonWidget> createState()=>_ZundamonWidgetState();
+}
+
+class _ZundamonWidgetState extends State<ZundamonWidget> {
+
+  @override
+  void didChangeDependencies(){ /* キャッシュで先読み込み */
+    super.didChangeDependencies();
+    for(var i=1; i<33; i++) {
+      precacheImage(AssetImage("images/ZUNDA/zundamon$i.png"), context);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final vm = context.watch<ZundaRoomViewModel>();
+    final skin = ZundaRoomViewModel.zundamon.skin;
+
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 0),
+      child: vm.resize(skin,45),
     );
   }
 }
