@@ -19,6 +19,7 @@ import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dar
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/file_handling_menu.dart';
 
 late ObjDatabaseStore store;
+int currentRoomIndex = 0;
 
 class ZundaRoomView extends StatefulWidget {
   const ZundaRoomView({super.key});
@@ -29,7 +30,6 @@ class ZundaRoomView extends StatefulWidget {
 
 class _ZundaRoomViewState extends State<ZundaRoomView> {
   bool loaded = false;
-  int currentRoomIndex = 0;
 
   @override
   void initState() {
@@ -66,6 +66,12 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   final home = ZundaRoomViewModel.home!.image;
   final location = vm.controller.location??Location(0,0);
 
+  void upd() {
+    currentRoomIndex = 0;
+    vm.fetchRoomDirs();
+    setState(() {});
+  }
+
   if(ZundaMoveController.jobList.isNotEmpty) vm.controller.move(ZundaRoomViewModel.zundamon.have!);
 
   if (ZundaRoomViewModel.rooms.isEmpty) {
@@ -79,9 +85,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
               icon: const Icon(Icons.arrow_downward, size: 32),
               onPressed: () async {
                 await store.changeTarget(p.dirname(DirDatabaseRepository.target.path));
-                currentRoomIndex = 0;
-                vm.fetchRoomDirs();
-                setState(() {});
+                upd();
               },
             ),
           ],
@@ -119,14 +123,13 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
               child: ObjIcon(
                 obj: o,
                 onTap: () async {
-                  showFileItemMenu(context, o);
+                  showFileItemMenu(context, o, upd);
+                  print(o.path);
                 },
                 onDoubleTap: () async {
                   await store.changeTarget(o.path);
-                  currentRoomIndex = 0;
-                  vm.fetchRoomDirs();
-                  print("変更完了");
-                  setState(() {});
+                  upd();
+                  print(o.path);
                 },
               ),
             ),
@@ -137,7 +140,8 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
               child: ObjIcon(
                 obj: o,
                 onTap: () async {
-                  showFileItemMenu(context, o);
+                  showFileItemMenu(context, o, upd);
+                  print(o.path);
                 },
                 onDoubleTap: () {},
               ),
@@ -169,10 +173,10 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
           ),
 
           LayoutBuilder(builder: (context,constraints){
-            print({"constraints.maxWidth:${constraints.maxWidth}"});
+            /*print({"constraints.maxWidth:${constraints.maxWidth}"});
             print("constraints.maxHeight:${constraints.maxHeight}");
             print("LWidth:${location.x}");
-            print("LHidth:${location.y}");
+            print("LHidth:${location.y}");*/
             return Container();
           }),
           Align(
@@ -208,6 +212,14 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                   style: TextStyle(fontSize: 12),
                 ),
               ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomLeft, // 左下
+            child: Image.asset(
+              "images/ITEM/trash.png",
+              width: 40,
+              height: 40,
             ),
           ),
         ],

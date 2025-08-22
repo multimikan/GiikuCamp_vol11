@@ -50,7 +50,7 @@ class DirHandler extends ChangeNotifier{
     
     if(Platform.isWindows) {trushPath = _getWinTrush();}
     else {trushPath = "${Platform.environment["HOME"]}/.Trush";}
-
+    print(trushPath);
     await move(f, trushPath);
 
     await store.fetchObjects();

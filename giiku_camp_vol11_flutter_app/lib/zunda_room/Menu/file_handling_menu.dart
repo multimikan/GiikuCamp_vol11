@@ -9,7 +9,7 @@ import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dart';
 import 'package:path/path.dart' as p;
 
-void showFileItemMenu(BuildContext context, Obj obj) {
+void showFileItemMenu(BuildContext context, Obj obj, void Function() upd) {
     final overlay = Overlay.of(context); // ボタン用オーバーレイ
     OverlayEntry? entry;
     entry = OverlayEntry(
@@ -30,7 +30,8 @@ void showFileItemMenu(BuildContext context, Obj obj) {
                         child: FractionalTranslation(
                             translation: const Offset(-0.5, -0.5),
                             child: ContextMenuOverlay(
-                                obj: obj, 
+                                obj: obj,
+                                upd: upd,
                                 onClose: () {
                                     entry!.remove();
                                 },
@@ -46,11 +47,13 @@ void showFileItemMenu(BuildContext context, Obj obj) {
 
 class ContextMenuOverlay extends StatelessWidget { // メニュー内容
     final Obj obj;
+    final VoidCallback upd;
     final VoidCallback onClose;
     const ContextMenuOverlay({
       super.key,
       required this.onClose,
       required this.obj,
+      required this.upd,
     });
     @override
     Widget build(BuildContext context) {
@@ -60,36 +63,36 @@ class ContextMenuOverlay extends StatelessWidget { // メニュー内容
                 mainAxisSize: MainAxisSize.min,
                 children: [
                     if (obj.extention != "") ...[
-                      _buildButton(context, Icons.open_in_new, '開く', obj),
+                      _buildButton(context, Icons.open_in_new, '開く', obj, upd),
                       const SizedBox(width: 8),
                     ],
-                    _buildButton(context, Icons.edit, '名前変更', obj),
+                    _buildButton(context, Icons.edit, '名前変更', obj, upd),
                     const SizedBox(width: 8),
-                    _buildButton(context, Icons.drive_file_move, '移動', obj),
+                    _buildButton(context, Icons.drive_file_move, '移動', obj, upd),
                     const SizedBox(width: 8),
-                    _buildButton(context, Icons.delete, '削除', obj),
+                    _buildButton(context, Icons.delete, '削除', obj, upd),
                 ],
             ),
         );
     }
 
-    Widget _buildButton(BuildContext context, IconData icon, String tooltip, Obj obj) {
+    Widget _buildButton(BuildContext context, IconData icon, String tooltip, Obj obj, void Function() upd) {
         return GestureDetector(
             onTap: () {
                 onClose(); // クリックしたらメニューを閉じる
                 debugPrint('$tooltip tapped');
                 switch (tooltip) {
                     case '開く':
-                        showOpenOverlay(context, obj);
+                        showOpenOverlay(context, obj, upd);
                         break;
                     case '名前変更':
-                        showRenameOverlay(context, obj);
+                        showRenameOverlay(context, obj, upd);
                         break;
                     case '移動':
-                        showMoveOverlay(context, obj);
+                        showMoveOverlay(context, obj, upd);
                         break;
                     case '削除':
-                        showDeleteOverlay(context, obj);
+                        showDeleteOverlay(context, obj, upd);
                         break;
                 }
             },
@@ -123,7 +126,7 @@ class TestFileIcon extends StatelessWidget { // 表示テスト用
             onTap: () {
                 final renderBox = context.findRenderObject() as RenderBox;
                 final position = renderBox.localToGlobal(Offset.zero);
-                showFileItemMenu(context, obj);
+                //showFileItemMenu(context, obj);
             },
             child: Column(
                 mainAxisSize: MainAxisSize.min,
