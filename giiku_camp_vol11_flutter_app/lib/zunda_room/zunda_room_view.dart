@@ -65,7 +65,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   final home = ZundaRoomViewModel.home!.image;
   final location = vm.controller.location??Location(0,0);
 
-  if(ZundaMoveController.jobList.isNotEmpty) vm.controller.move(vm.zundamon.have!);
+  if(ZundaMoveController.jobList.isNotEmpty) vm.controller.move(ZundaRoomViewModel.zundamon.have!);
 
   if (ZundaRoomViewModel.rooms.isEmpty) {
     return const Scaffold(
@@ -130,14 +130,13 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
             left: location.x.toDouble() - ZUNDAMON_IMAGE_PADDING,
             top: location.y.toDouble() - ZUNDAMON_IMAGE_PADDING,
             child: Stack(
-              clipBehavior: Clip.none, // はみ出しを許可する場合
+              clipBehavior: Clip.none, // はみ出しを許可
               children: [
                 ZundamonWidget(),      // 位置基準はここ
                 Positioned(
-                  // ObjIcon は無視したいなら適当な位置に置くか透明にする
                   top: -100, 
                   left: -100,
-                  child: ObjIcon(obj: vm.zundamon.have),
+                  child: ObjIcon(obj: ZundaRoomViewModel.zundamon.have),
                 ),
               ],
             ),
@@ -240,8 +239,7 @@ class _ZundamonWidgetState extends State<ZundamonWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.watch<ZundaRoomViewModel>();
-    final skin = vm.zundamon.skin;
+    final skin = ZundaRoomViewModel.zundamon.skin;
 
     return Stack(
       children: [
