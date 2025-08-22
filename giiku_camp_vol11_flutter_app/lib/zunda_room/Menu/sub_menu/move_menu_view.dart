@@ -12,6 +12,7 @@ void showMoveOverlay(BuildContext context, Obj obj) {
   final overlay = Overlay.of(context);
   entry?.remove();
   entry = null;
+  ZundaRoomViewModel.zundamon.have = obj;
   entry = OverlayEntry(
     builder: (context) {
       return Positioned(
@@ -40,6 +41,7 @@ void showMoveOverlay(BuildContext context, Obj obj) {
                       onPressed: () {
                         entry!.remove();
                         entry = null;
+                        ZundaRoomViewModel.zundamon.have = null;
                       },
                       child: const Text("キャンセル"),
                     ),

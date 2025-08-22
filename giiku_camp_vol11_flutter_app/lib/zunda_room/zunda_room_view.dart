@@ -134,10 +134,10 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
               children: [
                 ZundamonWidget(),      // 位置基準はここ
                 Positioned(
-                  top: -100, 
-                  left: -100,
+                  top: -50, 
+                  left: 0,
                   child: AnimatedSwitcher(
-                    duration: Duration(milliseconds: 300),
+                    duration: Duration(milliseconds: 30),
                     child: ObjIcon(
                       key: ValueKey(ZundaRoomViewModel.zundamon.have), // 変更を判定するキー
                       obj: ZundaRoomViewModel.zundamon.have,
