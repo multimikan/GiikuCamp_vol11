@@ -12,6 +12,8 @@ class AppConfig {
   static late double windowHeight;
 }
 
+final RESIZE_WINDOW = 0.4;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -44,8 +46,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    AppConfig.windowWidth = screenWidth;
-    AppConfig.windowHeight = screenHeight;
+    AppConfig.windowWidth = screenWidth*RESIZE_WINDOW;
+    AppConfig.windowHeight = screenHeight*RESIZE_WINDOW;
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
