@@ -6,6 +6,7 @@ import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/sub_menu/move_menu_
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/sub_menu/delete_menu_view.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/file_handling_menu_viewmodel.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store.dart';
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dart';
 import 'package:path/path.dart' as p;
 
 void showFileItemMenu(BuildContext context, Obj obj) {
@@ -85,6 +86,7 @@ class ContextMenuOverlay extends StatelessWidget { // メニュー内容
                         showRenameOverlay(context, obj);
                         break;
                     case '移動':
+                        ZundaRoomViewModel.zundamon.have = obj;
                         showMoveOverlay(context, obj);
                         break;
                     case '削除':
