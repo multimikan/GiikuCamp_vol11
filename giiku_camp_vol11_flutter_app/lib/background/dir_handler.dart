@@ -6,11 +6,11 @@ import 'package:path/path.dart' as p;
 import 'package:win32/win32.dart';
 
 class DirHandler extends ChangeNotifier{
+  final sr = Platform.isWindows ? "\\" : "/";
   Future<void> rename(FileSystemEntity f, String name) async{
     final store = await ObjDatabaseStore.init();
     final dirName = p.dirname(f.path);
     final extension = p.extension(f.path);
-    final sr = Platform.isWindows ? "\\" : "/";
 
     if(p.extension(f.path)!='') {
       try{
@@ -37,7 +37,7 @@ class DirHandler extends ChangeNotifier{
     final store = await ObjDatabaseStore.init();
     store.fetchObjects();
 
-    await f.rename(newPath);
+    await f.rename("$newPath$sr${p.basename(f.path)}");
 
     await store.fetchObjects();
     notifyListeners();
