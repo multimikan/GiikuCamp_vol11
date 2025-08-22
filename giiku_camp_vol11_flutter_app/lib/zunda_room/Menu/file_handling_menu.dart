@@ -86,7 +86,6 @@ class ContextMenuOverlay extends StatelessWidget { // メニュー内容
                         showRenameOverlay(context, obj);
                         break;
                     case '移動':
-                        ZundaRoomViewModel.zundamon.have = obj;
                         showMoveOverlay(context, obj);
                         break;
                     case '削除':
