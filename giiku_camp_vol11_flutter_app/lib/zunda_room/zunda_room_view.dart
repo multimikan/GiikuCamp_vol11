@@ -36,7 +36,6 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
     store = await ObjDatabaseStore.init();
     await store.fetchObjects();
     context.read<ZundaRoomViewModel>().fetchRoomDirs();
-    print(context.read<ZundaRoomViewModel>().rooms[0]);
     setState(() {
       loaded = true;
     });
@@ -91,6 +90,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
       //     child: Container()
       // ),
           for(var o in currentRoom.directories) // ディレクトリ配置
+          
             Positioned(
               left: (o.location.x).toDouble(),
               top: (o.location.y).toDouble(),
