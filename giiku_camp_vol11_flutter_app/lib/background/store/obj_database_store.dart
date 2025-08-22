@@ -198,7 +198,7 @@ class ObjDatabaseStore{
   }
 
   Map<String,int> _filePlace(){
-    final margin = 200;
+    final margin = 250;
     final floorY = ZundaRoomViewModel.home!.floor_y; 
     final floorX = ZundaRoomViewModel.home!.floor_x; 
     final y = Random().nextInt(floorY["max"]!-margin)+floorY["min"]!; 
