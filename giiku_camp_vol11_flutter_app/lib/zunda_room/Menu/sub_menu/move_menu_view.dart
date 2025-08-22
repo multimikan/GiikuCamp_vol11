@@ -12,7 +12,6 @@ void showMoveOverlay(BuildContext context, Obj obj) {
   final overlay = Overlay.of(context);
   entry?.remove();
   entry = null;
-  ZundaRoomViewModel.zundamon.have = obj;
   entry = OverlayEntry(
     builder: (context) {
       return Positioned(
