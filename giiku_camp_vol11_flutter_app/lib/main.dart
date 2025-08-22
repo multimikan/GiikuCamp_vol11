@@ -12,14 +12,18 @@ class AppConfig {
   static late double windowHeight;
 }
 
+final RESIZE_WINDOW = 0.3;
+final ZUNDAMON_IMAGE_PADDING = 100;
+final ZUNDAMON_RESIZE_PERCENT = 50;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final ByteData data = await rootBundle.load('images/home1(R).png');
   final ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
   final ui.FrameInfo frame = await codec.getNextFrame();
-  double windowWidth = frame.image.width.toDouble()*0.4;
-  double windowHeight = frame.image.height.toDouble()*0.4;
+  double windowWidth = frame.image.width.toDouble()*RESIZE_WINDOW;
+  double windowHeight = frame.image.height.toDouble()*RESIZE_WINDOW;
 
   if (Platform.isWindows|| Platform.isMacOS || Platform.isLinux){
     setWindowTitle('Image Sized Window');
@@ -44,8 +48,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    AppConfig.windowWidth = screenWidth;
-    AppConfig.windowHeight = screenHeight;
+    AppConfig.windowWidth = screenWidth/**RESIZE_WINDOW*/;
+    AppConfig.windowHeight = screenHeight/**RESIZE_WINDOW*/;
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
