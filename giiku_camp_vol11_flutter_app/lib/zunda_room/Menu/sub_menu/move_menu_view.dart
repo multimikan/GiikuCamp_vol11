@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:giiku_camp_vol11_flutter_app/background/dir_handler.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/file_handling_menu_viewmodel.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dart';
 
 OverlayEntry? entry;
 FileHandlingMenuViewmodel handler = FileHandlingMenuViewmodel();
@@ -10,6 +12,7 @@ void showMoveOverlay(BuildContext context, Obj obj) {
   final overlay = Overlay.of(context);
   entry?.remove();
   entry = null;
+  ZundaRoomViewModel.zundamon.have = obj;
   entry = OverlayEntry(
     builder: (context) {
       return Positioned(
@@ -38,15 +41,13 @@ void showMoveOverlay(BuildContext context, Obj obj) {
                       onPressed: () {
                         entry!.remove();
                         entry = null;
+                        ZundaRoomViewModel.zundamon.have = null;
                       },
                       child: const Text("キャンセル"),
                     ),
                     ElevatedButton(
                       onPressed: () async {
-                        await DirDatabaseRepository.init().then((repo) async {
-                          repo.fetchDirectory();
-                          await handler.moveObj(obj, repo.target.path);
-                        });
+                        await handler.moveObj(obj, DirDatabaseRepository.target.path);
                         entry!.remove();
                         entry = null;
                       },

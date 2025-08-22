@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store.dart';
 import 'package:giiku_camp_vol11_flutter_app/main.dart';
 import 'package:giiku_camp_vol11_flutter_app/main_dev.dart';
@@ -39,9 +40,10 @@ class Location{
 }
 
 class Job{
+  Obj target;
   Location goal;
   Location middle;
-  Job(this.goal,this.middle);
+  Job(this.goal,this.middle,this.target);
 }
 
 class Zundamon{
@@ -49,8 +51,16 @@ class Zundamon{
   Widget skin;
   LookAxis axis;
   Status status;
+  Obj? have;
 
   Zundamon(this.location,this.skin,this.axis,this.status);
+}
+
+class RoomDirs {
+  List<Obj> directories;
+  List<Obj> files;
+
+  RoomDirs(this.directories, this.files);
 }
 
 class ZundaRoomViewModel extends ChangeNotifier{
@@ -59,9 +69,11 @@ class ZundaRoomViewModel extends ChangeNotifier{
   final homeImages = HomeImages();
   static var home = HomeImages().home1[RoomDirection.left];
   late final ZundaMoveController controller;
-  Zundamon zundamon = Zundamon(Location(0,0),Image.asset(""),LookAxis.left,Status.stop);
+  static Zundamon zundamon = Zundamon(Location(0,0),Image.asset(""),LookAxis.left,Status.stop);
+  static List<RoomDirs> rooms = [];
 
   ZundaRoomViewModel() {
+    fetchRoomDirs();
     Iterable<Widget> imageIte = ImageIte();
     final image =imageIte.iterator;
     image.moveNext();
@@ -75,9 +87,16 @@ class ZundaRoomViewModel extends ChangeNotifier{
       _showFirst = !_showFirst; //0.5sごとにshowFirstが切り替わる
       image.moveNext(); //ジェネレータ.next()
       zundamon.skin = image.current;
-      zundamon.status = Status.cry;
       notifyListeners();
     });
+  }
+
+  static setHave(Obj){
+
+  }
+
+  static cancel(Obj){
+    
   }
 
   List<Image> getAnimationImages(){
@@ -111,6 +130,61 @@ class ZundaRoomViewModel extends ChangeNotifier{
     yield* ImageIte(!i);
   }
 
+  void fetchRoomDirs(){
+    final needRooms = _getNeedDoorNumbersInObjects();
+    final separatedObjects = _getSeparationObjects();
+    final files = separatedObjects["Files"]??[];
+    final directories = separatedObjects["Directories"]??[];
+    const max_door = 4;
+    const max_item = 10;
+    rooms = [];
+
+    List<Obj> tmpD = [] ,tmpF = [];
+
+    for(var i = 0; i<needRooms; i++){
+      for(var j=0; j<max_door; j++){
+        if(directories.isNotEmpty){
+        tmpD.add(directories.last);
+        directories.removeLast();
+        }
+      }
+      for(var j=0; j<max_item; j++){
+        if(files.isNotEmpty){
+        tmpF.add(files.last);
+        files.removeLast();
+        }
+      }
+      rooms.add(RoomDirs(tmpD, tmpF));
+      tmpD = [];
+      tmpF = [];
+    }
+    notifyListeners();
+  }
+
+  int _getNeedDoorNumbersInObjects(){
+    var dirNum = 0;
+    var need = 0;
+    const int max_door=4;
+    const int maz_item=20;
+
+    for(var o in ObjDatabaseStore.objects) {dirNum += o.extention==""?1:0;}
+    need = dirNum%max_door!=0?dirNum~/max_door+1:dirNum~/max_door;
+    final fileNum = (ObjDatabaseStore.objects.length-dirNum);
+    final fileneed = fileNum%max_door!=0?fileNum~/max_door+1:fileNum~/max_door;
+
+    return need>fileneed? need:fileneed;
+  }
+
+  Map<String,List<Obj>> _getSeparationObjects(){
+    List<Obj> files = [];
+    List<Obj> directories = [];
+    for(var o in ObjDatabaseStore.objects){
+      if(o.extention!="") {files.add(o);}
+      else {directories.add(o);}
+    }
+    return {"Files":files,"Directories":directories};
+  }
+
   Widget _changeImageWidgetWithNowAxis(Image img){
     final transeformedImg;
     if (zundamon.axis==LookAxis.left){
@@ -133,12 +207,17 @@ class ZundaRoomViewModel extends ChangeNotifier{
 }
 
 /* ---------------------------------------------------------------------------- */
-
+enum moveStatus{
+  start,
+  end
+}
 class ZundaMoveController extends ChangeNotifier{
   static List<Job> jobList = [];
   Location? location;
   Zundamon zundamon;
   bool isMoveing = false;
+  moveStatus status = moveStatus.start;
+  bool wait = false;
 
   Completer<void>? completer;
   
@@ -146,17 +225,24 @@ class ZundaMoveController extends ChangeNotifier{
     location = Location(zundamon.location.x, zundamon.location.y);
   }
 
-  void move(){
+  Future<void> move(Obj obj) async{
     if(!isMoveing) return;
     if(jobList.isNotEmpty){
       isMoveing = true;
+      zundamon.have = obj;
       Job job = _popJobList();
       _setmove(job.middle);
+      status = moveStatus.start;
+      zundamon.status = Status.stop;
+      notifyListeners();
       //middleまで待つ
-      //time.sleep()
+      await sleep(1);
+      zundamon.status = Status.walk;
       _setmove(job.goal);
-      //time.sleep()
-      move();
+      status = moveStatus.end;
+      notifyListeners();
+      await sleep(1);
+      move(job.target);
     }
     else{
       print("全ての動作が完了しました");
@@ -171,6 +257,12 @@ class ZundaMoveController extends ChangeNotifier{
     }
   }
 
+  Future<void> sleep(int time) async{
+    wait = true;
+    await Future.delayed(Duration(seconds: time));
+    wait = false;
+  }
+
   Job _popJobList(){
     final tmp = jobList.last;
     jobList.removeLast();
@@ -179,6 +271,7 @@ class ZundaMoveController extends ChangeNotifier{
 
   Future<void> _setmove(Location destination){
     location = destination;
+    zundamon.status = Status.walk;
     notifyListeners();
     return completer!.future;
   }

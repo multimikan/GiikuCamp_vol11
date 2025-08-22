@@ -7,6 +7,8 @@ import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store
 import 'dart:io';
 import 'package:open_file/open_file.dart';
 
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dart';
+
 class FileHandlingMenuViewmodel extends DirHandler{
   final repo = DirDatabaseRepository.init();
 
@@ -19,9 +21,8 @@ class FileHandlingMenuViewmodel extends DirHandler{
     await super.rename(f, newPath);
   }
   Future<void> moveObj(Obj obj, String newPath) async {
-    final repository = await repo;
-    FileSystemEntity f = await repository.convertFileSystemEntityFromObj(obj);
-    await super.move(f, newPath);
+    await super.move(obj.original, newPath);
+    ZundaMoveController.jobList.add(Job(Location(100,100),Location(obj.location.x,obj.location.y),obj));
   }
   Future<void> delObj(Obj obj) async {
     final repository = await repo;

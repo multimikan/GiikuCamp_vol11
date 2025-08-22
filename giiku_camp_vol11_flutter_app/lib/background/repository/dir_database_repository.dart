@@ -6,14 +6,14 @@ import 'package:path_provider/path_provider.dart';
 
 class DirDatabaseRepository extends ChangeNotifier{
   late String? selectTarget; //オプショナルtarget(指定する場合に初期化)
-  late Directory target; //表示対象dir
+  static late Directory target; //表示対象dir
   late List<FileSystemEntity> dirList; //対象dirの子階層を格納
   
   /*
   dirListは[Directory:OO,File:OO.extention]のように辞書形式のような形
   */
 
-  DirDatabaseRepository._(this.target,this.dirList,this.selectTarget); // private constructor
+  DirDatabaseRepository._(target,this.dirList,this.selectTarget); // private constructor
   /*
 
   ！！！このクラスをインスタンス化する際はawait DirDatabaseRepository.init();としてください！！！
