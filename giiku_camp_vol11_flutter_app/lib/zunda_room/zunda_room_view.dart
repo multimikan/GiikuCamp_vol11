@@ -6,6 +6,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:giiku_camp_vol11_flutter_app/main.dart';
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/file_handling_menu.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/image_helper.dart';
 import 'dart:math';
 import 'package:provider/provider.dart';
@@ -60,6 +61,8 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   final vm = context.watch<ZundaRoomViewModel>();
   final home = ZundaRoomViewModel.home!.image;
   final location = vm.controller.location??Location(0,0);
+
+  if(ZundaMoveController.jobList.isNotEmpty) vm.controller.move();
 
   if (ZundaRoomViewModel.rooms.isEmpty) {
     return const Scaffold(
@@ -152,6 +155,94 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
     );
   }
 }
+
+
+class ObjIcon extends StatefulWidget {
+  final Obj obj;
+  final VoidCallback onTap;
+  final VoidCallback onDoubleTap;
+  const ObjIcon({super.key, required this.obj, required this.onTap, required this.onDoubleTap});
+
+  @override
+  _ObjIconState createState() => _ObjIconState();
+}
+
+class _ObjIconState extends State<ObjIcon> {
+  void initState() {
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () async {
+        print("クリック");
+        widget.onTap();
+      },
+      onDoubleTap: () async {
+        print("ダブルクリック");
+        widget.onDoubleTap();
+      },
+      child: Column(
+        children: [
+          Text(widget.obj.name),
+          widget.obj.image
+        ],
+      ),
+    );
+  }
+}
+
+
+class ZundamonWidget extends StatefulWidget{
+  const ZundamonWidget({super.key});
+
+  @override
+  State<ZundamonWidget> createState()=>_ZundamonWidgetState();
+}
+
+class _ZundamonWidgetState extends State<ZundamonWidget> {
+
+  @override
+  void didChangeDependencies(){ /* キャッシュで先読み込み */
+    super.didChangeDependencies();
+    for(var i=1; i<33; i++) {
+      precacheImage(AssetImage("images/ZUNDA/zundamon$i.png"), context);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final vm = context.watch<ZundaRoomViewModel>();
+    final skin = vm.zundamon.skin;
+
+    return Scaffold(
+      body: Stack(
+        children: [
+          AnimatedPositioned(
+            duration: const Duration(seconds: 3),
+            left: (vm.controller.location!.x).toDouble(),
+            top: (vm.controller.location!.y).toDouble(),
+            child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 0),
+                child: ImageHelper.resize(skin,ZUNDAMON_RESIZE_PERCENT),
+            ),
+          onEnd: () {
+            if(vm.controller.status == moveStatus.start){
+
+            }
+            else{
+
+            }
+          },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
 
 /// 画面上に一定間隔のグリッドと座標ラベルを描くデバッグ用オーバーレイ。
 class DebugGridOverlay extends StatelessWidget {
@@ -295,71 +386,5 @@ class _GridPainter extends CustomPainter {
         labelColor != old.labelColor ||
         showLabels != old.showLabels ||
         padding != old.padding;
-  }
-}
-
-
-class ObjIcon extends StatefulWidget {
-  final Obj obj;
-  final VoidCallback onTap;
-  final VoidCallback onDoubleTap;
-  const ObjIcon({super.key, required this.obj, required this.onTap, required this.onDoubleTap});
-
-  @override
-  _ObjIconState createState() => _ObjIconState();
-}
-
-class _ObjIconState extends State<ObjIcon> {
-  void initState() {
-    super.initState();
-  }
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () async {
-        print("クリック");
-        widget.onTap();
-      },
-      onDoubleTap: () async {
-        print("ダブルクリック");
-        widget.onDoubleTap();
-      },
-      child: Column(
-        children: [
-          Text(widget.obj.name),
-          widget.obj.image
-        ],
-      ),
-    );
-  }
-}
-
-
-class ZundamonWidget extends StatefulWidget{
-  const ZundamonWidget({super.key});
-
-  @override
-  State<ZundamonWidget> createState()=>_ZundamonWidgetState();
-}
-
-class _ZundamonWidgetState extends State<ZundamonWidget> {
-
-  @override
-  void didChangeDependencies(){ /* キャッシュで先読み込み */
-    super.didChangeDependencies();
-    for(var i=1; i<33; i++) {
-      precacheImage(AssetImage("images/ZUNDA/zundamon$i.png"), context);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final vm = context.watch<ZundaRoomViewModel>();
-    final skin = vm.zundamon.skin;
-
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 0),
-      child: ImageHelper.resize(skin,ZUNDAMON_RESIZE_PERCENT),
-    );
   }
 }

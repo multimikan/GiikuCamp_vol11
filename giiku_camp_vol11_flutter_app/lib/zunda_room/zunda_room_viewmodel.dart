@@ -198,12 +198,17 @@ class ZundaRoomViewModel extends ChangeNotifier{
 }
 
 /* ---------------------------------------------------------------------------- */
-
+enum moveStatus{
+  start,
+  end
+}
 class ZundaMoveController extends ChangeNotifier{
   static List<Job> jobList = [];
   Location? location;
   Zundamon zundamon;
   bool isMoveing = false;
+  moveStatus status = moveStatus.start;
+  bool wait = false;
 
   Completer<void>? completer;
   
@@ -211,16 +216,20 @@ class ZundaMoveController extends ChangeNotifier{
     location = Location(zundamon.location.x, zundamon.location.y);
   }
 
-  void move(){
+  Future<void> move() async{
     if(!isMoveing) return;
     if(jobList.isNotEmpty){
       isMoveing = true;
       Job job = _popJobList();
       _setmove(job.middle);
+      status = moveStatus.start;
+      notifyListeners();
       //middleまで待つ
-      //time.sleep()
+      await sleep(1);
       _setmove(job.goal);
-      //time.sleep()
+      status = moveStatus.end;
+      notifyListeners();
+      await sleep(1);
       move();
     }
     else{
@@ -234,6 +243,12 @@ class ZundaMoveController extends ChangeNotifier{
       completer!.complete();
       completer = null;
     }
+  }
+
+  Future<void> sleep(int time) async{
+    wait = true;
+    await Future.delayed(Duration(seconds: time));
+    wait = false;
   }
 
   Job _popJobList(){
