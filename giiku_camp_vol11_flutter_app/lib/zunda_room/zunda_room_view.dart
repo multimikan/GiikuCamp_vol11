@@ -101,10 +101,9 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                 onDoubleTap: () async {
                   await store.changeTarget(o.path);
                   currentRoomIndex = 0;
+                  vm.fetchRoomDirs();
                   print("変更完了");
-                  setState(() {
-                    vm.fetchRoomDirs();
-                  });
+                  setState(() {});
                 },
               ),
             ),
