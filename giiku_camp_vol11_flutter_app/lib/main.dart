@@ -12,7 +12,7 @@ class AppConfig {
   static late double windowHeight;
 }
 
-final RESIZE_WINDOW = 0.4;
+final RESIZE_WINDOW = 0.3;
 final ZUNDAMON_IMAGE_SIZE = 100;
 
 void main() async {
@@ -21,8 +21,8 @@ void main() async {
   final ByteData data = await rootBundle.load('images/home1(R).png');
   final ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
   final ui.FrameInfo frame = await codec.getNextFrame();
-  double windowWidth = frame.image.width.toDouble()*0.4;
-  double windowHeight = frame.image.height.toDouble()*0.4;
+  double windowWidth = frame.image.width.toDouble()*RESIZE_WINDOW;
+  double windowHeight = frame.image.height.toDouble()*RESIZE_WINDOW;
 
   if (Platform.isWindows|| Platform.isMacOS || Platform.isLinux){
     setWindowTitle('Image Sized Window');
