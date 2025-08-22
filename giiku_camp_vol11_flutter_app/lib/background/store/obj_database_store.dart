@@ -164,7 +164,7 @@ class ObjDatabaseStore{
   }
 
   Map<String, int> _getPlace(FileSystemEntity f) {
-  const int margin = 20; // 座標の誤差
+  const int margin = 5; // 座標の誤差
 
   int x;
   int y;
