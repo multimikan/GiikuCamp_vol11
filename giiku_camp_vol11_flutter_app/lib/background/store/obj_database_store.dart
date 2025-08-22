@@ -183,6 +183,7 @@ class ObjDatabaseStore{
     for(var i = -margin; i<margin; i++){ // O(n*margin)のため動作が重いかも
       if(_isAddedPlaceFromObjects("x", x+i) || _isAddedPlaceFromObjects("y", y+i)) continue;
     }
+    print("x:$x,y:$y");
     return {"x":x,"y":y};
   }
   Map<String,int> _dirPlace(){
