@@ -17,7 +17,7 @@ void showMoveOverlay(BuildContext context, Obj obj) {
     builder: (context) {
       return Positioned(
         right: 16,
-        bottom: 16,
+        top: 16,
         child: Material(
           elevation: 8,
           borderRadius: BorderRadius.circular(8),

@@ -12,6 +12,7 @@ import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/file_handling_menu.
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/image_helper.dart';
 import 'dart:math';
 import 'package:provider/provider.dart';
+import 'package:path/path.dart' as p;
 import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dart';
@@ -68,8 +69,24 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   if(ZundaMoveController.jobList.isNotEmpty) vm.controller.move(ZundaRoomViewModel.zundamon.have!);
 
   if (ZundaRoomViewModel.rooms.isEmpty) {
-    return const Scaffold(
-      body: Center(child: Text("部屋がありません")),
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("部屋がありません"),
+            IconButton(
+              icon: const Icon(Icons.arrow_downward, size: 32),
+              onPressed: () async {
+                await store.changeTarget(p.dirname(DirDatabaseRepository.target.path));
+                currentRoomIndex = 0;
+                vm.fetchRoomDirs();
+                setState(() {});
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -170,6 +187,27 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
             child: IconButton(
               onPressed: (){nextRoom(ZundaRoomViewModel.rooms);},
               icon: const Icon(Icons.chevron_right, size: 48),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_downward, size: 32),
+                  onPressed: () async {
+                    await store.changeTarget(p.dirname(DirDatabaseRepository.target.path));
+                    currentRoomIndex = 0;
+                    vm.fetchRoomDirs();
+                    setState(() {});
+                  },
+                ),
+                const Text(
+                  "親ディレクトリに戻る",
+                  style: TextStyle(fontSize: 12),
+                ),
+              ],
             ),
           ),
         ],

@@ -55,7 +55,7 @@ class ObjDatabaseStore{
 
   /*別クラスでfetchObjectを使うときはasync{await fetchObject}を推奨(特に同期が重要な場面では必須)*/
   Future<void> fetchObjects([Directory? target]) async { /* パソコンのディレクトリ情報と同期して家具リストを更新 */
-    target = target?? Directory('C:\\Users\\sszzx\\Downloads\\devapp\\giikuvol11\\test');
+    target = target?? await getApplicationDocumentsDirectory();
     repo.fetchDirectory(target); //同期関数のためawait必要なし
     /*
     -更新後に必要な判定-
