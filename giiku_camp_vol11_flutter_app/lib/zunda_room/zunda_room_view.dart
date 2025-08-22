@@ -97,6 +97,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                 obj: o,
                 onTap: () async {
                   //showmenu
+                  print("現在のrooms:${ZundaRoomViewModel.rooms[0].directories[0].name}");
                 },
                 onDoubleTap: () async {
                   await store.changeTarget(o.path);
