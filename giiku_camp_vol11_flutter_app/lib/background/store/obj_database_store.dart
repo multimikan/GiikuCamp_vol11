@@ -181,7 +181,7 @@ class ObjDatabaseStore{
     if (!_isAddedPlaceFromObjects("x", x + i) &&
         !_isAddedPlaceFromObjects("y", y + i)) {
       print("x:${x + i}, y:${y + i}");
-      return {"x": x + i, "y": y + i};
+      return {"x": x + i, "y": y};
     }
   }
 
