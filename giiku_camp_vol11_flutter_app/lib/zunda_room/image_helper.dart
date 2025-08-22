@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:giiku_camp_vol11_flutter_app/main.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dart';
@@ -29,10 +30,18 @@ class ImageHelper{
   }
 
   static String convertImageTypeFromExtention(String extention){
+    final _random = Random();
     final e = extention.replaceAll(".", "");
     final imageExtentions = ["png","jpg","jpeg","bmp","heic",];
     final otherExtensions = ["docx","mp3","mp4","pptx","txt","xlsx"];
-    if(imageExtentions.contains(e)) return "images/ITEM/image.png";
+    final dirImageGroup = [
+        "images/DOOR/door1.png",
+        "images/DOOR/door2.png",
+        "images/DOOR/door3.png",
+        "images/DOOR/door4.png"
+    ];
+    if (e == "") return dirImageGroup[_random.nextInt(dirImageGroup.length)];
+    else if(imageExtentions.contains(e)) return "images/ITEM/image.png";
     return otherExtensions.contains(e)? "images/ITEM/$e.png":"images/ITEM/txt.png";
   }
 }

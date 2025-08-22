@@ -214,11 +214,24 @@ class _ObjIconState extends State<ObjIcon> {
         print("ダブルクリック");
         onDoubleTap();
       },
-      child: Column(
-        children: [
-          Text(obj.name),
-          obj.image,
-        ],
+      child: FractionalTranslation(
+        translation: const Offset(-0.5, -0.5),
+        child: SizedBox(
+          width: 60,
+          child: Center(
+            child: Column(
+              children: [
+                Text(
+                  widget.obj!.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: true,
+                ),
+                widget.obj!.image,
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

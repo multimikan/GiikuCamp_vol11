@@ -140,12 +140,17 @@ class ZundaRoomViewModel extends ChangeNotifier{
     rooms = [];
 
     List<Obj> tmpD = [] ,tmpF = [];
+    int t = 0;
 
     for(var i = 0; i<needRooms; i++){
       for(var j=0; j<max_door; j++){
         if(directories.isNotEmpty){
-        tmpD.add(directories.last);
-        directories.removeLast();
+          if(i==0) t = 172;
+          else if(i<needRooms-1) t = 112;
+          else t = 52;
+          directories.last.location.x = j*125 + t;
+          tmpD.add(directories.last);
+          directories.removeLast();
         }
       }
       for(var j=0; j<max_item; j++){

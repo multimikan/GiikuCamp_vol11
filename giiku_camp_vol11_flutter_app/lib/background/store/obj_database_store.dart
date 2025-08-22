@@ -55,7 +55,7 @@ class ObjDatabaseStore{
 
   /*別クラスでfetchObjectを使うときはasync{await fetchObject}を推奨(特に同期が重要な場面では必須)*/
   Future<void> fetchObjects([Directory? target]) async { /* パソコンのディレクトリ情報と同期して家具リストを更新 */
-    target = target?? await getApplicationDocumentsDirectory();
+    target = target?? Directory('C:\\Users\\sszzx\\Downloads\\devapp\\giikuvol11\\test');
     repo.fetchDirectory(target); //同期関数のためawait必要なし
     /*
     -更新後に必要な判定-
@@ -135,7 +135,8 @@ class ObjDatabaseStore{
 
   Obj _convertObjFromFileSystemEntity(FileSystemEntity f){ /* システムエンティティをオブジェ型に変換 */
     final name = p.basename(f.path);
-    final image = ImageHelper.resize(Image.asset(ImageHelper.convertImageTypeFromExtention(p.extension(f.path))),10);
+    Widget image = Image.asset(ImageHelper.convertImageTypeFromExtention(p.extension(f.path))); 
+    if(f is File) image = ImageHelper.resize(image,10);
     final extention = p.extension(f.path);
 
     final notAlreadyAddedPlacesMap = _getPlace(f);
@@ -203,7 +204,7 @@ class ObjDatabaseStore{
   }
 
   Map<String,int> _dirPlace(){
-    final y = ZundaRoomViewModel.home!.door_Y; 
+    final y = ZundaRoomViewModel.home!.door_Y - 30; 
     final x = Random().nextInt(450)+100;
     return {"x":x,"y":y};
   }
