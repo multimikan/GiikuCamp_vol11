@@ -79,8 +79,8 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
             ),
           AnimatedPositioned(
             duration: Duration(seconds: 2),
-            left:location.x.toDouble()-ZUNDAMON_IMAGE_SIZE,
-            top: location.y.toDouble()-ZUNDAMON_IMAGE_SIZE,
+            left:location.x.toDouble()-ZUNDAMON_IMAGE_PADDING,
+            top: location.y.toDouble()-ZUNDAMON_IMAGE_PADDING,
             child: SizedBox(child: ZundamonWidget(),),
             onEnd:(){ vm.controller.completer!.complete();},
           ),
@@ -300,7 +300,7 @@ class _ZundamonWidgetState extends State<ZundamonWidget> {
 
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 0),
-      child: vm.resize(skin,45),
+      child: vm.resize(skin,ZUNDAMON_RESIZE_PERCENT),
     );
   }
 }
