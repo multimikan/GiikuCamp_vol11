@@ -128,7 +128,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
     final directories = separatedObjects["Directories"]??[];
     const max_door = 4;
     const max_item = 10;
-    var tmpD = [] ,tmpF = [];
+    List<Obj> tmpD = [] ,tmpF = [];
 
     for(var i = 0; i<needRooms; i++){
       for(var j=0; j<max_door; j++){
@@ -143,7 +143,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
         files.removeLast();
         }
       }
-      rooms.add(RoomDirs(directories, files));
+      rooms.add(RoomDirs(tmpD, tmpF));
       tmpD = [];
       tmpF = [];
     }
