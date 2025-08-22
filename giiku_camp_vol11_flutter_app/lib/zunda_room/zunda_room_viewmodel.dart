@@ -18,7 +18,7 @@ enum Status{
   surprize3,
   look,
 }
-enum Axis{
+enum LookAxis{
   //top,
   right,
   left,
@@ -47,7 +47,7 @@ class Job{
 class Zundamon{
   Location location;
   Widget skin;
-  Axis axis;
+  LookAxis axis;
   Status status;
 
   Zundamon(this.location,this.skin,this.axis,this.status);
@@ -59,14 +59,14 @@ class ZundaRoomViewModel extends ChangeNotifier{
   final homeImages = HomeImages();
   static var home = HomeImages().home1[RoomDirection.left];
   late final ZundaMoveController controller;
-  Zundamon zundamon = Zundamon(Location(0,0),Image.asset(""),Axis.left,Status.stop);
+  Zundamon zundamon = Zundamon(Location(0,0),Image.asset(""),LookAxis.left,Status.stop);
 
   ZundaRoomViewModel() {
     Iterable<Widget> imageIte = ImageIte();
     final image =imageIte.iterator;
     image.moveNext();
+    zundamon  = Zundamon(Location(AppConfig.windowWidth.toInt(),AppConfig.windowHeight.toInt()), image.current, LookAxis.left, Status.walk);
     controller = ZundaMoveController(zundamon);
-    zundamon  = Zundamon(Location(AppConfig.windowWidth.toInt(),AppConfig.windowHeight.toInt()), image.current, Axis.left, Status.walk);
 
     Timer.periodic(Duration(milliseconds: 500), (_) {
       _showFirst = !_showFirst; //0.5sごとにshowFirstが切り替わる
@@ -128,7 +128,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
 
   Widget _changeImageWidgetWithNowAxis(Image img){
     final transeformedImg;
-    if (zundamon.axis==Axis.left){
+    if (zundamon.axis==LookAxis.left){
       transeformedImg = Transform(
         alignment: Alignment.center, // 回転軸を画像の中心に
         transform: Matrix4.identity()..scale(-1.0, 1.0, 1.0), // x軸を反転
