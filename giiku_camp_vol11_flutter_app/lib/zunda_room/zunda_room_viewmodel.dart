@@ -128,6 +128,8 @@ class ZundaRoomViewModel extends ChangeNotifier{
     final directories = separatedObjects["Directories"]??[];
     const max_door = 4;
     const max_item = 10;
+    rooms = [];
+
     List<Obj> tmpD = [] ,tmpF = [];
 
     for(var i = 0; i<needRooms; i++){
