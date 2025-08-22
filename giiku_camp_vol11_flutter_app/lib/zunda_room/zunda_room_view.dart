@@ -216,15 +216,13 @@ class _ZundamonWidgetState extends State<ZundamonWidget> {
     final vm = context.watch<ZundaRoomViewModel>();
     final skin = vm.zundamon.skin;
 
-    return Scaffold(
-      body: Stack(
-        children: [
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 0),
-            child: ImageHelper.resize(skin,ZUNDAMON_RESIZE_PERCENT),
-          ),
-        ],
-      ),
+    return Stack(
+      children: [
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 0),
+          child: ImageHelper.resize(skin,ZUNDAMON_RESIZE_PERCENT),
+        ),
+      ],
     );
   }
 }
