@@ -43,10 +43,7 @@ void showMoveOverlay(BuildContext context, Obj obj) {
                     ),
                     ElevatedButton(
                       onPressed: () async {
-                        await DirDatabaseRepository.init().then((repo) async {
-                          repo.fetchDirectory();
-                          await handler.moveObj(obj, DirDatabaseRepository.target.path);
-                        });
+                        await handler.moveObj(obj, DirDatabaseRepository.target.path);
                         entry!.remove();
                         entry = null;
                       },
