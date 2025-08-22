@@ -145,7 +145,7 @@ class ObjDatabaseStore{
   }
 
   String _convertImageTypeFromExtention(String extention){
-    final e = extention.splitMapJoin(".");
+    final e = extention.replaceAll(".", "");
     final imageExtentions = ["png","jpg","jpeg","bmp","heic",];
     final otherExtensions = ["docx","mp3","mp4","pptx","txt","xlsx"];
     if(imageExtentions.contains(e)) return "images/ITEM/image.png";
