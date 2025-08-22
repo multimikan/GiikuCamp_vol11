@@ -14,12 +14,12 @@ class HomeImages{
   final home1 = {
     RoomDirection.left: ImageHelper(Image.asset("images/home1(L).png",fit: BoxFit.fill,),
     (AppConfig.windowHeight*0.4).toInt(),
-  {"min":0,"max":(AppConfig.windowWidth*0.8).toInt()},
+  {"min":(AppConfig.windowWidth*0.2).toInt(),"max":(AppConfig.windowWidth*0.8).toInt()},
   {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
 
     RoomDirection.right: ImageHelper(Image.asset("images/home1(R).png",fit: BoxFit.fill,),
-    (AppConfig.windowHeight*0.4).toInt(),
-  {"min":(AppConfig.windowWidth*0.2).toInt(),"max":(AppConfig.windowWidth*0.8).toInt()},
+  (AppConfig.windowHeight*0.4).toInt(),
+  {"min":0,"max":(AppConfig.windowWidth*0.8).toInt()},
   {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
 
   RoomDirection.center: ImageHelper(Image.asset("images/home1(C).png",fit: BoxFit.fill,),
@@ -31,12 +31,12 @@ class HomeImages{
   final home2 = {
     RoomDirection.left: ImageHelper(Image.asset("images/home2(L).png",fit: BoxFit.fill,),
     (AppConfig.windowHeight*0.4).toInt(),
-  {"min":0,"max":(AppConfig.windowWidth*0.8).toInt()},
-  {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
-
-    RoomDirection.right: ImageHelper(Image.asset("images/home2(R).png",fit: BoxFit.fill,),
-    (AppConfig.windowHeight*0.4).toInt(),
   {"min":(AppConfig.windowWidth*0.2).toInt(),"max":(AppConfig.windowWidth*0.8).toInt()},
+  {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
+  
+    RoomDirection.right: ImageHelper(Image.asset("images/home2(R).png",fit: BoxFit.fill,),
+  (AppConfig.windowHeight*0.4).toInt(),
+  {"min":0,"max":(AppConfig.windowWidth*0.8).toInt()},
   {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
 
   RoomDirection.center: ImageHelper(Image.asset("images/home2(C).png",fit: BoxFit.fill,),
