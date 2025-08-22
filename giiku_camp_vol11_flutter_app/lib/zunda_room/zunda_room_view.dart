@@ -219,22 +219,9 @@ class _ZundamonWidgetState extends State<ZundamonWidget> {
     return Scaffold(
       body: Stack(
         children: [
-          AnimatedPositioned(
-            duration: const Duration(seconds: 3),
-            left: (vm.controller.location!.x).toDouble(),
-            top: (vm.controller.location!.y).toDouble(),
-            child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 0),
-                child: ImageHelper.resize(skin,ZUNDAMON_RESIZE_PERCENT),
-            ),
-          onEnd: () {
-            if(vm.controller.status == moveStatus.start){
-
-            }
-            else{
-
-            }
-          },
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 0),
+            child: ImageHelper.resize(skin,ZUNDAMON_RESIZE_PERCENT),
           ),
         ],
       ),
