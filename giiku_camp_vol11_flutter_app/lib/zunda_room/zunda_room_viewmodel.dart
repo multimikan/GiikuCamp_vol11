@@ -85,7 +85,6 @@ class ZundaRoomViewModel extends ChangeNotifier{
       _showFirst = !_showFirst; //0.5sごとにshowFirstが切り替わる
       image.moveNext(); //ジェネレータ.next()
       zundamon.skin = image.current;
-      zundamon.status = Status.surprize1;
       notifyListeners();
     });
   }
@@ -223,9 +222,11 @@ class ZundaMoveController extends ChangeNotifier{
       Job job = _popJobList();
       _setmove(job.middle);
       status = moveStatus.start;
+      zundamon.status = Status.stop;
       notifyListeners();
       //middleまで待つ
       await sleep(1);
+      zundamon.status = Status.walk;
       _setmove(job.goal);
       status = moveStatus.end;
       notifyListeners();
@@ -259,6 +260,7 @@ class ZundaMoveController extends ChangeNotifier{
 
   Future<void> _setmove(Location destination){
     location = destination;
+    zundamon.status = Status.walk;
     notifyListeners();
     return completer!.future;
   }

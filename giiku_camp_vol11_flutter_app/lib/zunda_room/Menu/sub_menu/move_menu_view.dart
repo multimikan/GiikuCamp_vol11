@@ -45,7 +45,7 @@ void showMoveOverlay(BuildContext context, Obj obj) {
                       onPressed: () async {
                         await DirDatabaseRepository.init().then((repo) async {
                           repo.fetchDirectory();
-                          await handler.moveObj(obj, repo.target.path);
+                          await handler.moveObj(obj, DirDatabaseRepository.target.path);
                         });
                         entry!.remove();
                         entry = null;
