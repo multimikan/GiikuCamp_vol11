@@ -75,7 +75,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
   static Zundamon zundamon = Zundamon(Location(0,0),Image.asset(""),LookAxis.left,Status.stop);
   static List<RoomDirs> rooms = [];
 
-  ZundaRoomViewModel() {
+  ZundaRoomViewModel(){
     fetchRoomDirs();
     Iterable<Widget> imageIte = ImageIte();
     final image =imageIte.iterator;
@@ -98,12 +98,14 @@ class ZundaRoomViewModel extends ChangeNotifier{
     zundamon.have = obj;
     final index = ObjDatabaseStore.objects.indexWhere((d)=> d.path == obj.path);
     ObjDatabaseStore.objects[index].image = SizedBox();
+    store.fetchObjects();
   }
 
   static cancelHave(Obj obj){
     zundamon.have = Obj("","",SizedBox(),"",Location(0,0),File(""));
     final index = ObjDatabaseStore.objects.indexWhere((d)=> d.path == obj.path);
     ObjDatabaseStore.objects[index].image = ImageHelper.resize(Image.asset(ImageHelper.convertImageTypeFromExtention(p.extension(obj.path))),10);
+    store.fetchObjects();  
   }
 
   List<Image> getAnimationImages(){
