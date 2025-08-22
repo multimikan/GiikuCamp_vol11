@@ -66,8 +66,8 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
       // ),
           for(var o in ObjDatabaseStore.objects)
             Positioned(
-              left: (o.location.x).toDouble(),
-              top: (o.location.y).toDouble(),
+              left: (o.location.x).toDouble()-100,
+              top: (o.location.y).toDouble()-100,
               child: ObjIcon(
                 obj: o,
                 onTap: () async {
