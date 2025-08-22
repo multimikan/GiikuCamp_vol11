@@ -59,6 +59,13 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   final vm = context.watch<ZundaRoomViewModel>();
   final home = ZundaRoomViewModel.home!.image;
   final location = vm.controller.location??Location(0,0);
+
+  if (vm.rooms.isEmpty) {
+    return const Scaffold(
+      body: Center(child: Text("部屋がありません")),
+    );
+  }
+  
   final currentRoom = vm.rooms[currentRoomIndex];
 
     if (!loaded) {
