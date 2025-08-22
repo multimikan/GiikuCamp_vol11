@@ -147,6 +147,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
       tmpD = [];
       tmpF = [];
     }
+    notifyListeners();
   }
 
   int _getNeedDoorNumbersInObjects(){
