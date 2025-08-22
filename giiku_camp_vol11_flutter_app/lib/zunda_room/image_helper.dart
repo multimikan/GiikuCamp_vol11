@@ -27,6 +27,14 @@ class ImageHelper{
       );
     }
   }
+
+  static String convertImageTypeFromExtention(String extention){
+    final e = extention.replaceAll(".", "");
+    final imageExtentions = ["png","jpg","jpeg","bmp","heic",];
+    final otherExtensions = ["docx","mp3","mp4","pptx","txt","xlsx"];
+    if(imageExtentions.contains(e)) return "images/ITEM/image.png";
+    return otherExtensions.contains(e)? "images/ITEM/$e.png":"images/ITEM/txt.png";
+  }
 }
 
 class HomeImages{
