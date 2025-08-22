@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dart';
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/file_handling_menu.dart';
 
 late ObjDatabaseStore store;
 
@@ -72,10 +73,25 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
               child: ObjIcon(
                 obj: o,
                 onTap: () async {
+                  showFileItemMenu(context, o);
+                },
+                onDoubleTap: () async {
                   await store.changeTarget(o.path);
                   print("変更完了");
                   setState(() {});
-                }
+                },
+              ),
+            ),
+          for(var o in currentRoom.files) // ファイル配置
+            Positioned(
+              left: (o.location.x).toDouble(),
+              top: (o.location.y).toDouble(),
+              child: ObjIcon(
+                obj: o,
+                onTap: () async {
+                  showFileItemMenu(context, o);
+                },
+                onDoubleTap: () {},
               ),
             ),
           AnimatedPositioned(
