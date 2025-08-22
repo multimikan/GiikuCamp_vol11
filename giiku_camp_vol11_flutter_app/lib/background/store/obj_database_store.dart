@@ -134,7 +134,7 @@ class ObjDatabaseStore{
 
   Obj _convertObjFromFileSystemEntity(FileSystemEntity f){ /* システムエンティティをオブジェ型に変換 */
     final name = p.basename(f.path);
-    final image = ImageHelper.resize(Image.asset(_convertImageTypeFromExtention(p.extension(f.path))),10);
+    final image = ImageHelper.resize(Image.asset(ImageHelper.convertImageTypeFromExtention(p.extension(f.path))),10);
     final extention = p.extension(f.path);
 
     final notAlreadyAddedPlacesMap = _getPlace(f);
@@ -143,14 +143,6 @@ class ObjDatabaseStore{
 
     final instance = Obj(f.path,name,image,extention,Location(x!,y!));
     return instance;
-  }
-
-  String _convertImageTypeFromExtention(String extention){
-    final e = extention.replaceAll(".", "");
-    final imageExtentions = ["png","jpg","jpeg","bmp","heic",];
-    final otherExtensions = ["docx","mp3","mp4","pptx","txt","xlsx"];
-    if(imageExtentions.contains(e)) return "images/ITEM/image.png";
-    return otherExtensions.contains(e)? "images/ITEM/$e.png":"images/ITEM/txt.png";
   }
 
   int _findObjectsIndexFromPath(String path){ /* pathが既存オブジェクトリストに登録済みならそのインデックスを返す */
@@ -172,7 +164,7 @@ class ObjDatabaseStore{
   }
 
   Map<String,int> _getPlace(FileSystemEntity f){
-    final double margin = 100; /* 座標の誤差 */
+    final double margin = 200; /* 座標の誤差 */
 
     var x;
     var y;
