@@ -67,6 +67,8 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
     );
   }
 
+  print(vm.rooms.first.directories[0]);
+
   final currentRoom = vm.rooms[currentRoomIndex];
 
     if (!loaded) {
@@ -90,7 +92,6 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
       //     child: Container()
       // ),
           for(var o in currentRoom.directories) // ディレクトリ配置
-          
             Positioned(
               left: (o.location.x).toDouble(),
               top: (o.location.y).toDouble(),
