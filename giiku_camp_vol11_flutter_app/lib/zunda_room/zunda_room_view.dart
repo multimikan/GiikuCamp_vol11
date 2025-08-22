@@ -183,7 +183,7 @@ class _ObjIconState extends State<ObjIcon> {
   @override
   void initState() {
     super.initState();
-    obj = widget.obj ?? Obj("", "", Image.asset(""), "", Location(0, 0), Directory(""));
+    obj = widget.obj ?? Obj("", "", SizedBox(), "", Location(0, 0), Directory(""));
     onTap = widget.onTap ?? () {};
     onDoubleTap = widget.onDoubleTap ?? () {};
   }
