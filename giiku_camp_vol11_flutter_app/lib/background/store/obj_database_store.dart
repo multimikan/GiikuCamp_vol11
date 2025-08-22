@@ -150,7 +150,7 @@ class ObjDatabaseStore{
     return index; //見つからない場合-1を返す
   }
   
-  bool _isAddedPlaceFromObjects(String xyz, double place){ /* objectsにすでにxyzが格納済みかを判定 */
+  bool _isAddedPlaceFromObjects(String xyz, int place){ /* objectsにすでにxyzが格納済みかを判定 */
     var isAdded = false;
     for(var o in objects){ /* objectsを全探索 */
       if (o.field(xyz) == place) isAdded = true;
@@ -163,29 +163,32 @@ class ObjDatabaseStore{
     return index != -1 ? true: false;
   }
 
-  Map<String,int> _getPlace(FileSystemEntity f){
-    final double margin = 100; /* 座標の誤差 */
+  Map<String, int> _getPlace(FileSystemEntity f) {
+  const int margin = 500; // 座標の誤差
 
-    var x;
-    var y;
-    
-    if(p.extension(f.path)==""){
-      x = _dirPlace()["x"];
-      y = _dirPlace()["y"];
-    }
-    else{
-      x = _filePlace()["x"];
-      y = _filePlace()["y"];
-    }
+  int x;
+  int y;
 
-    for (var i = -margin; i <= margin; i++) {
-      if (_isAddedPlaceFromObjects("x", x + i) ||
-          _isAddedPlaceFromObjects("y", y + i)) {
-        
-      }
-    }
-    return {"x":x,"y":y};
+  if (p.extension(f.path) == "") {
+    x = _dirPlace()["x"]!;
+    y = _dirPlace()["y"]!;
+  } else {
+    x = _filePlace()["x"]!;
+    y = _filePlace()["y"]!;
   }
+
+  for (int i = -margin; i <= margin; i++) {
+    if (!_isAddedPlaceFromObjects("x", x + i) &&
+        !_isAddedPlaceFromObjects("y", y + i)) {
+      print("x:${x + i}, y:${y + i}");
+      return {"x": x + i, "y": y + i};
+    }
+  }
+
+  return {"x": x, "y": y};
+}
+
+
   Map<String,int> _dirPlace(){
     final y = ZundaRoomViewModel.home!.door_Y; 
     final x = Random().nextInt(100)+10;
