@@ -46,8 +46,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    AppConfig.windowWidth = screenWidth*RESIZE_WINDOW;
-    AppConfig.windowHeight = screenHeight*RESIZE_WINDOW;
+    AppConfig.windowWidth = screenWidth/**RESIZE_WINDOW*/;
+    AppConfig.windowHeight = screenHeight/**RESIZE_WINDOW*/;
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
