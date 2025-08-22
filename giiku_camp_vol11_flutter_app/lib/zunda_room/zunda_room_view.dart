@@ -79,8 +79,8 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
             ),
           AnimatedPositioned(
             duration: Duration(seconds: 2),
-            left:location.x.toDouble()-10,
-            top: location.y.toDouble()-10,
+            left:0,
+            top: 0,
             child: SizedBox(child: ZundamonWidget(),),
             onEnd:(){ vm.controller.completer!.complete();},
           ),
