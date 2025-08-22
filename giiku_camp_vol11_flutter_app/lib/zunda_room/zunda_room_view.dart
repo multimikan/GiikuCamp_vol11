@@ -13,19 +13,6 @@ import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store
 import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dart';
 
-//仮置き
-class RoomDirs {
-  List<Obj> directories;
-  List<Obj> files;
-
-  RoomDirs({this.directories = const [], this.files = const []});
-}
-List<RoomDirs> Rooms = [
-  RoomDirs(directories: [], files: []),
-  RoomDirs(directories: [], files: []),
-  RoomDirs(directories: [], files: []),
-];
-
 late ObjDatabaseStore store;
 
 class ZundaRoomView extends StatefulWidget {
@@ -52,9 +39,9 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
       loaded = true;
     });
   }
-  void _nextRoom() {
+  void nextRoom(List<RoomDirs> rooms) {
     setState(() {
-      if (currentRoomIndex < Rooms.length - 1) {
+      if (currentRoomIndex < rooms.length - 1) {
         currentRoomIndex++;
       }
     });
@@ -72,7 +59,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   final vm = context.watch<ZundaRoomViewModel>();
   final home = ZundaRoomViewModel.home!.image;
   final location = vm.controller.location??Location(0,0);
-  final currentRoom = Rooms[currentRoomIndex];
+  final currentRoom = vm.rooms[currentRoomIndex];
 
     if (!loaded) {
       return const Scaffold(
@@ -147,7 +134,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
           Align(
             alignment: Alignment.centerRight,
             child: IconButton(
-              onPressed: _nextRoom,
+              onPressed: (){nextRoom(vm.rooms);},
               icon: const Icon(Icons.chevron_right, size: 48),
             ),
           ),

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store.dart';
 import 'package:giiku_camp_vol11_flutter_app/main.dart';
 import 'package:giiku_camp_vol11_flutter_app/main_dev.dart';
@@ -53,6 +54,13 @@ class Zundamon{
   Zundamon(this.location,this.skin,this.axis,this.status);
 }
 
+class RoomDirs {
+  List<Obj> directories;
+  List<Obj> files;
+
+  RoomDirs(this.directories, this.files);
+}
+
 class ZundaRoomViewModel extends ChangeNotifier{
   bool _showFirst = true;
   bool get showFirst => _showFirst; //getter
@@ -60,8 +68,10 @@ class ZundaRoomViewModel extends ChangeNotifier{
   static var home = HomeImages().home1[RoomDirection.left];
   late final ZundaMoveController controller;
   Zundamon zundamon = Zundamon(Location(0,0),Image.asset(""),LookAxis.left,Status.stop);
+  List<RoomDirs> rooms = [];
 
   ZundaRoomViewModel() {
+    fetchRoomDirs();
     Iterable<Widget> imageIte = ImageIte();
     final image =imageIte.iterator;
     image.moveNext();
@@ -109,6 +119,58 @@ class ZundaRoomViewModel extends ChangeNotifier{
     final img = getAnimationImages()[i?1:0];
     yield _changeImageWidgetWithNowAxis(img);
     yield* ImageIte(!i);
+  }
+
+  void fetchRoomDirs(){
+    final needRooms = _getNeedDoorNumbersInObjects();
+    final separatedObjects = _getSeparationObjects();
+    final files = separatedObjects["Files"]??[];
+    final directories = separatedObjects["Directories"]??[];
+    const max_door = 4;
+    const max_item = 10;
+    var tmpD = [] ,tmpF = [];
+
+    for(var i = 0; i<needRooms; i++){
+      for(var j=0; j<max_door; j++){
+        if(directories.isNotEmpty){
+        tmpD.add(directories.last);
+        directories.removeLast();
+        }
+      }
+      for(var j=0; j<max_item; j++){
+        if(files.isNotEmpty){
+        tmpF.add(files.last);
+        files.removeLast();
+        }
+      }
+      rooms.add(RoomDirs(directories, files));
+      tmpD = [];
+      tmpF = [];
+    }
+  }
+
+  int _getNeedDoorNumbersInObjects(){
+    var dirNum = 0;
+    var need = 0;
+    const int max_door=4;
+    const int maz_item=20;
+
+    for(var o in ObjDatabaseStore.objects) {dirNum += o.extention==""?1:0;}
+    need = dirNum%max_door!=0?dirNum~/max_door+1:dirNum~/max_door;
+    final fileNum = (ObjDatabaseStore.objects.length-dirNum);
+    final fileneed = fileNum%max_door!=0?fileNum~/max_door+1:fileNum~/max_door;
+
+    return need>fileneed? need:fileneed;
+  }
+
+  Map<String,List<Obj>> _getSeparationObjects(){
+    List<Obj> files = [];
+    List<Obj> directories = [];
+    for(var o in ObjDatabaseStore.objects){
+      if(o.extention!="") {files.add(o);}
+      else {directories.add(o);}
+    }
+    return {"Files":files,"Directories":directories};
   }
 
   Widget _changeImageWidgetWithNowAxis(Image img){
