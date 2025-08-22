@@ -102,7 +102,9 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                   await store.changeTarget(o.path);
                   currentRoomIndex = 0;
                   print("変更完了");
-                  setState(() {});
+                  setState(() {
+                    vm.fetchRoomDirs();
+                  });
                 },
               ),
             ),
