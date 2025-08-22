@@ -127,15 +127,25 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
             ),
           AnimatedPositioned(
             duration: Duration(seconds: 2),
-            left:location.x.toDouble()-ZUNDAMON_IMAGE_PADDING,
-            top: location.y.toDouble()-ZUNDAMON_IMAGE_PADDING,
-            child: Column(
+            left: location.x.toDouble() - ZUNDAMON_IMAGE_PADDING,
+            top: location.y.toDouble() - ZUNDAMON_IMAGE_PADDING,
+            child: Stack(
+              clipBehavior: Clip.none, // はみ出しを許可する場合
               children: [
-                ObjIcon(obj: vm.zundamon.have,),
-                ZundamonWidget(),
-                ]),
-            onEnd:(){ vm.controller.completer!.complete();},
+                ZundamonWidget(),      // 位置基準はここ
+                Positioned(
+                  // ObjIcon は無視したいなら適当な位置に置くか透明にする
+                  top: -100, 
+                  left: -100,
+                  child: ObjIcon(obj: vm.zundamon.have),
+                ),
+              ],
+            ),
+            onEnd: () {
+              vm.controller.completer!.complete();
+            },
           ),
+
           LayoutBuilder(builder: (context,constraints){
             print({"constraints.maxWidth:${constraints.maxWidth}"});
             print("constraints.maxHeight:${constraints.maxHeight}");
