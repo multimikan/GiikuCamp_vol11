@@ -91,6 +91,14 @@ class ZundaRoomViewModel extends ChangeNotifier{
     });
   }
 
+  static setHave(Obj){
+
+  }
+
+  static cancel(Obj){
+    
+  }
+
   List<Image> getAnimationImages(){
     final List<Image>tmp;
 
