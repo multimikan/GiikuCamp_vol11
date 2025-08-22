@@ -23,7 +23,8 @@ class Obj{ /* Model */
   Widget image;
   String extention;
   Location location;
-  Obj(this.path, this.name, this.image, this.extention, this.location);
+  FileSystemEntity original;
+  Obj(this.path, this.name, this.image, this.extention, this.location, this.original);
 
   dynamic field(String key) { /* 構造体の要素を文字列を受け取って変換し返す */
     switch(key){
@@ -118,7 +119,7 @@ class ObjDatabaseStore{
     x = x ?? obj.location.x;
     y = y ?? obj.location.y;
 
-    final instance = Obj(obj.path, name, image, extension, Location(x,y));
+    final instance = Obj(obj.path, name, image, extension, Location(x,y),obj.original);
     objects[index] = instance;
   }
 
@@ -141,7 +142,7 @@ class ObjDatabaseStore{
     final x = notAlreadyAddedPlacesMap["x"];
     final y = notAlreadyAddedPlacesMap["y"];
 
-    final instance = Obj(f.path,name,image,extention,Location(x!,y!));
+    final instance = Obj(f.path,name,image,extention,Location(x!,y!),f);
     return instance;
   }
 
