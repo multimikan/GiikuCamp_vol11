@@ -5,6 +5,7 @@
 */
 
 import 'package:flutter/material.dart';
+import 'package:giiku_camp_vol11_flutter_app/main.dart';
 import 'dart:math';
 import 'package:provider/provider.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store.dart';
@@ -39,6 +40,10 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
 
   @override
   Widget build(BuildContext context) {
+  final vm = context.watch<ZundaRoomViewModel>();
+  final home = ZundaRoomViewModel.home!.image;
+  final location = vm.controller.location??Location(0,0);
+
     if (!loaded) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
@@ -50,10 +55,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
       body: Stack(
         children: [
           SizedBox.expand(
-            child: Image.asset(
-              'images/zundamonnoie2.png',
-            fit: BoxFit.fill,
-            ),
+            child: home, 
           ),
       // もともとこの位置に書いてあったもの、一応残しておきます。
       // appBar: AppBar(
@@ -75,6 +77,20 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                 }
               ),
             ),
+          AnimatedPositioned(
+            duration: Duration(seconds: 2),
+            left:location.x.toDouble(),
+            top: location.y.toDouble(),
+            child: SizedBox(child: ZundamonWidget(),),
+            onEnd:(){ vm.controller.completer!.complete();},
+          ),
+          LayoutBuilder(builder: (context,constraints){
+            print({"constraints.maxWidth:${constraints.maxWidth}"});
+            print("constraints.maxHeight:${constraints.maxHeight}");
+            print("windowsWidth:${AppConfig.windowWidth}");
+            print("windowsHidth:${AppConfig.windowHeight}");
+            return Container();
+          })
         ],
       ),
     );

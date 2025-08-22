@@ -12,6 +12,7 @@ import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_
 import 'package:giiku_camp_vol11_flutter_app/main.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dart';
 import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 
 enum ObjType{ /*家具の種類*/
@@ -35,11 +36,10 @@ class Obj{ /* Model */
         return location.y;
     }
   }
-
 }
 
-
 class ObjDatabaseStore{
+  static Map<String,List<Obj>> history = {};
   static List<Obj> objects = [];
   late DirDatabaseRepository repo;
 
@@ -57,13 +57,20 @@ class ObjDatabaseStore{
 
   /*別クラスでfetchObjectを使うときはasync{await fetchObject}を推奨(特に同期が重要な場面では必須)*/
   Future<void> fetchObjects([Directory? target]) async { /* パソコンのディレクトリ情報と同期して家具リストを更新 */
+    target = target?? await getApplicationDocumentsDirectory();
     repo.fetchDirectory(target); //同期関数のためawait必要なし
     /*
     -更新後に必要な判定-
     1.オブジェクトリストにない新規fileをオブジェクトリストに追加
     2.オブジェクトリストにはあるがディレクトリ情報にないものをオブジェクトリストから削除
     */
+
+    if(history.containsKey(target.path)) objects = history[target.path]!; //hitstoryにターゲットパスが存在すればobjectsを置き換え
+
     _convertDirListToObjList(repo.dirList); // 1 & 2
+
+    history[target.path] = objects; //path:objects
+
     for(var i = 0; i< objects.length; i++){
       print(objects[i].path);
       print(objects[i].location.x);
@@ -178,19 +185,17 @@ class ObjDatabaseStore{
     }
     return {"x":x,"y":y};
   }
-
   Map<String,int> _dirPlace(){
-    final intWW = (windowWidth-20/* ずんだもんのサイズ分 */).toInt();
-    final y = 300; 
-    final x = Random().nextInt(intWW)+10;
+    final y = ZundaRoomViewModel.home!.door_Y; 
+    final x = Random().nextInt(100)+10;
     return {"x":x,"y":y};
   }
 
   Map<String,int> _filePlace(){
-    final intWW = (windowWidth-20).toInt();
-    final intWH = (windowHeight).toInt();
-    final y = Random().nextInt(intWH)+100; 
-    final x = Random().nextInt(intWW)+10;
+    final floorY = ZundaRoomViewModel.home!.floor_y; 
+    final floorX = ZundaRoomViewModel.home!.floor_x; 
+    final y = Random().nextInt(floorY["max"]!)+floorY["min"]!; 
+    final x = Random().nextInt(floorX["max"]!)+floorX["min"]!; 
     return {"x":x,"y":y};
   }
 }

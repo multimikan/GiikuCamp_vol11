@@ -3,6 +3,8 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store.dart';
+import 'package:giiku_camp_vol11_flutter_app/main.dart';
+import 'package:giiku_camp_vol11_flutter_app/main_dev.dart';
 import 'package:provider/provider.dart';
 
 enum Status{
@@ -20,6 +22,56 @@ enum Axis{
   right,
   left,
   //bottom
+}
+
+enum RoomDirection{
+  left,
+  right,
+  center
+}
+
+class ImageHelper{
+  Image image;
+  int door_Y;
+  Map<String,int> floor_x; //[min:OO,maxOO]
+  Map<String,int> floor_y;
+  ImageHelper(this.image,this.door_Y,this.floor_x,this.floor_y);
+}
+
+class HomeImages{
+  final home1 = {
+    RoomDirection.left: ImageHelper(Image.asset("images/home1(L).png",fit: BoxFit.fill,),
+    (AppConfig.windowHeight*0.4).toInt(),
+  {"min":0,"max":(AppConfig.windowWidth*0.8).toInt()},
+  {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
+
+    RoomDirection.right: ImageHelper(Image.asset("images/home1(R).png",fit: BoxFit.fill,),
+    (AppConfig.windowHeight*0.4).toInt(),
+  {"min":(AppConfig.windowWidth*0.2).toInt(),"max":(AppConfig.windowWidth*0.8).toInt()},
+  {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
+
+  RoomDirection.center: ImageHelper(Image.asset("images/home1(C).png",fit: BoxFit.fill,),
+    (AppConfig.windowHeight*0.4).toInt(),
+  {"min":(AppConfig.windowWidth).toInt(),"max":(AppConfig.windowWidth*0.8).toInt()},
+  {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
+  };
+
+  final home2 = {
+    RoomDirection.left: ImageHelper(Image.asset("images/home2(L).png",fit: BoxFit.fill,),
+    (AppConfig.windowHeight*0.4).toInt(),
+  {"min":0,"max":(AppConfig.windowWidth*0.8).toInt()},
+  {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
+
+    RoomDirection.right: ImageHelper(Image.asset("images/home2(R).png",fit: BoxFit.fill,),
+    (AppConfig.windowHeight*0.4).toInt(),
+  {"min":(AppConfig.windowWidth*0.2).toInt(),"max":(AppConfig.windowWidth*0.8).toInt()},
+  {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
+
+  RoomDirection.center: ImageHelper(Image.asset("images/home2(C).png",fit: BoxFit.fill,),
+    (AppConfig.windowHeight*0.4).toInt(),
+  {"min":(AppConfig.windowWidth).toInt(),"max":(AppConfig.windowWidth*0.8).toInt()},
+  {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
+  };
 }
 
 class Location{
@@ -47,14 +99,16 @@ class Zundamon{
 class ZundaRoomViewModel extends ChangeNotifier{
   bool _showFirst = true;
   bool get showFirst => _showFirst; //getter
-
-  static late Zundamon zundamon;
+  final homeImages = HomeImages();
+  static var home = HomeImages().home1[RoomDirection.left];
+  late final ZundaMoveController controller;
+  static Zundamon zundamon = Zundamon(Location(AppConfig.windowWidth.toInt(),AppConfig.windowHeight.toInt()), Image.asset("images/ZUNDA/zundamon1.png"), Axis.left, Status.stop);
 
   ZundaRoomViewModel(){
     Iterable<Widget> imageIte = ImageIte();
     final image =imageIte.iterator;
     image.moveNext();
-    zundamon = Zundamon(Location(0,0), image.current, Axis.left, Status.stop);
+    controller = ZundaMoveController(zundamon);
 
     Timer.periodic(Duration(milliseconds: 500), (_) {
       _showFirst = !_showFirst; //0.5sごとにshowFirstが切り替わる
@@ -142,9 +196,11 @@ class ZundaMoveController extends ChangeNotifier{
   Zundamon zundamon;
   bool isMoveing = false;
 
-  Completer<void>? _completer;
+  Completer<void>? completer;
   
-  ZundaMoveController(this.zundamon);
+  ZundaMoveController(this.zundamon){
+    location = Location(zundamon.location.x, zundamon.location.y);
+  }
 
   void move(){
     if(!isMoveing) return;
@@ -165,9 +221,9 @@ class ZundaMoveController extends ChangeNotifier{
   }
   
   void completeIfNeeded() { /* コンプリタが呼ばれたら */
-    if (_completer != null && !_completer!.isCompleted) {
-      _completer!.complete();
-      _completer = null;
+    if (completer != null && !completer!.isCompleted) {
+      completer!.complete();
+      completer = null;
     }
   }
 
@@ -180,6 +236,6 @@ class ZundaMoveController extends ChangeNotifier{
   Future<void> _setmove(Location destination){
     location = destination;
     notifyListeners();
-    return _completer!.future;
+    return completer!.future;
   }
 }
