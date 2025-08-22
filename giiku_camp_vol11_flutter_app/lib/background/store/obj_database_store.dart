@@ -168,7 +168,7 @@ class ObjDatabaseStore{
 
     var x;
     var y;
-
+    
     if(p.extension(f.path)==""){
       x = _dirPlace()["x"];
       y = _dirPlace()["y"];
@@ -184,7 +184,7 @@ class ObjDatabaseStore{
         return _getPlace(f);
       }
     }
-    return _getPlace(f);
+    return {"x":0,"y":0};
   }
   Map<String,int> _dirPlace(){
     final y = ZundaRoomViewModel.home!.door_Y; 
@@ -193,7 +193,7 @@ class ObjDatabaseStore{
   }
 
   Map<String,int> _filePlace(){
-    final margin = 250;
+    final margin = 350;
     final floorY = ZundaRoomViewModel.home!.floor_y; 
     final floorX = ZundaRoomViewModel.home!.floor_x; 
     final y = Random().nextInt(floorY["max"]!-margin)+floorY["min"]!; 
