@@ -171,12 +171,13 @@ class ObjDatabaseStore{
     int tries = 0;
 
     while (true) {
+      final fp = _filePlace();
       if (p.extension(f.path) == "") {
         x = _dirPlace()["x"]!;
         y = _dirPlace()["y"]!;
       } else {
-        x = _filePlace()["x"]!;
-        y = _filePlace()["y"]!;
+        x = fp["x"]!;
+        y = fp["y"]!;
       }
 
       bool collide = false;
