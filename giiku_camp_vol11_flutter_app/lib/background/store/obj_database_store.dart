@@ -168,7 +168,7 @@ class ObjDatabaseStore{
     var i = 0;
     while(b&&i<10000){
       i++;
-      final double margin = 100; /* 座標の誤差 */
+      final double margin = 250; /* 座標の誤差 */
 
       var x;
       var y;
