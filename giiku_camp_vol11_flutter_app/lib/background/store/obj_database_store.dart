@@ -184,7 +184,7 @@ class ObjDatabaseStore{
         return _getPlace(f);
       }
     }
-    return {"x":0,"y":0};
+    return {"x":x,"y":y};
   }
   Map<String,int> _dirPlace(){
     final y = ZundaRoomViewModel.home!.door_Y; 
