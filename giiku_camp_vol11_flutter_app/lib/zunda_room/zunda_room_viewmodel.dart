@@ -66,7 +66,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
     final image =imageIte.iterator;
     image.moveNext();
     controller = ZundaMoveController(zundamon);
-    zundamon  = Zundamon(Location(AppConfig.windowWidth.toInt(),AppConfig.windowHeight.toInt()), image.current, Axis.left, Status.stop);
+    zundamon  = Zundamon(Location(AppConfig.windowWidth.toInt(),AppConfig.windowHeight.toInt()), image.current, Axis.left, Status.walk);
 
     Timer.periodic(Duration(milliseconds: 500), (_) {
       _showFirst = !_showFirst; //0.5sごとにshowFirstが切り替わる
