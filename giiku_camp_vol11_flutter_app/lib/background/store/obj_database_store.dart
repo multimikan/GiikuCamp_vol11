@@ -164,7 +164,7 @@ class ObjDatabaseStore{
   }
 
   Map<String, int> _getPlace(FileSystemEntity f) {
-    const int margin = 300;
+    const int margin = 80;
     const int maxTry = 1000;
 
     int x, y;
@@ -203,7 +203,7 @@ class ObjDatabaseStore{
 
   Map<String,int> _dirPlace(){
     final y = ZundaRoomViewModel.home!.door_Y; 
-    final x = Random().nextInt(100)+10;
+    final x = Random().nextInt(450)+100;
     return {"x":x,"y":y};
   }
 
