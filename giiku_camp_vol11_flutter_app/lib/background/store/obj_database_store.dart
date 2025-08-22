@@ -164,7 +164,7 @@ class ObjDatabaseStore{
   }
 
   Map<String, int> _getPlace(FileSystemEntity f) {
-    const int margin = 100;
+    const int margin = 300;
     const int maxTry = 1000;
 
     int x, y;
