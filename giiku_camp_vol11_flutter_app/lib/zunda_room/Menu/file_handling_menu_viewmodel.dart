@@ -23,7 +23,7 @@ class FileHandlingMenuViewmodel extends DirHandler{
   @override
   Future<void> moveObj(Obj obj, String newPath) async {
     await super.move(obj.original, newPath);
-    ZundaMoveController.jobList.add(Job(Location(100,100),Location(obj.location.x,obj.location.y)));
+    ZundaMoveController.jobList.add(Job(Location(100,100),Location(obj.location.x,obj.location.y),obj));
   }
   Future<void> delObj(Obj obj) async {
     final repository = await repo;

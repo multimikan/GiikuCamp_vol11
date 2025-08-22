@@ -4,6 +4,8 @@
 クラス名: ClassNameViewのようなキャメルケースの命名をお願いします。
 */
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:giiku_camp_vol11_flutter_app/main.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/file_handling_menu.dart';
@@ -63,7 +65,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   final home = ZundaRoomViewModel.home!.image;
   final location = vm.controller.location??Location(0,0);
 
-  if(ZundaMoveController.jobList.isNotEmpty) vm.controller.move();
+  if(ZundaMoveController.jobList.isNotEmpty) vm.controller.move(vm.zundamon.have!);
 
   if (ZundaRoomViewModel.rooms.isEmpty) {
     return const Scaffold(
@@ -127,7 +129,11 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
             duration: Duration(seconds: 2),
             left:location.x.toDouble()-ZUNDAMON_IMAGE_PADDING,
             top: location.y.toDouble()-ZUNDAMON_IMAGE_PADDING,
-            child: SizedBox(child: ZundamonWidget(),),
+            child: Column(
+              children: [
+                ObjIcon(obj: vm.zundamon.have,),
+                ZundamonWidget(),
+                ]),
             onEnd:(){ vm.controller.completer!.complete();},
           ),
           LayoutBuilder(builder: (context,constraints){
@@ -159,39 +165,50 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
 
 
 class ObjIcon extends StatefulWidget {
-  final Obj obj;
-  final VoidCallback onTap;
-  final VoidCallback onDoubleTap;
-  const ObjIcon({super.key, required this.obj, required this.onTap, required this.onDoubleTap});
+  final Obj? obj;
+  final VoidCallback? onTap;
+  final VoidCallback? onDoubleTap;
+
+  const ObjIcon({super.key, this.obj, this.onTap, this.onDoubleTap});
 
   @override
   _ObjIconState createState() => _ObjIconState();
 }
 
 class _ObjIconState extends State<ObjIcon> {
+  late Obj obj;
+  late VoidCallback onTap;
+  late VoidCallback onDoubleTap;
+
+  @override
   void initState() {
     super.initState();
+    obj = widget.obj ?? Obj("", "", Image.asset(""), "", Location(0, 0), Directory(""));
+    onTap = widget.onTap ?? () {};
+    onDoubleTap = widget.onDoubleTap ?? () {};
   }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () async {
+      onTap: () {
         print("クリック");
-        widget.onTap();
+        onTap();
       },
-      onDoubleTap: () async {
+      onDoubleTap: () {
         print("ダブルクリック");
-        widget.onDoubleTap();
+        onDoubleTap();
       },
       child: Column(
         children: [
-          Text(widget.obj.name),
-          widget.obj.image
+          Text(obj.name),
+          obj.image,
         ],
       ),
     );
   }
 }
+
 
 
 class ZundamonWidget extends StatefulWidget{

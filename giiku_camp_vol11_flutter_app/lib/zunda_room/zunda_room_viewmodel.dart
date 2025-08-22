@@ -40,9 +40,10 @@ class Location{
 }
 
 class Job{
+  Obj target;
   Location goal;
   Location middle;
-  Job(this.goal,this.middle);
+  Job(this.goal,this.middle,this.target);
 }
 
 class Zundamon{
@@ -50,6 +51,7 @@ class Zundamon{
   Widget skin;
   LookAxis axis;
   Status status;
+  Obj? have;
 
   Zundamon(this.location,this.skin,this.axis,this.status);
 }
@@ -215,10 +217,11 @@ class ZundaMoveController extends ChangeNotifier{
     location = Location(zundamon.location.x, zundamon.location.y);
   }
 
-  Future<void> move() async{
+  Future<void> move(Obj obj) async{
     if(!isMoveing) return;
     if(jobList.isNotEmpty){
       isMoveing = true;
+      zundamon.have = obj;
       Job job = _popJobList();
       _setmove(job.middle);
       status = moveStatus.start;
@@ -231,7 +234,7 @@ class ZundaMoveController extends ChangeNotifier{
       status = moveStatus.end;
       notifyListeners();
       await sleep(1);
-      move();
+      move(job.target);
     }
     else{
       print("全ての動作が完了しました");
