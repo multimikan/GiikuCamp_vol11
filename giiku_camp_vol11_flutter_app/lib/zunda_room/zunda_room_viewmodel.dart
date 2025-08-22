@@ -72,6 +72,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
       _showFirst = !_showFirst; //0.5sごとにshowFirstが切り替わる
       image.moveNext(); //ジェネレータ.next()
       zundamon.skin = image.current;
+      zundamon.status = Status.cry;
       notifyListeners();
     });
   }
