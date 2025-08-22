@@ -266,11 +266,24 @@ class _ObjIconState extends State<ObjIcon> {
         widget.onTap();
         //showFileItemMenu
       },
-      child: Column(
-        children: [
-          Text(widget.obj.name),
-          widget.obj.image
-        ],
+      child: FractionalTranslation(
+        translation: const Offset(-0.5, -0.5),
+        child: SizedBox(
+          width: 60,
+          child: Center(
+            child: Column(
+              children: [
+                Text(
+                  widget.obj.name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: true,
+                ),
+                widget.obj.image
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
