@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
@@ -7,7 +8,9 @@ import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store
 import 'package:giiku_camp_vol11_flutter_app/main.dart';
 import 'package:giiku_camp_vol11_flutter_app/main_dev.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/image_helper.dart';
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_view.dart';
 import 'package:provider/provider.dart';
+import 'package:path/path.dart' as p;
 
 enum Status{
   stop,
@@ -91,12 +94,16 @@ class ZundaRoomViewModel extends ChangeNotifier{
     });
   }
 
-  static setHave(Obj){
-
+  static setHave(Obj obj){
+    zundamon.have = obj;
+    final index = ObjDatabaseStore.objects.indexWhere((d)=> d.path == obj.path);
+    ObjDatabaseStore.objects[index].image = SizedBox();
   }
 
-  static cancel(Obj){
-    
+  static cancelHave(Obj obj){
+    zundamon.have = Obj("","",SizedBox(),"",Location(0,0),File(""));
+    final index = ObjDatabaseStore.objects.indexWhere((d)=> d.path == obj.path);
+    ObjDatabaseStore.objects[index].image = ImageHelper.resize(Image.asset(ImageHelper.convertImageTypeFromExtention(p.extension(obj.path))),10);
   }
 
   List<Image> getAnimationImages(){
@@ -165,12 +172,12 @@ class ZundaRoomViewModel extends ChangeNotifier{
     var dirNum = 0;
     var need = 0;
     const int max_door=4;
-    const int maz_item=20;
+    const int max_item=20;
 
     for(var o in ObjDatabaseStore.objects) {dirNum += o.extention==""?1:0;}
     need = dirNum%max_door!=0?dirNum~/max_door+1:dirNum~/max_door;
     final fileNum = (ObjDatabaseStore.objects.length-dirNum);
-    final fileneed = fileNum%max_door!=0?fileNum~/max_door+1:fileNum~/max_door;
+    final fileneed = fileNum%max_item!=0?fileNum~/max_item+1:fileNum~/max_item;
 
     return need>fileneed? need:fileneed;
   }
