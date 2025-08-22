@@ -137,7 +137,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                   top: -40, 
                   left: -60,
                   child: AnimatedSwitcher(
-                    duration: Duration(milliseconds: 30),
+                    duration: Duration(milliseconds: 0),
                     child: ObjIcon(
                       key: ValueKey(ZundaRoomViewModel.zundamon.have), // 変更を判定するキー
                       obj: ZundaRoomViewModel.zundamon.have,
