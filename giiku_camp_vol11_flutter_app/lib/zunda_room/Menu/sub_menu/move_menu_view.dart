@@ -6,7 +6,7 @@ import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/file_handling_menu_
 import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
 
 OverlayEntry? entry;
-DirHandler handler = DirHandler();
+FileHandlingMenuViewmodel handler = FileHandlingMenuViewmodel();
 void showMoveOverlay(BuildContext context, Obj obj) {
   final overlay = Overlay.of(context);
   entry?.remove();
@@ -44,7 +44,7 @@ void showMoveOverlay(BuildContext context, Obj obj) {
                     ),
                     ElevatedButton(
                       onPressed: () async {
-                        await handler.move(obj.original, DirDatabaseRepository.target.path);
+                        await handler.moveObj(obj, DirDatabaseRepository.target.path);
                         entry!.remove();
                         entry = null;
                       },

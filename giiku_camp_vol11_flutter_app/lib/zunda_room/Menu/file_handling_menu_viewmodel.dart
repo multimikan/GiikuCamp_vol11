@@ -20,10 +20,9 @@ class FileHandlingMenuViewmodel extends DirHandler{
     FileSystemEntity f = await repository.convertFileSystemEntityFromObj(obj);
     await super.rename(f, newPath);
   }
+  @override
   Future<void> moveObj(Obj obj, String newPath) async {
-    final repository = await repo;
-    FileSystemEntity f = await repository.convertFileSystemEntityFromObj(obj);
-    await super.move(f, newPath);
+    await super.move(obj.original, newPath);
     ZundaMoveController.jobList.add(Job(Location(100,100),Location(obj.location.x,obj.location.y)));
   }
   Future<void> delObj(Obj obj) async {
