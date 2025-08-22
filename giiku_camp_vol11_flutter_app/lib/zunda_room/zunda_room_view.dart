@@ -87,8 +87,8 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
           LayoutBuilder(builder: (context,constraints){
             print({"constraints.maxWidth:${constraints.maxWidth}"});
             print("constraints.maxHeight:${constraints.maxHeight}");
-            print("windowsWidth:${AppConfig.windowWidth}");
-            print("windowsHidth:${AppConfig.windowHeight}");
+            print("LWidth:${location.x}");
+            print("LHidth:${location.y}");
             return Container();
           }),
           const DebugGridOverlay(interval: 40, showLabels: true, lineThickness: 1),
