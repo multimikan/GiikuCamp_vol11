@@ -111,25 +111,6 @@ class ZundaRoomViewModel extends ChangeNotifier{
     yield* ImageIte(!i);
   }
 
-  Widget resize(Widget w, int percent){
-    final Image img;
-    if(w is Image){
-      img = w;
-      return Image(
-        image: img.image,
-        width: (img.width??256)*percent/100,
-        height: (img.height??256)*percent/100,
-      );
-    }
-    else {
-      return SizedBox(
-        width: (256)*percent/100,
-        height: (256)*percent/100,
-        child: w,
-      );
-    }
-  }
-
   Widget _changeImageWidgetWithNowAxis(Image img){
     final transeformedImg;
     if (zundamon.axis==LookAxis.left){

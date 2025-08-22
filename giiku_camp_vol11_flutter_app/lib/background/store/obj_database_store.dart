@@ -10,6 +10,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
 import 'package:giiku_camp_vol11_flutter_app/main.dart';
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/image_helper.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -19,7 +20,7 @@ import 'package:path_provider/path_provider.dart';
 class Obj{ /* Model */
   String path; /*ディレクトリの絶対パスを取得*/
   String name;
-  Image image;
+  Widget image;
   String extention;
   Location location;
   Obj(this.path, this.name, this.image, this.extention, this.location);
@@ -108,7 +109,7 @@ class ObjDatabaseStore{
     }
   }
 
-  void _updateObj(Obj obj, [String? name, Image? image, String? extension, int? x, int? y]){ /*既存のオブジェクトを更新*/
+  void _updateObj(Obj obj, [String? name, Widget? image, String? extension, int? x, int? y]){ /*既存のオブジェクトを更新*/
     final index = _findObjectsIndexFromPath(obj.path);
 
     name = name ?? obj.name;
@@ -133,7 +134,7 @@ class ObjDatabaseStore{
 
   Obj _convertObjFromFileSystemEntity(FileSystemEntity f){ /* システムエンティティをオブジェ型に変換 */
     final name = p.basename(f.path);
-    final image = Image.asset(_convertImageTypeFromExtention(p.extension(f.path)));
+    final image = ImageHelper.resize(Image.asset(_convertImageTypeFromExtention(p.extension(f.path))),10);
     final extention = p.extension(f.path);
 
     final notAlreadyAddedPlacesMap = _getPlace(f);

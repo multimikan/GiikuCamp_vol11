@@ -6,6 +6,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:giiku_camp_vol11_flutter_app/main.dart';
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/image_helper.dart';
 import 'dart:math';
 import 'package:provider/provider.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store.dart';
@@ -300,7 +301,7 @@ class _ZundamonWidgetState extends State<ZundamonWidget> {
 
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 0),
-      child: vm.resize(skin,ZUNDAMON_RESIZE_PERCENT),
+      child: ImageHelper.resize(skin,ZUNDAMON_RESIZE_PERCENT),
     );
   }
 }
