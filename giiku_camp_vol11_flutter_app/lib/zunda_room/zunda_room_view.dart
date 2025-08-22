@@ -138,16 +138,16 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
           }),
           Align(
             alignment: Alignment.centerLeft,
-            child: ElevatedButton(
+            child: IconButton(
               onPressed: _prevRoom,
-              child: const Icon(Icons.arrow_back),
+              icon: const Icon(Icons.chevron_left, size: 48),
             ),
           ),
           Align(
             alignment: Alignment.centerRight,
-            child: ElevatedButton(
+            child: IconButton(
               onPressed: _nextRoom,
-              child: const Icon(Icons.arrow_forward),
+              icon: const Icon(Icons.chevron_right, size: 48),
             ),
           ),
         ],
