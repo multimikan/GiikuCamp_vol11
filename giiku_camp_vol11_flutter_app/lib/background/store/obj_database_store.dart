@@ -10,23 +10,20 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
 import 'package:giiku_camp_vol11_flutter_app/main.dart';
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/image_helper.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 
-enum ObjType{ /*家具の種類*/
-  door,
-  clock
-}
 
 class Obj{ /* Model */
   String path; /*ディレクトリの絶対パスを取得*/
   String name;
-  ObjType type;
+  Widget image;
   String extention;
   Location location;
-  Obj(this.path, this.name, this.type, this.extention, this.location);
+  Obj(this.path, this.name, this.image, this.extention, this.location);
 
   dynamic field(String key) { /* 構造体の要素を文字列を受け取って変換し返す */
     switch(key){
@@ -112,16 +109,16 @@ class ObjDatabaseStore{
     }
   }
 
-  void _updateObj(Obj obj, [String? name, ObjType? type, String? extension, int? x, int? y]){ /*既存のオブジェクトを更新*/
+  void _updateObj(Obj obj, [String? name, Widget? image, String? extension, int? x, int? y]){ /*既存のオブジェクトを更新*/
     final index = _findObjectsIndexFromPath(obj.path);
 
     name = name ?? obj.name;
-    type = type ?? obj.type;
+    image = image ?? obj.image;
     extension = extension ?? obj.extention;
     x = x ?? obj.location.x;
     y = y ?? obj.location.y;
 
-    final instance = Obj(obj.path, name, type, extension, Location(x,y));
+    final instance = Obj(obj.path, name, image, extension, Location(x,y));
     objects[index] = instance;
   }
 
@@ -137,14 +134,14 @@ class ObjDatabaseStore{
 
   Obj _convertObjFromFileSystemEntity(FileSystemEntity f){ /* システムエンティティをオブジェ型に変換 */
     final name = p.basename(f.path);
-    final type = p.extension(f.path)==""? ObjType.door: ObjType.clock;
+    final image = ImageHelper.resize(Image.asset(ImageHelper.convertImageTypeFromExtention(p.extension(f.path))),10);
     final extention = p.extension(f.path);
 
     final notAlreadyAddedPlacesMap = _getPlace(f);
     final x = notAlreadyAddedPlacesMap["x"];
     final y = notAlreadyAddedPlacesMap["y"];
 
-    final instance = Obj(f.path,name,type,extention,Location(x!,y!));
+    final instance = Obj(f.path,name,image,extention,Location(x!,y!));
     return instance;
   }
 
@@ -153,7 +150,7 @@ class ObjDatabaseStore{
     return index; //見つからない場合-1を返す
   }
   
-  bool _isAddedPlaceFromObjects(String xyz, double place){ /* objectsにすでにxyzが格納済みかを判定 */
+  bool _isAddedPlaceFromObjects(String xyz, int place){ /* objectsにすでにxyzが格納済みかを判定 */
     var isAdded = false;
     for(var o in objects){ /* objectsを全探索 */
       if (o.field(xyz) == place) isAdded = true;
@@ -166,25 +163,44 @@ class ObjDatabaseStore{
     return index != -1 ? true: false;
   }
 
-  Map<String,int> _getPlace(FileSystemEntity f){
-    final double margin = 20; /* 座標の誤差 */
+  Map<String, int> _getPlace(FileSystemEntity f) {
+    const int margin = 300;
+    const int maxTry = 1000;
 
-    var x;
-    var y;
-    if(p.extension(f.path)==""){
-      x = _dirPlace()["x"];
-      y = _dirPlace()["y"];
-    }
-    else{
-      x = _filePlace()["x"];
-      y = _filePlace()["y"];
-    }
+    int x, y;
+    int tries = 0;
 
-    for(var i = -margin; i<margin; i++){ // O(n*margin)のため動作が重いかも
-      if(_isAddedPlaceFromObjects("x", x+i) || _isAddedPlaceFromObjects("y", y+i)) continue;
+    while (true) {
+      final fp = _filePlace();
+      if (p.extension(f.path) == "") {
+        x = _dirPlace()["x"]!;
+        y = _dirPlace()["y"]!;
+      } else {
+        x = fp["x"]!;
+        y = fp["y"]!;
+      }
+
+      bool collide = false;
+      for (var o in objects) {
+        final dx = (o.location.x - x).abs();
+        final dy = (o.location.y - y).abs();
+        if (dx < margin && dy < margin) {
+          collide = true;
+          break;
+        }
+      }
+
+      if (!collide) {
+        return {"x": x, "y": y};
+      }
+
+      tries++;
+      if (tries > maxTry) {
+        return {"x": x, "y": y};
+      }
     }
-    return {"x":x,"y":y};
   }
+
   Map<String,int> _dirPlace(){
     final y = ZundaRoomViewModel.home!.door_Y; 
     final x = Random().nextInt(100)+10;
@@ -192,10 +208,11 @@ class ObjDatabaseStore{
   }
 
   Map<String,int> _filePlace(){
+    final margin = 250;
     final floorY = ZundaRoomViewModel.home!.floor_y; 
     final floorX = ZundaRoomViewModel.home!.floor_x; 
-    final y = Random().nextInt(floorY["max"]!)+floorY["min"]!; 
-    final x = Random().nextInt(floorX["max"]!)+floorX["min"]!; 
+    final y = Random().nextInt(floorY["max"]!-margin)+floorY["min"]!; 
+    final x = Random().nextInt(floorX["max"]!-margin)+floorX["min"]!; 
     return {"x":x,"y":y};
   }
 }
