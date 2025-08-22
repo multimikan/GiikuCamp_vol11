@@ -36,7 +36,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
     store = await ObjDatabaseStore.init();
     await store.fetchObjects();
     context.read<ZundaRoomViewModel>().fetchRoomDirs();
-    print(context.read<ZundaRoomViewModel>().rooms);
+    print(context.read<ZundaRoomViewModel>().rooms[0]);
     setState(() {
       loaded = true;
     });
