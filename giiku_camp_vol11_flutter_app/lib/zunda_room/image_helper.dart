@@ -15,7 +15,7 @@ class HomeImages{
     RoomDirection.left: ImageHelper(Image.asset("images/home1(L).png",fit: BoxFit.fill,),
     (AppConfig.windowHeight*0.4).toInt(),
   {"min":(AppConfig.windowWidth*0.2).toInt(),"max":(AppConfig.windowWidth*0.8).toInt()},
-  {"min":(AppConfig.windowHeight*0.5).toInt(),"max":(AppConfig.windowHeight.toInt()*0.9.toInt())}),
+  {"min":(AppConfig.windowHeight*0.5).toInt(),"max":(AppConfig.windowHeight*0.9).toInt()}),
 
     RoomDirection.right: ImageHelper(Image.asset("images/home1(R).png",fit: BoxFit.fill,),
   (AppConfig.windowHeight*0.4).toInt(),
