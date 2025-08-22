@@ -267,8 +267,8 @@ class _ObjIconState extends State<ObjIcon> {
       },
       child: Column(
         children: [
-          Icon(size: 20, widget.obj.type == ObjType.door ? Icons.folder : Icons.insert_drive_file, ),
           Text(widget.obj.name),
+          widget.obj.image
         ],
       ),
     );

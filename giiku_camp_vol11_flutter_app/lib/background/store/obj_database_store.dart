@@ -15,18 +15,14 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 
-enum ObjType{ /*家具の種類*/
-  door,
-  clock
-}
 
 class Obj{ /* Model */
   String path; /*ディレクトリの絶対パスを取得*/
   String name;
-  ObjType type;
+  Image image;
   String extention;
   Location location;
-  Obj(this.path, this.name, this.type, this.extention, this.location);
+  Obj(this.path, this.name, this.image, this.extention, this.location);
 
   dynamic field(String key) { /* 構造体の要素を文字列を受け取って変換し返す */
     switch(key){
@@ -112,16 +108,16 @@ class ObjDatabaseStore{
     }
   }
 
-  void _updateObj(Obj obj, [String? name, ObjType? type, String? extension, int? x, int? y]){ /*既存のオブジェクトを更新*/
+  void _updateObj(Obj obj, [String? name, Image? image, String? extension, int? x, int? y]){ /*既存のオブジェクトを更新*/
     final index = _findObjectsIndexFromPath(obj.path);
 
     name = name ?? obj.name;
-    type = type ?? obj.type;
+    image = image ?? obj.image;
     extension = extension ?? obj.extention;
     x = x ?? obj.location.x;
     y = y ?? obj.location.y;
 
-    final instance = Obj(obj.path, name, type, extension, Location(x,y));
+    final instance = Obj(obj.path, name, image, extension, Location(x,y));
     objects[index] = instance;
   }
 
@@ -137,15 +133,23 @@ class ObjDatabaseStore{
 
   Obj _convertObjFromFileSystemEntity(FileSystemEntity f){ /* システムエンティティをオブジェ型に変換 */
     final name = p.basename(f.path);
-    final type = p.extension(f.path)==""? ObjType.door: ObjType.clock;
+    final image = Image.asset(_convertImageTypeFromExtention(p.extension(f.path)));
     final extention = p.extension(f.path);
 
     final notAlreadyAddedPlacesMap = _getPlace(f);
     final x = notAlreadyAddedPlacesMap["x"];
     final y = notAlreadyAddedPlacesMap["y"];
 
-    final instance = Obj(f.path,name,type,extention,Location(x!,y!));
+    final instance = Obj(f.path,name,image,extention,Location(x!,y!));
     return instance;
+  }
+
+  String _convertImageTypeFromExtention(String extention){
+    final e = extention.splitMapJoin(".");
+    final imageExtentions = ["png","jpg","jpeg","bmp","heic",];
+    final otherExtensions = ["docx","mp3","mp4","pptx","txt","xlsx"];
+    if(imageExtentions.contains(e)) return "images/ITEM/image.png";
+    return otherExtensions.contains(e)? "images/ITEM/$e.png":"images/ITEM/txt.png";
   }
 
   int _findObjectsIndexFromPath(String path){ /* pathが既存オブジェクトリストに登録済みならそのインデックスを返す */
