@@ -164,24 +164,28 @@ class ObjDatabaseStore{
   }
 
   Map<String,int> _getPlace(FileSystemEntity f){
-    final double margin = 500; /* 座標の誤差 */
+    var b = true;
+    var i = 0;
+    while(b&&i<10000){
+      i++;
+      final double margin = 100; /* 座標の誤差 */
 
-    var x;
-    var y;
-    if(p.extension(f.path)==""){
-      x = _dirPlace()["x"];
-      y = _dirPlace()["y"];
-    }
-    else{
-      x = _filePlace()["x"];
-      y = _filePlace()["y"];
-    }
+      var x;
+      var y;
+      if(p.extension(f.path)==""){
+        x = _dirPlace()["x"];
+        y = _dirPlace()["y"];
+      }
+      else{
+        x = _filePlace()["x"];
+        y = _filePlace()["y"];
+      }
 
-    for (var i = -margin; i <= margin; i++) {
-    // XとY両方が空いてる座標を見つけたらそこで確定
-      if (!_isAddedPlaceFromObjects("x", x + i) &&
-          !_isAddedPlaceFromObjects("y", y + i)) {
-        return {"x": x + i, "y": y + i};
+      for (var i = -margin; i <= margin; i++) {
+        if (_isAddedPlaceFromObjects("x", x + i) ||
+            _isAddedPlaceFromObjects("y", y + i)) {
+          return _getPlace(f);
+        }
       }
     }
     return {"x":0,"y":0};
