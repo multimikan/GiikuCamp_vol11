@@ -181,7 +181,7 @@ class ObjDatabaseStore{
     for (var i = -margin; i <= margin; i++) {
       if (_isAddedPlaceFromObjects("x", x + i) ||
           _isAddedPlaceFromObjects("y", y + i)) {
-        return _getPlace(f);
+        
       }
     }
     return {"x":x,"y":y};
