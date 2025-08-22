@@ -61,7 +61,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
   late final ZundaMoveController controller;
   late Zundamon zundamon = Zundamon(Location(0,0),Image.asset(""),Axis.left,Status.stop);
 
-  ZundaRoomViewModel(){
+  ZundaRoomViewModel() {
     Iterable<Widget> imageIte = ImageIte();
     final image =imageIte.iterator;
     image.moveNext();
@@ -72,6 +72,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
       _showFirst = !_showFirst; //0.5sごとにshowFirstが切り替わる
       image.moveNext(); //ジェネレータ.next()
       zundamon.skin = image.current;
+      notifyListeners();
     });
   }
 
