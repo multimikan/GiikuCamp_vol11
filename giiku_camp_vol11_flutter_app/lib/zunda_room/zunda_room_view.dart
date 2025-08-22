@@ -35,6 +35,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   Future<void> _loadObjects() async {
     store = await ObjDatabaseStore.init();
     await store.fetchObjects();
+    context.read<ZundaRoomViewModel>().fetchRoomDirs();
     setState(() {
       loaded = true;
     });
@@ -65,7 +66,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
       body: Center(child: Text("部屋がありません")),
     );
   }
-  
+
   final currentRoom = vm.rooms[currentRoomIndex];
 
     if (!loaded) {
