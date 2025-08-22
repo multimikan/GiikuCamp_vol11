@@ -177,11 +177,14 @@ class ObjDatabaseStore{
       y = _filePlace()["y"];
     }
 
-    for(var i = -margin; i<margin; i++){ // O(n*margin)のため動作が重いかも
-      if(_isAddedPlaceFromObjects("x", x+i) || _isAddedPlaceFromObjects("y", y+i)) continue;
+    for (var i = -margin; i <= margin; i++) {
+    // XとY両方が空いてる座標を見つけたらそこで確定
+      if (!_isAddedPlaceFromObjects("x", x + i) &&
+          !_isAddedPlaceFromObjects("y", y + i)) {
+        return {"x": x + i, "y": y + i};
+      }
     }
-    print("x:$x,y:$y");
-    return {"x":x,"y":y};
+    return {"x":0,"y":0};
   }
   Map<String,int> _dirPlace(){
     final y = ZundaRoomViewModel.home!.door_Y; 
