@@ -68,7 +68,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
   static var home = HomeImages().home1[RoomDirection.left];
   late final ZundaMoveController controller;
   Zundamon zundamon = Zundamon(Location(0,0),Image.asset(""),LookAxis.left,Status.stop);
-  List<RoomDirs> rooms = [];
+  static List<RoomDirs> rooms = [];
 
   ZundaRoomViewModel() {
     fetchRoomDirs();

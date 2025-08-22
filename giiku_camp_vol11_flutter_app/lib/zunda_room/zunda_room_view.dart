@@ -61,15 +61,13 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   final home = ZundaRoomViewModel.home!.image;
   final location = vm.controller.location??Location(0,0);
 
-  if (vm.rooms.isEmpty) {
+  if (ZundaRoomViewModel.rooms.isEmpty) {
     return const Scaffold(
       body: Center(child: Text("部屋がありません")),
     );
   }
 
-  print(vm.rooms.first.directories[0]);
-
-  final currentRoom = vm.rooms[currentRoomIndex];
+  final currentRoom = ZundaRoomViewModel.rooms[currentRoomIndex];
 
     if (!loaded) {
       return const Scaffold(
@@ -144,7 +142,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
           Align(
             alignment: Alignment.centerRight,
             child: IconButton(
-              onPressed: (){nextRoom(vm.rooms);},
+              onPressed: (){nextRoom(ZundaRoomViewModel.rooms);},
               icon: const Icon(Icons.chevron_right, size: 48),
             ),
           ),
