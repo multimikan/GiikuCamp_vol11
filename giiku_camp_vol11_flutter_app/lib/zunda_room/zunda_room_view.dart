@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dart';
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/file_handling_menu.dart';
 
 late ObjDatabaseStore store;
 
@@ -99,7 +100,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
               child: ObjIcon(
                 obj: o,
                 onTap: () async {
-                  //showmenu
+                  showFileItemMenu(context, o);
                 },
                 onDoubleTap: () async {
                   await store.changeTarget(o.path);
@@ -117,7 +118,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
               child: ObjIcon(
                 obj: o,
                 onTap: () async {
-                  //showmenu
+                  showFileItemMenu(context, o);
                 },
                 onDoubleTap: () {},
               ),
@@ -386,5 +387,80 @@ class _GridPainter extends CustomPainter {
         labelColor != old.labelColor ||
         showLabels != old.showLabels ||
         padding != old.padding;
+  }
+}
+
+
+class ObjIcon extends StatefulWidget {
+  final Obj obj;
+  final VoidCallback onTap;
+  const ObjIcon({super.key, required this.obj, required this.onTap});
+
+  @override
+  _ObjIconState createState() => _ObjIconState();
+}
+
+class _ObjIconState extends State<ObjIcon> {
+  void initState() {
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () async {
+        print("変更開始");
+        widget.onTap();
+        //showFileItemMenu
+      },
+      child: FractionalTranslation(
+        translation: const Offset(-0.5, -0.5),
+        child: SizedBox(
+          width: 60,
+          child: Center(
+            child: Column(
+              children: [
+                Text(
+                  widget.obj.name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: true,
+                ),
+                widget.obj.image
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class ZundamonWidget extends StatefulWidget{
+  const ZundamonWidget({super.key});
+
+  @override
+  State<ZundamonWidget> createState()=>_ZundamonWidgetState();
+}
+
+class _ZundamonWidgetState extends State<ZundamonWidget> {
+
+  @override
+  void didChangeDependencies(){ /* キャッシュで先読み込み */
+    super.didChangeDependencies();
+    for(var i=1; i<33; i++) {
+      precacheImage(AssetImage("images/ZUNDA/zundamon$i.png"), context);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final vm = context.watch<ZundaRoomViewModel>();
+    final skin = vm.zundamon.skin;
+
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 0),
+      child: ImageHelper.resize(skin,ZUNDAMON_RESIZE_PERCENT),
+    );
   }
 }
