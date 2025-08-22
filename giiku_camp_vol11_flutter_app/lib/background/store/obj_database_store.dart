@@ -164,29 +164,42 @@ class ObjDatabaseStore{
   }
 
   Map<String, int> _getPlace(FileSystemEntity f) {
-  const int margin = 5; // 座標の誤差
+    const int margin = 30;
+    const int maxTry = 1000;
 
-  int x;
-  int y;
+    int x, y;
+    int tries = 0;
 
-  if (p.extension(f.path) == "") {
-    x = _dirPlace()["x"]!;
-    y = _dirPlace()["y"]!;
-  } else {
-    x = _filePlace()["x"]!;
-    y = _filePlace()["y"]!;
-  }
+    while (true) {
+      if (p.extension(f.path) == "") {
+        x = _dirPlace()["x"]!;
+        y = _dirPlace()["y"]!;
+      } else {
+        x = _filePlace()["x"]!;
+        y = _filePlace()["y"]!;
+      }
 
-  for (int i = -margin; i <= margin; i++) {
-    if (!_isAddedPlaceFromObjects("x", x + i) &&
-        !_isAddedPlaceFromObjects("y", y + i)) {
-      print("x:${x + i}, y:${y + i}");
-      return {"x": x + i, "y": y};
+      bool collide = false;
+      for (var o in objects) {
+        final dx = (o.location.x - x).abs();
+        final dy = (o.location.y - y).abs();
+        if (dx < margin && dy < margin) {
+          collide = true;
+          break;
+        }
+      }
+
+      if (!collide) {
+        return {"x": x, "y": y};
+      }
+
+      tries++;
+      if (tries > maxTry) {
+        return {"x": x, "y": y};
+      }
     }
   }
 
-  return {"x": x, "y": y};
-}
 
 
   Map<String,int> _dirPlace(){
