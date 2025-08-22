@@ -59,13 +59,14 @@ class ZundaRoomViewModel extends ChangeNotifier{
   final homeImages = HomeImages();
   static var home = HomeImages().home1[RoomDirection.left];
   late final ZundaMoveController controller;
-  static Zundamon zundamon = Zundamon(Location(AppConfig.windowWidth.toInt(),AppConfig.windowHeight.toInt()), Image.asset("images/ZUNDA/zundamon1.png"), Axis.left, Status.stop);
+  late Zundamon zundamon;
 
   ZundaRoomViewModel(){
     Iterable<Widget> imageIte = ImageIte();
     final image =imageIte.iterator;
     image.moveNext();
     controller = ZundaMoveController(zundamon);
+    zundamon  = Zundamon(Location(AppConfig.windowWidth.toInt(),AppConfig.windowHeight.toInt()), image.current, Axis.left, Status.stop);
 
     Timer.periodic(Duration(milliseconds: 500), (_) {
       _showFirst = !_showFirst; //0.5sごとにshowFirstが切り替わる

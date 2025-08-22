@@ -13,6 +13,7 @@ class AppConfig {
 }
 
 final RESIZE_WINDOW = 0.4;
+final ZUNDAMON_IMAGE_SIZE = 100;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
