@@ -12,6 +12,19 @@ import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store
 import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dart';
 
+//仮置き
+class RoomDirs {
+  List<Obj> directories;
+  List<Obj> files;
+
+  RoomDirs({this.directories = const [], this.files = const []});
+}
+List<RoomDirs> Rooms = [
+  RoomDirs(directories: [], files: []),
+  RoomDirs(directories: [], files: []),
+  RoomDirs(directories: [], files: []),
+];
+
 late ObjDatabaseStore store;
 
 class ZundaRoomView extends StatefulWidget {
@@ -23,6 +36,7 @@ class ZundaRoomView extends StatefulWidget {
 
 class _ZundaRoomViewState extends State<ZundaRoomView> {
   bool loaded = false;
+  int currentRoomIndex = 0;
 
   @override
   void initState() {
@@ -37,12 +51,27 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
       loaded = true;
     });
   }
+  void _nextRoom() {
+    setState(() {
+      if (currentRoomIndex < Rooms.length - 1) {
+        currentRoomIndex++;
+      }
+    });
+  }
+  void _prevRoom() {
+    setState(() {
+      if (currentRoomIndex > 0) {
+        currentRoomIndex--;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
   final vm = context.watch<ZundaRoomViewModel>();
   final home = ZundaRoomViewModel.home!.image;
   final location = vm.controller.location??Location(0,0);
+  final currentRoom = Rooms[currentRoomIndex];
 
     if (!loaded) {
       return const Scaffold(
@@ -64,17 +93,33 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
       // body: Center(
       //     child: Container()
       // ),
-          for(var o in ObjDatabaseStore.objects)
+          for(var o in currentRoom.directories) // ディレクトリ配置
             Positioned(
               left: (o.location.x).toDouble(),
               top: (o.location.y).toDouble(),
               child: ObjIcon(
                 obj: o,
                 onTap: () async {
+                  //showmenu
+                },
+                onDoubleTap: () async {
                   await store.changeTarget(o.path);
+                  currentRoomIndex = 0;
                   print("変更完了");
                   setState(() {});
-                }
+                },
+              ),
+            ),
+          for(var o in currentRoom.files) // ファイル配置
+            Positioned(
+              left: (o.location.x).toDouble(),
+              top: (o.location.y).toDouble(),
+              child: ObjIcon(
+                obj: o,
+                onTap: () async {
+                  //showmenu
+                },
+                onDoubleTap: () {},
               ),
             ),
           AnimatedPositioned(
@@ -90,7 +135,21 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
             print("windowsWidth:${AppConfig.windowWidth}");
             print("windowsHidth:${AppConfig.windowHeight}");
             return Container();
-          })
+          }),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: ElevatedButton(
+              onPressed: _prevRoom,
+              child: const Icon(Icons.arrow_back),
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: ElevatedButton(
+              onPressed: _nextRoom,
+              child: const Icon(Icons.arrow_forward),
+            ),
+          ),
         ],
       ),
     );
@@ -100,7 +159,8 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
 class ObjIcon extends StatefulWidget {
   final Obj obj;
   final VoidCallback onTap;
-  const ObjIcon({super.key, required this.obj, required this.onTap});
+  final VoidCallback onDoubleTap;
+  const ObjIcon({super.key, required this.obj, required this.onTap, required this.onDoubleTap});
 
   @override
   _ObjIconState createState() => _ObjIconState();
@@ -114,9 +174,12 @@ class _ObjIconState extends State<ObjIcon> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        print("変更開始");
+        print("クリック");
         widget.onTap();
-        //showFileItemMenu
+      },
+      onDoubleTap: () async {
+        print("ダブルクリック");
+        widget.onDoubleTap();
       },
       child: Column(
         children: [
