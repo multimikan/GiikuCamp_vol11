@@ -172,7 +172,7 @@ class ObjDatabaseStore{
   }
 
   Map<String,int> _getPlace(FileSystemEntity f){
-    final double margin = 20; /* 座標の誤差 */
+    final double margin = 100; /* 座標の誤差 */
 
     var x;
     var y;
