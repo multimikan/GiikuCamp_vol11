@@ -249,6 +249,7 @@ class ZundaMoveController extends ChangeNotifier{
   Future<void> move() async{
     if(!isMoveing) return;
     if(jobList.isNotEmpty){
+      print("move start");
       isMoveing = true;
       Job job = _popJobList();
       _setmove(job.middle);
