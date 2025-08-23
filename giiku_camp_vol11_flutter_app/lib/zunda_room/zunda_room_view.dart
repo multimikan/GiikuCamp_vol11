@@ -288,12 +288,12 @@ class _ObjIconState extends State<ObjIcon> {
             child: Column(
               children: [
                 Text(
-                  widget.obj!.name,
+                  obj?.name ?? "",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   softWrap: true,
                 ),
-                widget.obj!.image,
+                obj?.image ?? const SizedBox(),
               ],
             ),
           ),

@@ -167,7 +167,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
         files.removeLast();
         }
       }
-      rooms.add(RoomDirs(tmpD, tmpF));
+      rooms.add(RoomDirs(List.from(tmpD), List.from(tmpF)));
       tmpD = [];
       tmpF = [];
     }
