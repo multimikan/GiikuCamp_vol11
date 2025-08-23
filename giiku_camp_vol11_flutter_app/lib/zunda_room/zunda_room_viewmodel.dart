@@ -246,30 +246,26 @@ class ZundaMoveController extends ChangeNotifier{
     notifyListeners();
   }
 
-  Future<void> move() async{
-    if(isMoveing) return;
-    if(jobList.isNotEmpty){
-      print("move start");
-      isMoveing = true;
-      Job job = _popJobList();
-      _setmove(job.middle);
-      status = moveStatus.start;
-      zundamon.status = Status.stop;
-      notifyListeners();
-      //middleまで待つ
-      await sleep(1);
-      zundamon.status = Status.walk;
-      _setmove(job.goal);
-      status = moveStatus.end;
-      notifyListeners();
-      await sleep(1);
-      move();
-    }
-    else{
-      print("全ての動作が完了しました");
-      isMoveing = false;
-    }
+  Future<void> move() async {
+  if (isMoveing) return;
+  if (jobList.isNotEmpty) {
+    print("move start");
+    isMoveing = true;
+    Job job = _popJobList();
+    
+    await _setmove(job.middle); // middle に移動
+    await Future.delayed(Duration(seconds: 1));
+    completer?.complete(); // ← 中継地点到達で完了
+    
+    await _setmove(job.goal);   // goal に移動
+    await Future.delayed(Duration(seconds: 1));
+    completer?.complete(); // ← ゴール到達で完了
+    
+    isMoveing = false;
+    fetch(); // 次のジョブがあれば続行
   }
+}
+
   
   void completeIfNeeded() { /* コンプリタが呼ばれたら */
     if (completer != null && !completer!.isCompleted) {
