@@ -135,6 +135,21 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
       // body: Center(
       //     child: Container()
       // ),
+      AnimatedPositioned(
+            duration: const Duration(seconds: 2),
+            curve: Curves.easeInOut,
+            right: vm.controller.zundamon.location.x.toDouble() - ZUNDAMON_IMAGE_PADDING,
+            top:  vm.controller.zundamon.location.y.toDouble() - ZUNDAMON_IMAGE_PADDING,
+            child: Stack(
+              clipBehavior: Clip.none, // はみ出しを許可
+              children: [
+                ZundamonWidget(),
+              ],
+            ),
+            onEnd: () {
+              vm.controller.completeIfNeeded();
+            },
+          ),
           for(var o in currentRoom.directories) // ディレクトリ配置
             Positioned(
               left: (o.location.x).toDouble(),
@@ -168,21 +183,6 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                 onDoubleTap: () {},
               ),
             ),
-          AnimatedPositioned(
-            duration: const Duration(seconds: 2),
-            curve: Curves.easeInOut,
-            left: vm.controller.zundamon.location.x.toDouble() - ZUNDAMON_IMAGE_PADDING,
-            top:  vm.controller.zundamon.location.y.toDouble() - ZUNDAMON_IMAGE_PADDING,
-            child: Stack(
-              clipBehavior: Clip.none, // はみ出しを許可
-              children: [
-                ZundamonWidget(),
-              ],
-            ),
-            onEnd: () {
-              vm.controller.completeIfNeeded();
-            },
-          ),
 
           LayoutBuilder(builder: (context,constraints){
             /*print({"constraints.maxWidth:${constraints.maxWidth}"});
