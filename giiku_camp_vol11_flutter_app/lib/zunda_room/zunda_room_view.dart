@@ -29,6 +29,7 @@ class ZundaRoomView extends StatefulWidget {
 
 class _ZundaRoomViewState extends State<ZundaRoomView> {
   bool loaded = false;
+  final vm = ZundaRoomViewModel();
 
   @override
   void initState() {
@@ -48,8 +49,14 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
     setState(() {
       if (currentRoomIndex < rooms.length - 1) {
         currentRoomIndex++;
-        if(currentRoomIndex==rooms.length-1) {ZundaRoomViewModel.currentHomeDirection = RoomDirection.right;}
-        else{ZundaRoomViewModel.currentHomeDirection = RoomDirection.center;}
+        if(currentRoomIndex==rooms.length-1) {
+          ZundaRoomViewModel.currentHomeDirection = RoomDirection.right;
+          vm.fetchRoomDirs();
+        }
+        else{
+          ZundaRoomViewModel.currentHomeDirection = RoomDirection.center;
+          vm.fetchRoomDirs();
+        }
       }
     });
   }
@@ -57,8 +64,14 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
     setState(() {
       if (currentRoomIndex > 0) {
         currentRoomIndex--;
-        if(currentRoomIndex==0) {ZundaRoomViewModel.currentHomeDirection = RoomDirection.left;}
-        else{ZundaRoomViewModel.currentHomeDirection = RoomDirection.center;}
+        if(currentRoomIndex==0) {
+          ZundaRoomViewModel.currentHomeDirection = RoomDirection.left;
+          vm.fetchRoomDirs();
+          }
+        else{
+          ZundaRoomViewModel.currentHomeDirection = RoomDirection.center;
+          vm.fetchRoomDirs();
+          }
       }
     });
   }

@@ -138,6 +138,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
   }
 
   void fetchRoomDirs(){
+    home = HomeImages.get(currentHome)[currentHomeDirection];
     final needRooms = _getNeedDoorNumbersInObjects();
     final separatedObjects = _getSeparationObjects();
     final files = separatedObjects["Files"]??[];
