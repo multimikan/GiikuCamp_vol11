@@ -166,7 +166,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
               ],
             ),
             onEnd: () {
-              vm.controller.completeIfNeeded(Status.surprize1);
+              vm.controller.completeIfNeeded(Status.values.byName("surprize${Random().nextInt(3)+1}"));
             },
           ),
 
