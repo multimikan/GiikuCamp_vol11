@@ -79,6 +79,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   @override
   Widget build(BuildContext context) {
   final vm = context.watch<ZundaRoomViewModel>();
+  final controller = context.watch<ZundaMoveController>();
   final home = ZundaRoomViewModel.home!.image;
   final location = vm.controller.location??Location(0,0);
 
