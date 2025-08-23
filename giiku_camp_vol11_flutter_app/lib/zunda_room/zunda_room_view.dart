@@ -7,6 +7,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:giiku_camp_vol11_flutter_app/background/gpt/gpt_service.dart';
 import 'package:giiku_camp_vol11_flutter_app/main.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/file_handling_menu.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/image_helper.dart';
@@ -30,6 +31,9 @@ class ZundaRoomView extends StatefulWidget {
 class _ZundaRoomViewState extends State<ZundaRoomView> {
   bool loaded = false;
   final vm = ZundaRoomViewModel();
+  final gpt = GPTTerminal();
+  final TextEditingController controller = TextEditingController();
+  String reply = "";
 
   @override
   void initState() {
@@ -233,6 +237,37 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
               "images/ITEM/trash.png",
               width: 40,
               height: 40,
+            ),
+          ),
+          Align(
+            alignment: Alignment.topLeft, // 左上
+            child: SizedBox(
+              width: 250,
+              child: Row(
+                children: [
+                  Expanded( // ← 追加！ TextField に幅を与える
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        hintText: "やってほしいことを教えてほしいのだ",
+                        border: OutlineInputBorder(),
+                        isDense: true,
+                        filled: true,              // ← 背景を塗りつぶす指定
+                        fillColor: Colors.white,
+                      ),
+                      controller: controller,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton(
+                    onPressed: () async {
+                      reply = await gpt.sendMessage(controller.text);
+                      print(reply);
+                      upd();
+                    },
+                    child: const Text("実行"),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
