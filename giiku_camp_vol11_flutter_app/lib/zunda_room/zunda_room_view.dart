@@ -83,9 +83,11 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   final location = vm.controller.location??Location(0,0);
 
   void upd() {
-    currentRoomIndex = 0;
-    vm.fetchRoomDirs();
-    setState(() {});
+    setState(() {
+      currentRoomIndex = 0;
+      ZundaRoomViewModel.currentHomeDirection = RoomDirection.left;
+      vm.fetchRoomDirs();
+    });
   }
 
   if(ZundaMoveController.jobList.isNotEmpty) vm.controller.move(ZundaRoomViewModel.zundamon.have!);
@@ -273,17 +275,17 @@ class _ObjIconState extends State<ObjIcon> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        print("クリック");
-        onTap();
-      },
-      onDoubleTap: () {
-        print("ダブルクリック");
-        onDoubleTap();
-      },
-      child: FractionalTranslation(
-        translation: const Offset(-0.5, -0.5),
+    return FractionalTranslation(
+      translation: const Offset(-0.5, -0.5),
+      child: GestureDetector(
+        onTap: () {
+          print("クリック");
+          onTap();
+        },
+        onDoubleTap: () {
+          print("ダブルクリック");
+          onDoubleTap();
+        },
         child: SizedBox(
           width: 60,
           child: Center(
