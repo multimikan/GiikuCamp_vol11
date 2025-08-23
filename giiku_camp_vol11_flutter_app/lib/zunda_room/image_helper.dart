@@ -3,81 +3,155 @@ import 'package:flutter/material.dart';
 import 'package:giiku_camp_vol11_flutter_app/main.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dart';
 
-class ImageHelper{
-  Image image;
-  int door_Y;
-  Map<String,int> floor_x; //[min:OO,maxOO]
-  Map<String,int> floor_y;
-  ImageHelper(this.image,this.door_Y,this.floor_x,this.floor_y);
+/// 部屋の方向
+enum RoomDirection { left, right, center }
 
-  static Widget resize(Widget w, int percent){
-    final Image img;
-    if(w is Image){
-      img = w;
+/// 部屋の一枚の画像情報
+class RoomImage {
+  final Image image;
+  final int doorY;
+  final Map<String, int> floorX; // {min: OO, max: OO}
+  final Map<String, int> floorY;
+
+  const RoomImage({
+    required this.image,
+    required this.doorY,
+    required this.floorX,
+    required this.floorY,
+  });
+}
+
+/// 画像関連ユーティリティ
+class ImageUtils {
+  /// リサイズ
+  static Widget resize(Widget widget, int percent) {
+    if (widget is Image) {
       return Image(
-        image: img.image,
-        width: (img.width??256)*percent/100,
-        height: (img.height??256)*percent/100,
+        image: widget.image,
+        width: (widget.width ?? 256) * percent / 100,
+        height: (widget.height ?? 256) * percent / 100,
       );
-    }
-    else {
+    } else {
       return SizedBox(
-        width: (256)*percent/100,
-        height: (256)*percent/100,
-        child: w,
+        width: 256 * percent / 100,
+        height: 256 * percent / 100,
+        child: widget,
       );
     }
   }
 
-  static String convertImageTypeFromExtention(String extention){
-    final _random = Random();
-    final e = extention.replaceAll(".", "");
-    final imageExtentions = ["png","jpg","jpeg","bmp","heic",];
-    final otherExtensions = ["docx","mp3","mp4","pptx","txt","xlsx"];
-    final dirImageGroup = [
-        "images/DOOR/door1.png",
-        "images/DOOR/door2.png",
-        "images/DOOR/door3.png",
-        "images/DOOR/door4.png"
+  /// 拡張子からアイコン画像のパスに変換
+  static String fromExtension(String extension) {
+    final e = extension.replaceAll(".", "").toLowerCase();
+    final random = Random();
+
+    const imageExtensions = ["png", "jpg", "jpeg", "bmp", "heic"];
+    const otherExtensions = ["docx", "mp3", "mp4", "pptx", "txt", "xlsx"];
+    const dirImages = [
+      "images/DOOR/door1.png",
+      "images/DOOR/door2.png",
+      "images/DOOR/door3.png",
+      "images/DOOR/door4.png",
     ];
-    if (e == "") return dirImageGroup[_random.nextInt(dirImageGroup.length)];
-    else if(imageExtentions.contains(e)) return "images/ITEM/image.png";
-    return otherExtensions.contains(e)? "images/ITEM/$e.png":"images/ITEM/txt.png";
+
+    if (e.isEmpty) {
+      return dirImages[random.nextInt(dirImages.length)];
+    } else if (imageExtensions.contains(e)) {
+      return "images/ITEM/image.png";
+    } else if (otherExtensions.contains(e)) {
+      return "images/ITEM/$e.png";
+    } else {
+      return "images/ITEM/txt.png";
+    }
   }
 }
 
-class HomeImages{
-  final home1 = {
-    RoomDirection.left: ImageHelper(Image.asset("images/home1(L).png",fit: BoxFit.fill,),
-    (AppConfig.windowHeight*0.4).toInt(),
-  {"min":(AppConfig.windowWidth*0.2).toInt(),"max":(AppConfig.windowWidth*0.8).toInt()},
-  {"min":(AppConfig.windowHeight*0.5).toInt(),"max":(AppConfig.windowHeight*0.9).toInt()}),
+/// 家の種類
+enum HomeType { home1, home2 }
 
-    RoomDirection.right: ImageHelper(Image.asset("images/home1(R).png",fit: BoxFit.fill,),
-  (AppConfig.windowHeight*0.4).toInt(),
-  {"min":0,"max":(AppConfig.windowWidth*0.8).toInt()},
-  {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
+/// 家ごとの画像セットを管理
+class HomeImages {
+  static Map<RoomDirection, RoomImage> get(HomeType type) {
+    switch (type) {
+      case HomeType.home1:
+        return {
+          RoomDirection.left: RoomImage(
+            image: Image.asset("images/home1(L).png", fit: BoxFit.fill),
+            doorY: (AppConfig.windowHeight * 0.4).toInt(),
+            floorX: {
+              "min": (AppConfig.windowWidth * 0.2).toInt(),
+              "max": (AppConfig.windowWidth * 0.8).toInt(),
+            },
+            floorY: {
+              "min": (AppConfig.windowHeight * 0.5).toInt(),
+              "max": (AppConfig.windowHeight * 0.9).toInt(),
+            },
+          ),
+          RoomDirection.right: RoomImage(
+            image: Image.asset("images/home1(R).png", fit: BoxFit.fill),
+            doorY: (AppConfig.windowHeight * 0.4).toInt(),
+            floorX: {
+              "min": 0,
+              "max": (AppConfig.windowWidth * 0.8).toInt(),
+            },
+            floorY: {
+              "min": (AppConfig.windowHeight * 0.4).toInt(),
+              "max": AppConfig.windowHeight.toInt(),
+            },
+          ),
+          RoomDirection.center: RoomImage(
+            image: Image.asset("images/home1(C).png", fit: BoxFit.fill),
+            doorY: (AppConfig.windowHeight * 0.4).toInt(),
+            floorX: {
+              "min": AppConfig.windowWidth.toInt(),
+              "max": (AppConfig.windowWidth * 0.8).toInt(),
+            },
+            floorY: {
+              "min": (AppConfig.windowHeight * 0.4).toInt(),
+              "max": AppConfig.windowHeight.toInt(),
+            },
+          ),
+        };
 
-  RoomDirection.center: ImageHelper(Image.asset("images/home1(C).png",fit: BoxFit.fill,),
-    (AppConfig.windowHeight*0.4).toInt(),
-  {"min":(AppConfig.windowWidth).toInt(),"max":(AppConfig.windowWidth*0.8).toInt()},
-  {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
-  };
-
-  final home2 = {
-    RoomDirection.left: ImageHelper(Image.asset("images/home2(L).png",fit: BoxFit.fill,),
-    (AppConfig.windowHeight*0.4).toInt(),
-  {"min":(AppConfig.windowWidth*0.2).toInt(),"max":(AppConfig.windowWidth*0.8).toInt()},
-  {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
-  
-    RoomDirection.right: ImageHelper(Image.asset("images/home2(R).png",fit: BoxFit.fill,),
-  (AppConfig.windowHeight*0.4).toInt(),
-  {"min":0,"max":(AppConfig.windowWidth*0.8).toInt()},
-  {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
-
-  RoomDirection.center: ImageHelper(Image.asset("images/home2(C).png",fit: BoxFit.fill,),
-    (AppConfig.windowHeight*0.4).toInt(),
-  {"min":(AppConfig.windowWidth).toInt(),"max":(AppConfig.windowWidth*0.8).toInt()},
-  {"min":(AppConfig.windowHeight*0.4).toInt(),"max":AppConfig.windowHeight.toInt()}),
-  };
+      case HomeType.home2:
+        return {
+          RoomDirection.left: RoomImage(
+            image: Image.asset("images/home2(L).png", fit: BoxFit.fill),
+            doorY: (AppConfig.windowHeight * 0.4).toInt(),
+            floorX: {
+              "min": (AppConfig.windowWidth * 0.2).toInt(),
+              "max": (AppConfig.windowWidth * 0.8).toInt(),
+            },
+            floorY: {
+              "min": (AppConfig.windowHeight * 0.4).toInt(),
+              "max": AppConfig.windowHeight.toInt(),
+            },
+          ),
+          RoomDirection.right: RoomImage(
+            image: Image.asset("images/home2(R).png", fit: BoxFit.fill),
+            doorY: (AppConfig.windowHeight * 0.4).toInt(),
+            floorX: {
+              "min": 0,
+              "max": (AppConfig.windowWidth * 0.8).toInt(),
+            },
+            floorY: {
+              "min": (AppConfig.windowHeight * 0.4).toInt(),
+              "max": AppConfig.windowHeight.toInt(),
+            },
+          ),
+          RoomDirection.center: RoomImage(
+            image: Image.asset("images/home2(C).png", fit: BoxFit.fill),
+            doorY: (AppConfig.windowHeight * 0.4).toInt(),
+            floorX: {
+              "min": AppConfig.windowWidth.toInt(),
+              "max": (AppConfig.windowWidth * 0.8).toInt(),
+            },
+            floorY: {
+              "min": (AppConfig.windowHeight * 0.4).toInt(),
+              "max": AppConfig.windowHeight.toInt(),
+            },
+          ),
+        };
+    }
+  }
 }

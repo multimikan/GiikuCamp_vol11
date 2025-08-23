@@ -70,7 +70,9 @@ class ZundaRoomViewModel extends ChangeNotifier{
   bool _showFirst = true;
   bool get showFirst => _showFirst; //getter
   final homeImages = HomeImages();
-  static var home = HomeImages().home1[RoomDirection.left];
+  static var currentHomeDirection = RoomDirection.left;
+  static var currentHome = HomeType.home1;
+  static var home = HomeImages.get(currentHome)[currentHomeDirection];
   late final ZundaMoveController controller;
   static Zundamon zundamon = Zundamon(Location(0,0),Image.asset(""),LookAxis.left,Status.stop);
   static List<RoomDirs> rooms = [];
@@ -104,7 +106,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
   static cancelHave(Obj obj){
     zundamon.have = Obj("","",SizedBox(),"",Location(0,0),File(""));
     final index = ObjDatabaseStore.objects.indexWhere((d)=> d.path == obj.path);
-    ObjDatabaseStore.objects[index].image = ImageHelper.resize(Image.asset(ImageHelper.convertImageTypeFromExtention(p.extension(obj.path))),10);
+    ObjDatabaseStore.objects[index].image = ImageUtils.resize(Image.asset(ImageUtils.fromExtension(p.extension(obj.path))),10);
     store.fetchObjects();  
   }
 
@@ -174,6 +176,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
     }
     notifyListeners();
   }
+  
 
   int _getNeedDoorNumbersInObjects(){
     var dirNum = 0;

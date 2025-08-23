@@ -49,6 +49,8 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
     setState(() {
       if (currentRoomIndex < rooms.length - 1) {
         currentRoomIndex++;
+        if(currentRoomIndex==rooms.length-1) {ZundaRoomViewModel.currentHomeDirection = RoomDirection.right;}
+        else{ZundaRoomViewModel.currentHomeDirection = RoomDirection.center;}
       }
     });
   }
@@ -56,6 +58,8 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
     setState(() {
       if (currentRoomIndex > 0) {
         currentRoomIndex--;
+        if(currentRoomIndex==0) {ZundaRoomViewModel.currentHomeDirection = RoomDirection.left;}
+        else{ZundaRoomViewModel.currentHomeDirection = RoomDirection.center;}
       }
     });
   }
@@ -180,7 +184,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
             return Container();
           }),
           Align(
-            alignment: Alignment.centerLeft,
+            alignment: Alignment.centerLeft,/* 部屋を左に移動 */
             child: IconButton(
               onPressed: _prevRoom,
               icon: const Icon(Icons.chevron_left, size: 48),
@@ -314,7 +318,7 @@ class _ZundamonWidgetState extends State<ZundamonWidget> {
       children: [
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 0),
-          child: ImageHelper.resize(skin,ZUNDAMON_RESIZE_PERCENT),
+          child: ImageUtils.resize(skin,ZUNDAMON_RESIZE_PERCENT),
         ),
       ],
     );
