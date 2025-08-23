@@ -137,6 +137,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
               left: (o.location.x).toDouble(),
               top: (o.location.y).toDouble(),
               child: ObjIcon(
+                key: ValueKey(o.path),
                 obj: o,
                 onTap: () async {
                   showFileItemMenu(context, o, upd);
@@ -154,6 +155,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
               left: (o.location.x).toDouble(),
               top: (o.location.y).toDouble(),
               child: ObjIcon(
+                key: ValueKey(o.path),
                 obj: o,
                 onTap: () async {
                   showFileItemMenu(context, o, upd);
