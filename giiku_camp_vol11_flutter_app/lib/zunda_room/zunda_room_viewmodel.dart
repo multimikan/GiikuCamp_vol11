@@ -67,7 +67,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
   bool get showFirst => _showFirst; //getter
   final homeImages = HomeImages();
   static var currentHomeDirection = RoomDirection.left;
-  static var currentHome = HomeType.home1;
+  static var currentHome = HomeType.home2;
   static var home = HomeImages.get(currentHome)[currentHomeDirection];
   late final ZundaMoveController controller;
   static Zundamon zundamon = Zundamon(Location(0,0),Image.asset(""),LookAxis.left,Status.stop);
