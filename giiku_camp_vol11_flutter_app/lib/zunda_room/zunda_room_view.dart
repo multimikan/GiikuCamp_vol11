@@ -166,7 +166,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
               ],
             ),
             onEnd: () {
-              vm.controller.completeIfNeeded();
+              vm.controller.completeIfNeeded(Status.surprize1);
             },
           ),
 
