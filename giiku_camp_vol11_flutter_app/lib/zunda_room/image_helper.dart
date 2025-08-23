@@ -74,7 +74,7 @@ class HomeImages {
         return {
           RoomDirection.left: RoomImage(
             image: Image.asset("images/home1(L).png", fit: BoxFit.fill),
-            doorY: (AppConfig.windowHeight * 0.4).toInt(),
+            doorY: (AppConfig.windowHeight * 0.35).toInt(),
             floorX: {
               "min": (AppConfig.windowWidth * 0.2).toInt(),
               "max": (AppConfig.windowWidth * 0.8).toInt(),
@@ -86,26 +86,26 @@ class HomeImages {
           ),
           RoomDirection.right: RoomImage(
             image: Image.asset("images/home1(R).png", fit: BoxFit.fill),
-            doorY: (AppConfig.windowHeight * 0.4).toInt(),
+            doorY: (AppConfig.windowHeight * 0.35).toInt(),
             floorX: {
-              "min": 0,
+              "min": (AppConfig.windowWidth * 0.2).toInt(),
               "max": (AppConfig.windowWidth * 0.8).toInt(),
             },
             floorY: {
-              "min": (AppConfig.windowHeight * 0.4).toInt(),
-              "max": AppConfig.windowHeight.toInt(),
+              "min": (AppConfig.windowHeight * 0.5).toInt(),
+              "max": (AppConfig.windowHeight * 0.9).toInt(),
             },
           ),
           RoomDirection.center: RoomImage(
             image: Image.asset("images/home1(C).png", fit: BoxFit.fill),
-            doorY: (AppConfig.windowHeight * 0.4).toInt(),
+            doorY: (AppConfig.windowHeight * 0.35).toInt(),
             floorX: {
-              "min": AppConfig.windowWidth.toInt(),
+              "min": (AppConfig.windowWidth * 0.2).toInt(),
               "max": (AppConfig.windowWidth * 0.8).toInt(),
             },
             floorY: {
-              "min": (AppConfig.windowHeight * 0.4).toInt(),
-              "max": AppConfig.windowHeight.toInt(),
+              "min": (AppConfig.windowHeight * 0.5).toInt(),
+              "max": (AppConfig.windowHeight * 0.9).toInt(),
             },
           ),
         };
@@ -114,38 +114,38 @@ class HomeImages {
         return {
           RoomDirection.left: RoomImage(
             image: Image.asset("images/home2(L).png", fit: BoxFit.fill),
-            doorY: (AppConfig.windowHeight * 0.4).toInt(),
+            doorY: (AppConfig.windowHeight * 0.35).toInt(),
             floorX: {
               "min": (AppConfig.windowWidth * 0.2).toInt(),
               "max": (AppConfig.windowWidth * 0.8).toInt(),
             },
             floorY: {
-              "min": (AppConfig.windowHeight * 0.4).toInt(),
-              "max": AppConfig.windowHeight.toInt(),
+              "min": (AppConfig.windowHeight * 0.5).toInt(),
+              "max": (AppConfig.windowHeight * 0.9).toInt(),
             },
           ),
           RoomDirection.right: RoomImage(
             image: Image.asset("images/home2(R).png", fit: BoxFit.fill),
-            doorY: (AppConfig.windowHeight * 0.4).toInt(),
+            doorY: (AppConfig.windowHeight * 0.35).toInt(),
             floorX: {
-              "min": 0,
+              "min": (AppConfig.windowWidth * 0.2).toInt(),
               "max": (AppConfig.windowWidth * 0.8).toInt(),
             },
             floorY: {
-              "min": (AppConfig.windowHeight * 0.4).toInt(),
-              "max": AppConfig.windowHeight.toInt(),
+              "min": (AppConfig.windowHeight * 0.5).toInt(),
+              "max": (AppConfig.windowHeight * 0.9).toInt(),
             },
           ),
           RoomDirection.center: RoomImage(
             image: Image.asset("images/home2(C).png", fit: BoxFit.fill),
-            doorY: (AppConfig.windowHeight * 0.4).toInt(),
+            doorY: (AppConfig.windowHeight * 0.35).toInt(),
             floorX: {
-              "min": AppConfig.windowWidth.toInt(),
+              "min": (AppConfig.windowWidth * 0.2).toInt(),
               "max": (AppConfig.windowWidth * 0.8).toInt(),
             },
             floorY: {
-              "min": (AppConfig.windowHeight * 0.4).toInt(),
-              "max": AppConfig.windowHeight.toInt(),
+              "min": (AppConfig.windowHeight * 0.5).toInt(),
+              "max": (AppConfig.windowHeight * 0.9).toInt(),
             },
           ),
         };
