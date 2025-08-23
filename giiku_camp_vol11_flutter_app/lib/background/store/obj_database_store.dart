@@ -137,6 +137,7 @@ class ObjDatabaseStore{
     final name = p.basename(f.path);
     Widget image = Image.asset(ImageUtils.fromExtension(p.extension(f.path))); 
     if(f is File) image = ImageUtils.resize(image,10);
+    else if(f is Directory) image = ImageUtils.resize(image,60); //ドアリサイズ
     final extention = p.extension(f.path);
 
     final notAlreadyAddedPlacesMap = _getPlace(f);
@@ -166,7 +167,8 @@ class ObjDatabaseStore{
   }
 
   Map<String, int> _getPlace(FileSystemEntity f) {
-    const int margin = 80;
+    double m = AppConfig.windowWidth*0.1;
+    int margin = m.toInt();
     const int maxTry = 1000;
 
     int x, y;
@@ -204,17 +206,22 @@ class ObjDatabaseStore{
   }
 
   Map<String,int> _dirPlace(){
-    final y = ZundaRoomViewModel.home!.doorY - 30; 
-    final x = Random().nextInt(450)+100;
-    return {"x":x,"y":y};
+    final tmp = ZundaRoomViewModel.home!;
+    final y = tmp.doorY;
+    final maxX = tmp.floorX["max"] ?? 0;
+    final minX = tmp.floorX["min"] ?? 0;
+    final x = Random().nextInt(maxX-minX)+minX;
+    return {"x":x.toInt(),"y":y.toInt()};
   }
 
   Map<String,int> _filePlace(){
-    final margin = 250;
-    final floorY = ZundaRoomViewModel.home!.floorY; 
-    final floorX = ZundaRoomViewModel.home!.floorX; 
-    final y = Random().nextInt(floorY["max"]!-margin)+floorY["min"]!; 
-    final x = Random().nextInt(floorX["max"]!-margin)+floorX["min"]!; 
+    final tmp = ZundaRoomViewModel.home!;
+    final maxY = tmp.floorY["max"] ?? 0;
+    final minY = tmp.floorY["min"] ?? 0;
+    final maxX = tmp.floorX["max"] ?? 0;
+    final minX = tmp.floorX["min"] ?? 0;
+    final y = Random().nextInt(maxY-minY)+minY; 
+    final x = Random().nextInt(maxX-minX)+minX; 
     return {"x":x.toInt(),"y":y.toInt()};
   }
 }

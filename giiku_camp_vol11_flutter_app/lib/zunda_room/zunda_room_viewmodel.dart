@@ -67,7 +67,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
   bool get showFirst => _showFirst; //getter
   final homeImages = HomeImages();
   static var currentHomeDirection = RoomDirection.left;
-  static var currentHome = HomeType.home1;
+  static var currentHome = HomeType.home2;
   static var home = HomeImages.get(currentHome)[currentHomeDirection];
   late final ZundaMoveController controller;
   static Zundamon zundamon = Zundamon(Location(0,0),Image.asset(""),LookAxis.left,Status.stop);
@@ -147,6 +147,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
     const max_door = 4;
     const max_item = 10;
     rooms = [];
+    final width = AppConfig.windowWidth;
 
     List<Obj> tmpD = [] ,tmpF = [];
     int t = 0;
@@ -154,10 +155,10 @@ class ZundaRoomViewModel extends ChangeNotifier{
     for(var i = 0; i<needRooms; i++){
       for(var j=0; j<max_door; j++){
         if(directories.isNotEmpty){
-          if(i==0) t = 172;
-          else if(i<needRooms-1) t = 112;
-          else t = 52;
-          directories.last.location.x = j*125 + t;
+          if(i==0) t = (width*0.27).toInt();
+          else if(i<needRooms-1) t = (width*0.2).toInt();
+          else t = (width*0.13).toInt();
+          directories.last.location.x = (j*width*0.2).toInt() + t;
           tmpD.add(directories.last);
           directories.removeLast();
         }

@@ -148,6 +148,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                 },
                 onDoubleTap: () async {
                   await store.changeTarget(o.path);
+                  ZundaRoomViewModel.currentHome = Random().nextBool() ? HomeType.home2 : HomeType.home1;
                   upd();
                   print(o.path);
                 },
@@ -217,6 +218,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                   icon: const Icon(Icons.arrow_downward, size: 32),
                   onPressed: () async {
                     await store.changeTarget(p.dirname(DirDatabaseRepository.target.path));
+                    ZundaRoomViewModel.currentHome = Random().nextBool() ? HomeType.home2 : HomeType.home1;
                     upd();
                   },
                 ),
@@ -280,15 +282,18 @@ class _ObjIconState extends State<ObjIcon> {
           onDoubleTap();
         },
         child: SizedBox(
-          width: 60,
+          width: 100,
           child: Center(
             child: Column(
               children: [
-                Text(
-                  obj?.name ?? "",
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: true,
+                Container(
+                  color: Colors.white,
+                  child: Text(
+                    obj?.name ?? "",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
+                  ),
                 ),
                 obj?.image ?? const SizedBox(),
               ],
