@@ -88,6 +88,11 @@ class ObjDatabaseStore{
     await fetchObjects(Directory(targetPass));
   }
 
+  HomeType getCurrentHomeType(String target){
+    final existing = history.indexWhere((h) => h.path == target);
+    return history[existing].homeType;
+  }
+
   /*
   このアプリの外でリネームされた場合にファイルの追跡ができなくなります。
   現在、FileSystemEntity型の変数でディレクトリ情報を取得していますが、この型にはidが存在しません。

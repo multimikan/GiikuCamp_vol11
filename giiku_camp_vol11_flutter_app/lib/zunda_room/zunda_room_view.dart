@@ -148,7 +148,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                 },
                 onDoubleTap: () async {
                   await store.changeTarget(o.path);
-                  ZundaRoomViewModel.currentHome = Random().nextBool() ? HomeType.home2 : HomeType.home1;
+                  ZundaRoomViewModel.currentHome = store.getCurrentHomeType(o.path);
                   upd();
                   print(o.path);
                 },
@@ -217,8 +217,9 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                 IconButton(
                   icon: const Icon(Icons.arrow_downward, size: 32),
                   onPressed: () async {
-                    await store.changeTarget(p.dirname(DirDatabaseRepository.target.path));
-                    ZundaRoomViewModel.currentHome = Random().nextBool() ? HomeType.home2 : HomeType.home1;
+                    final currentPath = p.dirname(DirDatabaseRepository.target.path);
+                    await store.changeTarget(currentPath);
+                    ZundaRoomViewModel.currentHome = store.getCurrentHomeType(currentPath);
                     upd();
                   },
                 ),
