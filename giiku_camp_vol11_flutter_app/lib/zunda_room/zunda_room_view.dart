@@ -80,25 +80,25 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   Widget build(BuildContext context) {
   final vm = context.watch<ZundaRoomViewModel>();
   final home = ZundaRoomViewModel.home!.image;
-  final location = vm.controller.location??Location(0,0);
 
   void upd() {
     setState(() {
       currentRoomIndex = 0;
       ZundaRoomViewModel.currentHomeDirection = RoomDirection.left;
       vm.fetchRoomDirs();
+      vm.controller.fetch();
     });
   }
 
-  if(ZundaMoveController.jobList.isNotEmpty) vm.controller.move(ZundaRoomViewModel.zundamon.have!);
+  if(context.watch<ZundaMoveController>().localJobList.isNotEmpty) vm.controller.move(ZundaRoomViewModel.zundamon.have!);
 
   if (ZundaRoomViewModel.rooms.isEmpty) {
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        child: Stack(
           children: [
-            Text("部屋がありません"),
+            SizedBox.expand(child: home,),
+            Text("からっぽの部屋です..."),
             IconButton(
               icon: const Icon(Icons.arrow_downward, size: 32),
               onPressed: () async {
@@ -168,24 +168,17 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
               ),
             ),
           AnimatedPositioned(
-            duration: Duration(seconds: 2),
-            left: location.x.toDouble() - ZUNDAMON_IMAGE_PADDING,
-            top: location.y.toDouble() - ZUNDAMON_IMAGE_PADDING,
+            duration: const Duration(seconds: 2),
+            left: context.watch<ZundaMoveController>().zundamon.location.x.toDouble() - ZUNDAMON_IMAGE_PADDING,
+            top: context.watch<ZundaMoveController>().zundamon.location.y.toDouble() - ZUNDAMON_IMAGE_PADDING,
             child: Stack(
               clipBehavior: Clip.none, // はみ出しを許可
               children: [
-                ZundamonWidget(),      // 位置基準はここ
-                Positioned(
-                  top: -40, 
-                  left: -60,
-                  child: AnimatedSwitcher(
-                    duration: Duration(milliseconds: 0),
-                    child: ObjIcon(
-                      key: ValueKey(ZundaRoomViewModel.zundamon.have), // 変更を判定するキー
-                      obj: ZundaRoomViewModel.zundamon.have,
-                    ),
-                  ) ,
-                ),
+                Column(
+                  children: [
+                ZundamonWidget(),
+                ]
+                )
               ],
             ),
             onEnd: () {
