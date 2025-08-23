@@ -135,7 +135,8 @@ class ObjDatabaseStore{
 
   Obj _convertObjFromFileSystemEntity(FileSystemEntity f){ /* システムエンティティをオブジェ型に変換 */
     final name = p.basename(f.path);
-    final image = ImageHelper.resize(Image.asset(ImageHelper.convertImageTypeFromExtention(p.extension(f.path))),10);
+    Widget image = Image.asset(ImageUtils.fromExtension(p.extension(f.path))); 
+    if(f is File) image = ImageUtils.resize(image,10);
     final extention = p.extension(f.path);
 
     final notAlreadyAddedPlacesMap = _getPlace(f);
@@ -203,18 +204,18 @@ class ObjDatabaseStore{
   }
 
   Map<String,int> _dirPlace(){
-    final y = ZundaRoomViewModel.home!.door_Y; 
+    final y = ZundaRoomViewModel.home!.doorY - 30; 
     final x = Random().nextInt(450)+100;
     return {"x":x,"y":y};
   }
 
   Map<String,int> _filePlace(){
     final margin = 250;
-    final floorY = ZundaRoomViewModel.home!.floor_y; 
-    final floorX = ZundaRoomViewModel.home!.floor_x; 
+    final floorY = ZundaRoomViewModel.home!.floorY; 
+    final floorX = ZundaRoomViewModel.home!.floorX; 
     final y = Random().nextInt(floorY["max"]!-margin)+floorY["min"]!; 
     final x = Random().nextInt(floorX["max"]!-margin)+floorX["min"]!; 
-    return {"x":x,"y":y};
+    return {"x":x.toInt(),"y":y.toInt()};
   }
 }
 

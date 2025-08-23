@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
@@ -7,7 +8,9 @@ import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store
 import 'package:giiku_camp_vol11_flutter_app/main.dart';
 import 'package:giiku_camp_vol11_flutter_app/main_dev.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/image_helper.dart';
+import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_view.dart';
 import 'package:provider/provider.dart';
+import 'package:path/path.dart' as p;
 
 enum Status{
   stop,
@@ -26,11 +29,7 @@ enum LookAxis{
   //bottom
 }
 
-enum RoomDirection{
-  left,
-  right,
-  center
-}
+enum RoomDirection { left, right, center }
 
 class Location{
   int x;
@@ -67,12 +66,14 @@ class ZundaRoomViewModel extends ChangeNotifier{
   bool _showFirst = true;
   bool get showFirst => _showFirst; //getter
   final homeImages = HomeImages();
-  static var home = HomeImages().home1[RoomDirection.left];
+  static var currentHomeDirection = RoomDirection.left;
+  static var currentHome = HomeType.home1;
+  static var home = HomeImages.get(currentHome)[currentHomeDirection];
   late final ZundaMoveController controller;
   static Zundamon zundamon = Zundamon(Location(0,0),Image.asset(""),LookAxis.left,Status.stop);
   static List<RoomDirs> rooms = [];
 
-  ZundaRoomViewModel() {
+  ZundaRoomViewModel(){
     fetchRoomDirs();
     Iterable<Widget> imageIte = ImageIte();
     final image =imageIte.iterator;
@@ -91,12 +92,18 @@ class ZundaRoomViewModel extends ChangeNotifier{
     });
   }
 
-  static setHave(Obj){
-
+  static setHave(Obj obj){
+    zundamon.have = obj;
+    final index = ObjDatabaseStore.objects.indexWhere((d)=> d.path == obj.path);
+    ObjDatabaseStore.objects[index].image = SizedBox();
+    store.fetchObjects();
   }
 
-  static cancel(Obj){
-    
+  static cancelHave(Obj obj){
+    zundamon.have = Obj("","",SizedBox(),"",Location(0,0),File(""));
+    final index = ObjDatabaseStore.objects.indexWhere((d)=> d.path == obj.path);
+    ObjDatabaseStore.objects[index].image = ImageUtils.resize(Image.asset(ImageUtils.fromExtension(p.extension(obj.path))),10);
+    store.fetchObjects();  
   }
 
   List<Image> getAnimationImages(){
@@ -131,6 +138,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
   }
 
   void fetchRoomDirs(){
+    home = HomeImages.get(currentHome)[currentHomeDirection];
     final needRooms = _getNeedDoorNumbersInObjects();
     final separatedObjects = _getSeparationObjects();
     final files = separatedObjects["Files"]??[];
@@ -140,12 +148,17 @@ class ZundaRoomViewModel extends ChangeNotifier{
     rooms = [];
 
     List<Obj> tmpD = [] ,tmpF = [];
+    int t = 0;
 
     for(var i = 0; i<needRooms; i++){
       for(var j=0; j<max_door; j++){
         if(directories.isNotEmpty){
-        tmpD.add(directories.last);
-        directories.removeLast();
+          if(i==0) t = 172;
+          else if(i<needRooms-1) t = 112;
+          else t = 52;
+          directories.last.location.x = j*125 + t;
+          tmpD.add(directories.last);
+          directories.removeLast();
         }
       }
       for(var j=0; j<max_item; j++){
@@ -154,23 +167,24 @@ class ZundaRoomViewModel extends ChangeNotifier{
         files.removeLast();
         }
       }
-      rooms.add(RoomDirs(tmpD, tmpF));
+      rooms.add(RoomDirs(List.from(tmpD), List.from(tmpF)));
       tmpD = [];
       tmpF = [];
     }
     notifyListeners();
   }
+  
 
   int _getNeedDoorNumbersInObjects(){
     var dirNum = 0;
     var need = 0;
     const int max_door=4;
-    const int maz_item=20;
+    const int max_item=20;
 
     for(var o in ObjDatabaseStore.objects) {dirNum += o.extention==""?1:0;}
     need = dirNum%max_door!=0?dirNum~/max_door+1:dirNum~/max_door;
     final fileNum = (ObjDatabaseStore.objects.length-dirNum);
-    final fileneed = fileNum%max_door!=0?fileNum~/max_door+1:fileNum~/max_door;
+    final fileneed = fileNum%max_item!=0?fileNum~/max_item+1:fileNum~/max_item;
 
     return need>fileneed? need:fileneed;
   }

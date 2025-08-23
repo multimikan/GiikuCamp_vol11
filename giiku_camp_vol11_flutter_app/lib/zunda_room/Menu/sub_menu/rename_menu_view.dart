@@ -5,7 +5,7 @@ import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/file_handling_menu_
 
 OverlayEntry? entry;
 FileHandlingMenuViewmodel handler = FileHandlingMenuViewmodel();
-void showRenameOverlay(BuildContext context, Obj obj) {
+void showRenameOverlay(BuildContext context, Obj obj, void Function() upd) {
   final TextEditingController controller = TextEditingController();
   final overlay = Overlay.of(context);
   entry?.remove();
@@ -71,6 +71,7 @@ void showRenameOverlay(BuildContext context, Obj obj) {
                               await handler.renameObj(obj, controller.text);
                               entry!.remove();
                               entry = null;
+                              upd();
                             },
                             child: const Text("実行"),
                           ),

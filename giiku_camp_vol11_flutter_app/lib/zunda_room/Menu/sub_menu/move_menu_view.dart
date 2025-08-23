@@ -8,7 +8,7 @@ import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dar
 
 OverlayEntry? entry;
 FileHandlingMenuViewmodel handler = FileHandlingMenuViewmodel();
-void showMoveOverlay(BuildContext context, Obj obj) {
+void showMoveOverlay(BuildContext context, Obj obj, void Function() upd) {
   final overlay = Overlay.of(context);
   entry?.remove();
   entry = null;
@@ -17,7 +17,7 @@ void showMoveOverlay(BuildContext context, Obj obj) {
     builder: (context) {
       return Positioned(
         right: 16,
-        bottom: 16,
+        top: 16,
         child: Material(
           elevation: 8,
           borderRadius: BorderRadius.circular(8),
@@ -50,6 +50,7 @@ void showMoveOverlay(BuildContext context, Obj obj) {
                         await handler.moveObj(obj, DirDatabaseRepository.target.path);
                         entry!.remove();
                         entry = null;
+                        upd();
                       },
                       child: const Text("決定"),
                     ),

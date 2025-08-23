@@ -5,7 +5,7 @@ import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/file_handling_menu_
 
 OverlayEntry? entry;
 FileHandlingMenuViewmodel handler = FileHandlingMenuViewmodel();
-void showDeleteOverlay(BuildContext context, Obj obj) {
+void showDeleteOverlay(BuildContext context, Obj obj, void Function() upd) {
   final overlay = Overlay.of(context);
   entry?.remove();
   entry = null;
@@ -58,6 +58,7 @@ void showDeleteOverlay(BuildContext context, Obj obj) {
                               await handler.delObj(obj);
                               entry!.remove();
                               entry = null;
+                              upd();
                             },
                             child: const Text("実行"),
                           ),

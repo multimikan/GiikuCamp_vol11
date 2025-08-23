@@ -12,12 +12,13 @@ import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/file_handling_menu.
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/image_helper.dart';
 import 'dart:math';
 import 'package:provider/provider.dart';
+import 'package:path/path.dart' as p;
 import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store.dart';
 import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dart';
-import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/file_handling_menu.dart';
 
 late ObjDatabaseStore store;
+int currentRoomIndex = 0;
 
 class ZundaRoomView extends StatefulWidget {
   const ZundaRoomView({super.key});
@@ -28,7 +29,7 @@ class ZundaRoomView extends StatefulWidget {
 
 class _ZundaRoomViewState extends State<ZundaRoomView> {
   bool loaded = false;
-  int currentRoomIndex = 0;
+  final vm = ZundaRoomViewModel();
 
   @override
   void initState() {
@@ -48,6 +49,14 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
     setState(() {
       if (currentRoomIndex < rooms.length - 1) {
         currentRoomIndex++;
+        if(currentRoomIndex==rooms.length-1) {
+          ZundaRoomViewModel.currentHomeDirection = RoomDirection.right;
+          vm.fetchRoomDirs();
+        }
+        else{
+          ZundaRoomViewModel.currentHomeDirection = RoomDirection.center;
+          vm.fetchRoomDirs();
+        }
       }
     });
   }
@@ -55,6 +64,14 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
     setState(() {
       if (currentRoomIndex > 0) {
         currentRoomIndex--;
+        if(currentRoomIndex==0) {
+          ZundaRoomViewModel.currentHomeDirection = RoomDirection.left;
+          vm.fetchRoomDirs();
+          }
+        else{
+          ZundaRoomViewModel.currentHomeDirection = RoomDirection.center;
+          vm.fetchRoomDirs();
+          }
       }
     });
   }
@@ -65,11 +82,33 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   final home = ZundaRoomViewModel.home!.image;
   final location = vm.controller.location??Location(0,0);
 
+  void upd() {
+    setState(() {
+      currentRoomIndex = 0;
+      ZundaRoomViewModel.currentHomeDirection = RoomDirection.left;
+      vm.fetchRoomDirs();
+    });
+  }
+
   if(ZundaMoveController.jobList.isNotEmpty) vm.controller.move(ZundaRoomViewModel.zundamon.have!);
 
   if (ZundaRoomViewModel.rooms.isEmpty) {
-    return const Scaffold(
-      body: Center(child: Text("部屋がありません")),
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("部屋がありません"),
+            IconButton(
+              icon: const Icon(Icons.arrow_downward, size: 32),
+              onPressed: () async {
+                await store.changeTarget(p.dirname(DirDatabaseRepository.target.path));
+                upd();
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -100,16 +139,16 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
               left: (o.location.x).toDouble(),
               top: (o.location.y).toDouble(),
               child: ObjIcon(
+                key: ValueKey(o.path),
                 obj: o,
                 onTap: () async {
-                  showFileItemMenu(context, o);
+                  showFileItemMenu(context, o, upd);
+                  print(o.path);
                 },
                 onDoubleTap: () async {
                   await store.changeTarget(o.path);
-                  currentRoomIndex = 0;
-                  vm.fetchRoomDirs();
-                  print("変更完了");
-                  setState(() {});
+                  upd();
+                  print(o.path);
                 },
               ),
             ),
@@ -118,9 +157,11 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
               left: (o.location.x).toDouble(),
               top: (o.location.y).toDouble(),
               child: ObjIcon(
+                key: ValueKey(o.path),
                 obj: o,
                 onTap: () async {
-                  showFileItemMenu(context, o);
+                  showFileItemMenu(context, o, upd);
+                  print(o.path);
                 },
                 onDoubleTap: () {},
               ),
@@ -152,14 +193,14 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
           ),
 
           LayoutBuilder(builder: (context,constraints){
-            print({"constraints.maxWidth:${constraints.maxWidth}"});
+            /*print({"constraints.maxWidth:${constraints.maxWidth}"});
             print("constraints.maxHeight:${constraints.maxHeight}");
             print("LWidth:${location.x}");
-            print("LHidth:${location.y}");
+            print("LHidth:${location.y}");*/
             return Container();
           }),
           Align(
-            alignment: Alignment.centerLeft,
+            alignment: Alignment.centerLeft,/* 部屋を左に移動 */
             child: IconButton(
               onPressed: _prevRoom,
               icon: const Icon(Icons.chevron_left, size: 48),
@@ -170,6 +211,33 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
             child: IconButton(
               onPressed: (){nextRoom(ZundaRoomViewModel.rooms);},
               icon: const Icon(Icons.chevron_right, size: 48),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_downward, size: 32),
+                  onPressed: () async {
+                    await store.changeTarget(p.dirname(DirDatabaseRepository.target.path));
+                    upd();
+                  },
+                ),
+                const Text(
+                  "親ディレクトリに戻る",
+                  style: TextStyle(fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomLeft, // 左下
+            child: Image.asset(
+              "images/ITEM/trash.png",
+              width: 40,
+              height: 40,
             ),
           ),
         ],
@@ -205,20 +273,33 @@ class _ObjIconState extends State<ObjIcon> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        print("クリック");
-        onTap();
-      },
-      onDoubleTap: () {
-        print("ダブルクリック");
-        onDoubleTap();
-      },
-      child: Column(
-        children: [
-          Text(obj.name),
-          obj.image,
-        ],
+    return FractionalTranslation(
+      translation: const Offset(-0.5, -0.5),
+      child: GestureDetector(
+        onTap: () {
+          print("クリック");
+          onTap();
+        },
+        onDoubleTap: () {
+          print("ダブルクリック");
+          onDoubleTap();
+        },
+        child: SizedBox(
+          width: 60,
+          child: Center(
+            child: Column(
+              children: [
+                Text(
+                  obj?.name ?? "",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: true,
+                ),
+                obj?.image ?? const SizedBox(),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -251,7 +332,7 @@ class _ZundamonWidgetState extends State<ZundamonWidget> {
       children: [
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 0),
-          child: ImageHelper.resize(skin,ZUNDAMON_RESIZE_PERCENT),
+          child: ImageUtils.resize(skin,ZUNDAMON_RESIZE_PERCENT),
         ),
       ],
     );
