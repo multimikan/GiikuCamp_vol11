@@ -35,6 +35,7 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_)=>ZundaRoomViewModel()),
+      ChangeNotifierProvider(create: (_)=>ZundaMoveController(ZundaRoomViewModel.zundamon))
     ],
     child: const MyApp(),
     ));
