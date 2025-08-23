@@ -180,7 +180,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
               ],
             ),
             onEnd: () {
-              vm.controller.completer!.complete();
+              vm.controller.completeIfNeeded();
             },
           ),
 
