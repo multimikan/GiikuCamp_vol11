@@ -86,7 +86,6 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
       currentRoomIndex = 0;
       ZundaRoomViewModel.currentHomeDirection = RoomDirection.left;
       vm.fetchRoomDirs();
-      vm.controller.fetch();
     });
   }
 
@@ -163,7 +162,6 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                 obj: o,
                 onTap: () async {
                   ZundaMoveController.jobList.add(Job(Location(0,0),o.location,o));
-                  vm.controller.fetch();
                   showFileItemMenu(context, o, upd);
                   print(o.path);
                 },

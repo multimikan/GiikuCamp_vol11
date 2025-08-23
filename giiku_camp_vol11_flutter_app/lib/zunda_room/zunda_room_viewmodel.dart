@@ -83,7 +83,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
     controller = ZundaMoveController(zundamon);
 
     Timer.periodic(Duration(milliseconds: 500), (_) {
-      final newLocation = controller.location??Location(AppConfig.windowWidth.toInt(),AppConfig.windowHeight.toInt());
+      final newLocation = controller.zundamon.location??Location(AppConfig.windowWidth.toInt(),AppConfig.windowHeight.toInt());
       location = newLocation;
       _showFirst = !_showFirst; //0.5sごとにshowFirstが切り替わる
       image.moveNext(); //ジェネレータ.next()
@@ -229,7 +229,6 @@ enum moveStatus{
 class ZundaMoveController extends ChangeNotifier{
   static List<Job> jobList = [];
   var localJobList = [];
-  Location? location;
   Zundamon zundamon;
   bool isMoveing = false;
   moveStatus status = moveStatus.start;
@@ -237,9 +236,7 @@ class ZundaMoveController extends ChangeNotifier{
 
   Completer<void>? completer;
   
-  ZundaMoveController(this.zundamon){
-    location = Location(zundamon.location.x, zundamon.location.y);
-  }
+  ZundaMoveController(this.zundamon){}
 
   void fetch(){
     localJobList = jobList;
@@ -257,10 +254,6 @@ class ZundaMoveController extends ChangeNotifier{
     await _setmove(job.middle); // middle に移動
     await Future.delayed(Duration(seconds: 1));
     completer?.complete(); // ← 中継地点到達で完了
-    
-    await _setmove(job.goal);   // goal に移動
-    await Future.delayed(Duration(seconds: 1));
-    completer?.complete(); // ← ゴール到達で完了
     
     isMoveing = false;
     fetch(); // 次のジョブがあれば続行
@@ -289,7 +282,6 @@ class ZundaMoveController extends ChangeNotifier{
 
   Future<void> _setmove(Location destination) {
   completer = Completer<void>(); // ← 毎回初期化
-  location = destination;
   zundamon.status = Status.walk;
   zundamon.location = destination;
   notifyListeners();
