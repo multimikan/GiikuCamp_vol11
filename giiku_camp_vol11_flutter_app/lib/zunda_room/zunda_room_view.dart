@@ -285,15 +285,18 @@ class _ObjIconState extends State<ObjIcon> {
           onDoubleTap();
         },
         child: SizedBox(
-          width: 60,
+          width: 100,
           child: Center(
             child: Column(
               children: [
-                Text(
-                  obj?.name ?? "",
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: true,
+                Container(
+                  color: Colors.white,
+                  child: Text(
+                    obj?.name ?? "",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
+                  ),
                 ),
                 obj?.image ?? const SizedBox(),
               ],
