@@ -79,7 +79,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
     final image =imageIte.iterator;
     image.moveNext();
     var location = Location(AppConfig.windowWidth.toInt(),AppConfig.windowHeight.toInt());
-    zundamon  = Zundamon(location, image.current, LookAxis.left, Status.walk);
+    zundamon  = Zundamon(location, image.current, LookAxis.left, Status.look);
     controller = ZundaMoveController(zundamon);
 
     Timer.periodic(Duration(milliseconds: 500), (_) {
@@ -88,6 +88,7 @@ class ZundaRoomViewModel extends ChangeNotifier{
       _showFirst = !_showFirst; //0.5sごとにshowFirstが切り替わる
       image.moveNext(); //ジェネレータ.next()
       zundamon.skin = image.current;
+      controller.fetch();
       notifyListeners();
     });
   }
