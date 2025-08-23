@@ -4,10 +4,13 @@ import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store
 import 'dart:io';
 import 'package:path/path.dart' as p; 
 import 'package:win32/win32.dart';
+import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
 
 class DirHandler extends ChangeNotifier{
   final sr = Platform.isWindows ? "\\" : "/";
   Future<void> rename(FileSystemEntity f, String name) async{
+    String path = DirDatabaseRepository.target.path;
+    Directory dir = Directory(path);
     final store = await ObjDatabaseStore.init();
     final dirName = p.dirname(f.path);
     final extension = p.extension(f.path);
@@ -29,31 +32,40 @@ class DirHandler extends ChangeNotifier{
         print("エラー：$e");
       }
     }
-    await store.fetchObjects();
+    await store.fetchObjects(dir);
     notifyListeners();
   }
 
   Future<void> move(FileSystemEntity f, String newPath) async {
+    String path = DirDatabaseRepository.target.path;
+    Directory dir = Directory(path);
     final store = await ObjDatabaseStore.init();
-    store.fetchObjects();
+    store.fetchObjects(dir);
 
     await f.rename("$newPath$sr${p.basename(f.path)}");
 
-    await store.fetchObjects();
+    await store.fetchObjects(dir);
     notifyListeners();
   }
 
   Future<void> del(FileSystemEntity f) async {
+    String path = DirDatabaseRepository.target.path;
+    Directory dir = Directory(path);
     final store = await ObjDatabaseStore.init();
-    final String trushPath;
-    store.fetchObjects();
+    store.fetchObjects(dir);
     
-    if(Platform.isWindows) {trushPath = _getWinTrush();}
-    else {trushPath = "${Platform.environment["HOME"]}/.Trush";}
-    print(trushPath);
-    await move(f, trushPath);
+    try {
+      if (f is Directory) {
+        await f.delete(recursive: true);
+      } else if (f is File) {
+        await f.delete();
+      }
+      print("削除成功: ${f.path}");
+    } catch (e) {
+      print("削除失敗: $e");
+    }
 
-    await store.fetchObjects();
+    await store.fetchObjects(dir);
     notifyListeners();
   }
 
