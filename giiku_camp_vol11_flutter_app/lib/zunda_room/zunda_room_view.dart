@@ -95,10 +95,10 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   if (ZundaRoomViewModel.rooms.isEmpty) {
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        child: Stack(
           children: [
-            Text("部屋がありません"),
+            SizedBox.expand(child: home,),
+            Text("からっぽの部屋です..."),
             IconButton(
               icon: const Icon(Icons.arrow_downward, size: 32),
               onPressed: () async {
@@ -167,9 +167,9 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
               ),
             ),
           AnimatedPositioned(
-            duration: Duration(seconds: 2),
-            left: location.x.toDouble() - ZUNDAMON_IMAGE_PADDING,
-            top: location.y.toDouble() - ZUNDAMON_IMAGE_PADDING,
+            duration: const Duration(seconds: 2),
+            left: context.watch<ZundaMoveController>().zundamon.location.x.toDouble() - ZUNDAMON_IMAGE_PADDING,
+            top: context.watch<ZundaMoveController>().zundamon.location.y.toDouble() - ZUNDAMON_IMAGE_PADDING,
             child: Stack(
               clipBehavior: Clip.none, // はみ出しを許可
               children: [
