@@ -175,15 +175,8 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
               children: [
                 Column(
                   children: [
-                ZundamonWidget(),      // 位置基準はここ
-                AnimatedSwitcher(
-                    duration: Duration(milliseconds: 0),
-                    child: ObjIcon(
-                      key: ValueKey(ZundaRoomViewModel.zundamon.have), // 変更を判定するキー
-                      obj: ZundaRoomViewModel.zundamon.have,
-                    ),
-                  ) ,
-                  ]
+                ZundamonWidget(),
+                ]
                 )
               ],
             ),

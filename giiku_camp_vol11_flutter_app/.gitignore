@@ -47,3 +47,4 @@ app.*.map.json
 #自作
 lib/main_dev.dart
 .DS_Store
+lib/background/gpt/gpt_environment.dart
