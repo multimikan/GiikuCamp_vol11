@@ -90,7 +90,9 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
     });
   }
 
-  if(context.watch<ZundaMoveController>().localJobList.isNotEmpty) vm.controller.fetch();
+  if(context.watch<ZundaMoveController>().localJobList.isNotEmpty) {
+    
+  }
 
   if (ZundaRoomViewModel.rooms.isEmpty) {
     return Scaffold(
@@ -160,6 +162,8 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                 key: ValueKey(o.path),
                 obj: o,
                 onTap: () async {
+                  ZundaMoveController.jobList.add(Job(Location(0,0),o.location,o));
+                  vm.controller.fetch();
                   showFileItemMenu(context, o, upd);
                   print(o.path);
                 },
