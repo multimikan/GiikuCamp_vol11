@@ -168,7 +168,8 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
             ),
           AnimatedPositioned(
             duration: const Duration(seconds: 2),
-            left: 0,
+            curve: Curves.easeInOut,
+            left: context.watch<ZundaMoveController>().zundamon.location.x.toDouble() - ZUNDAMON_IMAGE_PADDING,
             top: 0,
             child: Stack(
               clipBehavior: Clip.none, // はみ出しを許可
