@@ -137,6 +137,7 @@ class ObjDatabaseStore{
     final name = p.basename(f.path);
     Widget image = Image.asset(ImageUtils.fromExtension(p.extension(f.path))); 
     if(f is File) image = ImageUtils.resize(image,10);
+    else if(f is Directory) image = ImageUtils.resize(image,60); //ドアリサイズ
     final extention = p.extension(f.path);
 
     final notAlreadyAddedPlacesMap = _getPlace(f);
