@@ -29,11 +29,7 @@ enum LookAxis{
   //bottom
 }
 
-enum RoomDirection{
-  left,
-  right,
-  center
-}
+enum RoomDirection { left, right, center }
 
 class Location{
   int x;

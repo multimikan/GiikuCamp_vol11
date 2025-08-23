@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:giiku_camp_vol11_flutter_app/main.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dart';
 
-/// 部屋の方向
-enum RoomDirection { left, right, center }
 
 /// 部屋の一枚の画像情報
 class RoomImage {
@@ -68,7 +66,6 @@ class ImageUtils {
 
 /// 家の種類
 enum HomeType { home1, home2 }
-
 /// 家ごとの画像セットを管理
 class HomeImages {
   static Map<RoomDirection, RoomImage> get(HomeType type) {
