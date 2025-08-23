@@ -260,7 +260,6 @@ class ZundaMoveController extends ChangeNotifier{
     fetch(); // 次のジョブがあれば続行
   }
 }
-
   
   void completeIfNeeded(Status? status) { /* コンプリタが呼ばれたら */
     if(status!=null) zundamon.status = status;

@@ -36,8 +36,15 @@ class Obj{ /* Model */
   }
 }
 
+class History{
+  String path;
+  List<Obj> objects;
+  HomeType homeType;
+  History(this.path,this.objects,this.homeType);
+}
+
 class ObjDatabaseStore{
-  static Map<String,List<Obj>> history = {};
+  static List<History> history = [];
   static List<Obj> objects = [];
   late DirDatabaseRepository repo;
 
