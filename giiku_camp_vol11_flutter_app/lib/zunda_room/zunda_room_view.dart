@@ -79,19 +79,18 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   @override
   Widget build(BuildContext context) {
   final vm = context.watch<ZundaRoomViewModel>();
-  final controller = context.watch<ZundaMoveController>();
   final home = ZundaRoomViewModel.home!.image;
-  final location = vm.controller.location??Location(0,0);
 
   void upd() {
     setState(() {
       currentRoomIndex = 0;
       ZundaRoomViewModel.currentHomeDirection = RoomDirection.left;
       vm.fetchRoomDirs();
+      vm.controller.fetch();
     });
   }
 
-  if(ZundaMoveController.jobList.isNotEmpty) vm.controller.move(ZundaRoomViewModel.zundamon.have!);
+  if(context.watch<ZundaMoveController>().localJobList.isNotEmpty) vm.controller.move(ZundaRoomViewModel.zundamon.have!);
 
   if (ZundaRoomViewModel.rooms.isEmpty) {
     return Scaffold(
