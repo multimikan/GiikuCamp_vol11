@@ -290,10 +290,12 @@ class ZundaMoveController extends ChangeNotifier{
     return tmp;
   }
 
-  Future<void> _setmove(Location destination){
-    location = destination;
-    zundamon.status = Status.walk;
-    notifyListeners();
-    return completer!.future;
-  }
+  Future<void> _setmove(Location destination) {
+  completer = Completer<void>(); // ← 毎回初期化
+  location = destination;
+  zundamon.status = Status.walk;
+  notifyListeners();
+  return completer!.future;
+}
+
 }
