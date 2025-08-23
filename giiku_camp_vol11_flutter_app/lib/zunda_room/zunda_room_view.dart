@@ -90,7 +90,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
     });
   }
 
-  if(context.watch<ZundaMoveController>().localJobList.isNotEmpty) vm.controller.move(ZundaRoomViewModel.zundamon.have!);
+  if(context.watch<ZundaMoveController>().localJobList.isNotEmpty) vm.controller.fetch();
 
   if (ZundaRoomViewModel.rooms.isEmpty) {
     return Scaffold(
@@ -170,7 +170,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
             duration: const Duration(seconds: 2),
             curve: Curves.easeInOut,
             left: context.watch<ZundaMoveController>().zundamon.location.x.toDouble() - ZUNDAMON_IMAGE_PADDING,
-            top: 0,
+            top: context.watch<ZundaMoveController>().zundamon.location.y.toDouble() - ZUNDAMON_IMAGE_PADDING,
             child: Stack(
               clipBehavior: Clip.none, // はみ出しを許可
               children: [
