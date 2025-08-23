@@ -222,9 +222,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                   icon: const Icon(Icons.arrow_downward, size: 32),
                   onPressed: () async {
                     await store.changeTarget(p.dirname(DirDatabaseRepository.target.path));
-                    currentRoomIndex = 0;
-                    vm.fetchRoomDirs();
-                    setState(() {});
+                    upd();
                   },
                 ),
                 const Text(
