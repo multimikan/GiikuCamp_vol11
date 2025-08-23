@@ -242,14 +242,14 @@ class ZundaMoveController extends ChangeNotifier{
 
   void fetch(){
     localJobList = jobList;
+    move();
     notifyListeners();
   }
 
-  Future<void> move(Obj obj) async{
+  Future<void> move() async{
     if(!isMoveing) return;
     if(jobList.isNotEmpty){
       isMoveing = true;
-      zundamon.have = obj;
       Job job = _popJobList();
       _setmove(job.middle);
       status = moveStatus.start;
@@ -262,7 +262,7 @@ class ZundaMoveController extends ChangeNotifier{
       status = moveStatus.end;
       notifyListeners();
       await sleep(1);
-      move(job.target);
+      move();
     }
     else{
       print("全ての動作が完了しました");
