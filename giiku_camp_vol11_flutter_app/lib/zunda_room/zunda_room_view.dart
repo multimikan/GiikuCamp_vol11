@@ -173,10 +173,10 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
             child: Stack(
               clipBehavior: Clip.none, // はみ出しを許可
               children: [
+                Column(
+                  children: [
                 ZundamonWidget(),      // 位置基準はここ
                 Positioned(
-                  top: -40, 
-                  left: 0,
                   child: AnimatedSwitcher(
                     duration: Duration(milliseconds: 0),
                     child: ObjIcon(
@@ -185,6 +185,8 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                     ),
                   ) ,
                 ),
+                  ]
+                )
               ],
             ),
             onEnd: () {
