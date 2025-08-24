@@ -36,6 +36,7 @@ class DirDatabaseRepository extends ChangeNotifier{
      }catch(e){
       print("エラー：$e");
      }
+    print(dirList);
   }
 
   Future<FileSystemEntity> convertFileSystemEntityFromObj(Obj obj) async {
