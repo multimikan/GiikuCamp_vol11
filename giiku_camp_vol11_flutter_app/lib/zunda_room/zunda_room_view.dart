@@ -12,6 +12,7 @@ import 'package:giiku_camp_vol11_flutter_app/main.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/file_handling_menu.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/image_helper.dart';
 import 'dart:math';
+import 'dart:async';
 import 'package:provider/provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:giiku_camp_vol11_flutter_app/background/store/obj_database_store.dart';
@@ -306,7 +307,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                   const SizedBox(width: 8),
                   ElevatedButton(
                     onPressed: () async {
-                      reply = await gpt.sendMessage(controller.text);
+                      final reply = gpt.sendMessage(controller.text);
                       print(controller.text);
                       print(reply);
                       upd();
@@ -324,40 +325,109 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   }
 }
 
-Future<void> showGPTResultDialog(BuildContext context, Map<String, dynamic> text) async {
+Future<void> showGPTResultDialog(BuildContext context, Future<Map<String, dynamic>> futureResponse) async {
   return showDialog(
     context: context,
-    barrierDismissible: false,
+    barrierDismissible: false, // タップで閉じられないようにする
     builder: (BuildContext context) {
-      return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
+      return _CharacterDialog(futureResponse: futureResponse, position: ZundaRoomViewModel.zundamon.location);
+    },
+  );
+}
+
+class _CharacterDialog extends StatefulWidget {
+  final Future<Map<String, dynamic>> futureResponse;
+  final Location position;
+
+  const _CharacterDialog({Key? key, required this.futureResponse, required this.position}) : super(key: key);
+
+  @override
+  State<_CharacterDialog> createState() => _CharacterDialogState();
+}
+
+class _CharacterDialogState extends State<_CharacterDialog> {
+  String displayText = "";
+  Timer? _timer;
+  int dotCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // 読み込み中のアニメーション
+    _timer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
+      setState(() {
+        dotCount = (dotCount + 1) % 4;
+        displayText = "考え中なのだ" + "." * dotCount;
+      });
+    });
+
+    // API 呼び出し開始
+    widget.futureResponse.then((res) {
+      if (mounted) {
+        _timer?.cancel();
+        setState(() {
+          displayText = res["res"] ?? "応答がなかったのだ…";
+        });
+      }
+    }).catchError((err) {
+      if (mounted) {
+        _timer?.cancel();
+        setState(() {
+          displayText = "エラーが出たのだ: $err";
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned(
+          left: widget.position.x.toDouble()-AppConfig.windowWidth*0.1,
+          top: widget.position.y.toDouble()-AppConfig.windowWidth*0.1,
+          child: FractionalTranslation(
+          translation: const Offset(-1, -1),
+            child: Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                // 吹き出し
+                Container(
+                  padding: const EdgeInsets.fromLTRB(12, 40, 12, 12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4)],
+                  ),
+                  constraints: const BoxConstraints(maxWidth: 250),
+                  child: Text(
+                    displayText,
+                    style: const TextStyle(fontSize: 16, color: Colors.black),
+                  ),
+                ),
+                // 閉じるボタン
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  child: IconButton(
                     icon: const Icon(Icons.close),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(
-                text["res"] ?? "表示失敗なのだ...",
-                style: const TextStyle(fontSize: 16),
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
-      );
-    },
-  );
+      ],
+    );
+  }
 }
 
 class ObjIcon extends StatefulWidget {
