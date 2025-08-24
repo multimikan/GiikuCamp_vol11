@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:giiku_camp_vol11_flutter_app/background/gpt/gpt_environment.dart';
+import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 
 class GPTTerminal {
   final GptEnvironment environment = GptEnvironment();
+
   // 安全のためホワイトリストを作る
     final allowed = [
     "ls", "pwd", "cat", "less", "head", "tail", "stat",
@@ -15,6 +17,9 @@ class GPTTerminal {
   ];
 
   Future<Map<String, dynamic>> sendMessage(String message) async{
+    final repo = await DirDatabaseRepository.init();
+    final allFiles = await repo.fetchAllEntities();
+
     const endpoint = "https://api.openai.com/v1/chat/completions";
 
     final response = await http.post(
@@ -31,6 +36,8 @@ class GPTTerminal {
         {"role": "system", "content": "危険なコマンドや$allowed外のコマンドは生成せず、resに理由を書くこと。"},
         {"role": "system", "content": "質問や雑談はcommandは空で、resだけで柔軟に返してよいのだ。"},
         {"role": "system", "content": "コマンドの内容はresで説明せず、必要な場合のみcommandに入れるのだ。"},
+        {"role": "system", "content": "全てのディレクトリ・ファイルを格納する配列を参考にして、ユーザが探したいファイルの名前が曖昧でも推察して提案するようにして。"},
+        {"role": "system", "content": "全てのディレクトリ・ファイルを格納する配列=$allFiles"},
         {"role": "user", "content": message},
       ] 
   // nucleus sampling。1.0なら無効、0.9なら上位90%まで
