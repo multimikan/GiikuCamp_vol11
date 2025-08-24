@@ -30,6 +30,7 @@ class ZundaRoomView extends StatefulWidget {
 class _ZundaRoomViewState extends State<ZundaRoomView> {
   bool loaded = false;
   final vm = ZundaRoomViewModel();
+  Obj? selectedObj;
 
   @override
   void initState() {
@@ -155,6 +156,22 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
               ),
             ),
 
+          if(selectedObj!=null)
+            Positioned(
+              left: (selectedObj!.location.x).toDouble(),
+              top: (selectedObj!.location.y).toDouble(),
+              child: ObjIcon(
+                key: ValueKey(selectedObj!.path),
+                obj: selectedObj,
+                onTap: () async {
+                  ZundaMoveController.jobList.add(Job(Location(0,0),selectedObj!.location,selectedObj!));
+                  showFileItemMenu(context, selectedObj!, upd);
+                  print(selectedObj!.path);
+                },
+                onDoubleTap: () {},
+              ),
+            ),
+
           AnimatedPositioned(
             duration: const Duration(seconds: 3),
             curve: Curves.easeInOut,
@@ -181,6 +198,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                 obj: o,
                 onTap: () async {
                   ZundaMoveController.jobList.add(Job(Location(0,0),o.location,o));
+                  selectedObj = o;
                   showFileItemMenu(context, o, upd);
                   print(o.path);
                 },
