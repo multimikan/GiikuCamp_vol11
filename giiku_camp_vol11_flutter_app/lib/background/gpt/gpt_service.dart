@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:giiku_camp_vol11_flutter_app/background/gpt/gpt_environment.dart';
+import 'package:giiku_camp_vol11_flutter_app/background/repository/dir_database_repository.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 
 class GPTTerminal {
   final GptEnvironment environment = GptEnvironment();
+
   // 安全のためホワイトリストを作る
     final allowed = [
     "ls", "pwd", "cat", "less", "head", "tail", "stat",
@@ -15,6 +17,9 @@ class GPTTerminal {
   ];
 
   Future<Map<String, dynamic>> sendMessage(String message) async{
+    final repo = await DirDatabaseRepository.init();
+    final allFiles = await repo.fetchAllEntities();
+
     const endpoint = "https://api.openai.com/v1/chat/completions";
 
     final response = await http.post(
@@ -26,20 +31,23 @@ class GPTTerminal {
       body: jsonEncode({
         "model": environment.model,
         "messages": [
-          {"role": "system", "content": "あなたはずんだもんという名前なのだ。口調はこんな感じなのだ。ユーザーのアシスタントをよろしく頼むのだ！"},
-          {"role": "system", "content": "ユーザーのプロンプトに対して適切なファイル操作コマンドを考え、、出力は次のようなJSONの形でお願い。{\"command\": \"ls -la\",\"res\": \"ずんだもん口調で返答をお願いするのだ！\"}"},
-          {"role": "system", "content": "客観的に考え、ユーザーが対話を求めた場合、ユーザーに危険が及ぶと判断した場合、さらに、$allowed以外のコマンドが必要な場合はコマンドを生成せず、JSON形式で返答のこと。{\"command\": \"\",\"res\": \"ずんだもん口調で生成できない理由を説明する・対話を返答するのだ！！\"}"},
-          {"role": "user", "content": message},
-        ],
-        "max_completion_tokens": 1000,
+        {"role": "system", "content": "あなたはずんだもんという名前なのだ。一人称はボク、語尾は必ず『なのだ』で統一すること。"},
+        {"role": "system", "content": "出力はJSON形式で、必ず {\"command\": \"\", \"res\": \"\"} の形にすること。"},
+        {"role": "system", "content": "危険なコマンドや$allowed外のコマンドは生成せず、resに理由を書くこと。"},
+        {"role": "system", "content": "質問や雑談はcommandは空で、resだけで柔軟に返してよいのだ。"},
+        {"role": "system", "content": "コマンドの内容はresで説明せず、必要な場合のみcommandに入れるのだ。"},
+        {"role": "system", "content": "全てのディレクトリ・ファイルを格納する配列を参考にして、ユーザが探したいファイルの名前が曖昧でも推察して提案するようにして。"},
+        {"role": "system", "content": "全てのディレクトリ・ファイルを格納する配列=$allFiles"},
+        {"role": "user", "content": message},
+      ] 
+  // nucleus sampling。1.0なら無効、0.9なら上位90%まで
       }),
     );
 
     if(response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      final dataDart = data["choices"][0]["message"]["content"];
+      final dataDart = data["choices"][0]["message"]["content"] as String;
       final dataDartMap = jsonDecode(dataDart);
-      print(dataDartMap["res"]);
       return dataDartMap;
     } else {
       throw Exception("Failed to load response: ${response.body}");

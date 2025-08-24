@@ -307,11 +307,17 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                   const SizedBox(width: 8),
                   ElevatedButton(
                     onPressed: () async {
-                      final reply = gpt.sendMessage(controller.text);
+
+                      final tmp = controller.text;
+                      controller.text = "";
+                      reply = await gpt.sendMessage(tmp);
+
                       print(controller.text);
                       print(reply);
                       upd();
-                      showGPTResultDialog(context, reply);
+                      if(reply["command"]!=""){
+                        runCmdAlart(context, reply["command"]);
+                      }
                     },
                     child: const Text("実行"),
                   ),
@@ -325,7 +331,9 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   }
 }
 
+
 Future<void> showGPTResultDialog(BuildContext context, Future<Map<String, dynamic>> futureResponse) async {
+
   return showDialog(
     context: context,
     barrierDismissible: false, // タップで閉じられないようにする
@@ -429,6 +437,56 @@ class _CharacterDialogState extends State<_CharacterDialog> {
     );
   }
 }
+
+
+Future<void> runCmdAlart(BuildContext context, String cmd) {
+  return showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start, // 左寄せ
+            children: [
+              Text(
+                "実行確認",
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // 中身（例: コマンド表示）
+              Text("実行コマンド: $cmd"),
+
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("キャンセル"),
+                  ),TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("実行"),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
 
 class ObjIcon extends StatefulWidget {
   final Obj? obj;
