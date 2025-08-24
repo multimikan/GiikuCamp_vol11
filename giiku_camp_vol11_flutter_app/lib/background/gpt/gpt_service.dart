@@ -34,10 +34,7 @@ class GPTTerminal {
           {"role": "system", "content": "客観的に考え、、ユーザーに危険が及ぶと判断した場合、さらに、$allowed以外のコマンドが必要な場合はコマンドを生成せず、以下のJSON形式で返答のこと。{\"command\": \"\",\"res\": \"ずんだもん口調で生成できない理由を説明するのだ！\"}"},
           {"role": "system", "content": "ユーザーが対話を求めた際はコマンドを生成せず、JSON形式でずんだもんらしく返答のこと。{\"command\": \"\",\"res\": \"お話ししてあげるのだ！！\"}"},
           {"role": "user", "content": message},
-        ],
-        //"max_completion_tokens": 1000,
-        "temperature": 0.7,   // 0.0 = 固い / 1.0以上 = ランダム
-        "top_p": 1.0,         // nucleus sampling。1.0なら無効、0.9なら上位90%まで
+        ],        // nucleus sampling。1.0なら無効、0.9なら上位90%まで
       }),
     );
 
