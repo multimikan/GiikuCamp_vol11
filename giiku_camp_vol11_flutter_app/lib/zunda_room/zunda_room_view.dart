@@ -7,6 +7,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:giiku_camp_vol11_flutter_app/background/gpt/gpt_service.dart';
 import 'package:giiku_camp_vol11_flutter_app/main.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/Menu/file_handling_menu.dart';
 import 'package:giiku_camp_vol11_flutter_app/zunda_room/image_helper.dart';
@@ -19,6 +20,7 @@ import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dar
 
 late ObjDatabaseStore store;
 int currentRoomIndex = 0;
+String reply = "";
 
 class ZundaRoomView extends StatefulWidget {
   const ZundaRoomView({super.key});
@@ -30,7 +32,11 @@ class ZundaRoomView extends StatefulWidget {
 class _ZundaRoomViewState extends State<ZundaRoomView> {
   bool loaded = false;
   final vm = ZundaRoomViewModel();
+
   Obj? selectedObj;
+  final gpt = GPTTerminal();
+  final TextEditingController controller = TextEditingController();
+
 
   @override
   void initState() {
@@ -111,13 +117,21 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
         child: Stack(
           children: [
             SizedBox.expand(child: home,),
-            Text("からっぽの部屋です..."),
-            IconButton(
-              icon: const Icon(Icons.arrow_downward, size: 32),
-              onPressed: () async {
-                await store.changeTarget(p.dirname(DirDatabaseRepository.target.path));
-                upd();
-              },
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("からっぽの部屋なのだ..."),
+                  IconButton(
+                    icon: const Icon(Icons.arrow_downward, size: 32),
+                    onPressed: () async {
+                      await store.changeTarget(p.dirname(DirDatabaseRepository.target.path));
+                      upd();
+                    },
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -161,6 +175,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                 onDoubleTap: () async {
                   await store.changeTarget(o.path);
                   ZundaRoomViewModel.currentHome = store.getCurrentHomeType(o.path);
+
                   upd();
                   print(o.path);
                 },
@@ -252,11 +267,12 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                     await store.changeTarget(currentPath);
                     ZundaRoomViewModel.currentHome = store.getCurrentHomeType(currentPath);
                     vm.controller.zundamon.status = Status.look;
+
                     upd();
                   },
                 ),
-                const Text(
-                  "親ディレクトリに戻る",
+                Text(
+                  p.basename(DirDatabaseRepository.target.path),
                   style: TextStyle(fontSize: 12),
                 ),
               ],
@@ -270,12 +286,80 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
               height: 40,
             ),
           ),
+          Align(
+            alignment: Alignment.topLeft, // 左上
+            child: SizedBox(
+              width: 400,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        hintText: "やってほしいことを教えてほしいのだ",
+                        border: OutlineInputBorder(),
+                        isDense: true,
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                      controller: controller,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton(
+                    onPressed: () async {
+                      reply = await gpt.sendMessage(controller.text);
+                      print(controller.text);
+                      print(reply);
+                      upd();
+                      showGPTResultDialog(context, reply);
+                    },
+                    child: const Text("実行"),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
+Future<void> showGPTResultDialog(BuildContext context, String text) async {
+  return showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                text,
+                style: const TextStyle(fontSize: 16),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
 
 class ObjIcon extends StatefulWidget {
   final Obj? obj;

@@ -39,7 +39,7 @@ void showDeleteOverlay(BuildContext context, Obj obj, void Function() upd) {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        "本当に削除しますか？\n復元できません",
+                        "本当に削除するのだ？\n復元できないのだ",
                         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 16),
