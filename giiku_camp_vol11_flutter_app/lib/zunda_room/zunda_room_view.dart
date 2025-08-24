@@ -310,7 +310,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                       print(controller.text);
                       print(reply);
                       upd();
-                      showGPTResultDialog(context, reply);
+                      runCmdAlart(context, reply["command"]);
                     },
                     child: const Text("実行"),
                   ),
