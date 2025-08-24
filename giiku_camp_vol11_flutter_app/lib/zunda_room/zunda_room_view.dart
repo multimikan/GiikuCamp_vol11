@@ -48,6 +48,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   }
   void nextRoom(List<RoomDirs> rooms) {
     setState(() {
+      selectedObj = null;
       if (currentRoomIndex < rooms.length - 1) {
         currentRoomIndex++;
         if(currentRoomIndex==rooms.length-1) {
@@ -63,6 +64,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   }
   void _prevRoom() {
     setState(() {
+      selectedObj = null;
       if (currentRoomIndex > 0) {
         currentRoomIndex--;
         if(currentRoomIndex==0) {
@@ -215,7 +217,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
           Align(
             alignment: Alignment.centerLeft,/* 部屋を左に移動 */
             child: IconButton(
-              onPressed: _prevRoom,
+              onPressed: (_prevRoom),
               icon: const Icon(Icons.chevron_left, size: 48),
             ),
           ),
@@ -234,6 +236,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                 IconButton(
                   icon: const Icon(Icons.arrow_downward, size: 32),
                   onPressed: () async {
+                    selectedObj = null;
                     final currentPath = p.dirname(DirDatabaseRepository.target.path);
                     await store.changeTarget(currentPath);
                     ZundaRoomViewModel.currentHome = store.getCurrentHomeType(currentPath);
