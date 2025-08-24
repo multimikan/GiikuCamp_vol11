@@ -63,14 +63,14 @@ class ContextMenuOverlay extends StatelessWidget { // メニュー内容
                 mainAxisSize: MainAxisSize.min,
                 children: [
                     if (obj.extention != "") ...[
-                      _buildButton(context, Icons.open_in_new, '開く', obj, upd),
+                      Column(children:[Text('開く',style:TextStyle(fontSize:10)),_buildButton(context, Icons.open_in_new, '開く', obj, upd)]),
                       const SizedBox(width: 8),
                     ],
-                    _buildButton(context, Icons.edit, '名前変更', obj, upd),
+                    Column(children:[Text('名前変更',style:TextStyle(fontSize:10)),_buildButton(context, Icons.edit, '名前変更', obj, upd)]),
                     const SizedBox(width: 8),
-                    _buildButton(context, Icons.drive_file_move, '移動', obj, upd),
+                    Column(children:[Text('移動',style:TextStyle(fontSize:10)),_buildButton(context, Icons.drive_file_move, '移動', obj, upd)]),
                     const SizedBox(width: 8),
-                    _buildButton(context, Icons.delete, '削除', obj, upd),
+                    Column(children:[Text('削除',style:TextStyle(fontSize:10)),_buildButton(context, Icons.delete, '削除', obj, upd)]),
                 ],
             ),
         );

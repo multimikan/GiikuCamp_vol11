@@ -224,8 +224,8 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                     upd();
                   },
                 ),
-                const Text(
-                  "親ディレクトリに戻る",
+                Text(
+                  p.basename(DirDatabaseRepository.target.path),
                   style: TextStyle(fontSize: 12),
                 ),
               ],
