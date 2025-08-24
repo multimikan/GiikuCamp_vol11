@@ -306,8 +306,9 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                   const SizedBox(width: 8),
                   ElevatedButton(
                     onPressed: () async {
+                      final tmp = controller.text;
                       controller.text = "";
-                      reply = await gpt.sendMessage(controller.text);
+                      reply = await gpt.sendMessage(tmp);
                       print(controller.text);
                       print(reply);
                       upd();
