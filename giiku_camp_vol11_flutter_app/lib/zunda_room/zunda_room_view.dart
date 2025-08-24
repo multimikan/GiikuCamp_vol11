@@ -38,6 +38,23 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
     _loadObjects();
   }
 
+  void upd() {
+    setState(() {
+      zundamonNeutral();
+      currentRoomIndex = 0;
+      ZundaRoomViewModel.currentHomeDirection = RoomDirection.left;
+      vm.fetchRoomDirs();
+    });
+  }
+
+  void zundamonNeutral(){
+    setState(() {
+      selectedObj = null;
+      vm.controller.zundamon.status = Status.look;
+    });
+    
+  }
+
   Future<void> _loadObjects() async {
     store = await ObjDatabaseStore.init();
     await store.fetchObjects();
@@ -48,8 +65,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   }
   void nextRoom(List<RoomDirs> rooms) {
     setState(() {
-      selectedObj = null;
-      vm.controller.zundamon.status = Status.look;
+      zundamonNeutral();
       if (currentRoomIndex < rooms.length - 1) {
         currentRoomIndex++;
         if(currentRoomIndex==rooms.length-1) {
@@ -65,8 +81,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   }
   void _prevRoom() {
     setState(() {
-      selectedObj = null;
-      vm.controller.zundamon.status = Status.look;
+      zundamonNeutral();
       if (currentRoomIndex > 0) {
         currentRoomIndex--;
         if(currentRoomIndex==0) {
@@ -85,14 +100,6 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   Widget build(BuildContext context) {
   final vm = context.watch<ZundaRoomViewModel>();
   final home = ZundaRoomViewModel.home!.image;
-
-  void upd() {
-    setState(() {
-      currentRoomIndex = 0;
-      ZundaRoomViewModel.currentHomeDirection = RoomDirection.left;
-      vm.fetchRoomDirs();
-    });
-  }
 
   if(context.watch<ZundaMoveController>().localJobList.isNotEmpty) {
     
