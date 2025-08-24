@@ -251,7 +251,7 @@ class ZundaMoveController extends ChangeNotifier{
     print("move start");
     isMoveing = true;
     Job job = _popJobList();
-    print(job.target);
+    print(job.target.name);
     
     await _setmove(job.middle); // middle に移動
     await Future.delayed(Duration(seconds: 1));
