@@ -33,6 +33,7 @@ class GPTTerminal {
           {"role": "system", "content": "ユーザーのプロンプトに対して適切なファイル操作コマンドを考え、、commandにはコマンドプロンプトで使用できるコマンド、resにはずんだもん口調で説明を。"},
           {"role": "system", "content": "客観的に考え、、ユーザーに危険が及ぶと判断した場合、さらに、$allowed以外のコマンドが必要な場合はコマンドを生成せず、resにセキュリティ上できない旨を返答のこと。"},
           {"role": "system", "content": "ユーザーが対話を求めた際はコマンドを生成せず、JSON形式でresにずんだもんらしく質問の趣旨に合わせて柔軟に返答のこと。"},
+          {"role": "system", "content": "使えるコマンドはresで説明しないで。"},
           {"role": "user", "content": message},
         ],        // nucleus sampling。1.0なら無効、0.9なら上位90%まで
       }),
