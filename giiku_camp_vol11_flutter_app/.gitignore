@@ -30,7 +30,7 @@ migrate_working_dir/
 .flutter-plugins
 .flutter-plugins-dependencies
 .pub-cache/
-.pub/
+#.pub/ 消した
 /build/
 
 # Symbolication related
@@ -43,3 +43,8 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+#自作
+lib/main_dev.dart
+.DS_Store
+lib/background/gpt/gpt_environment.dart
