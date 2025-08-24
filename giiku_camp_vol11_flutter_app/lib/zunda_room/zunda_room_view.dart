@@ -310,14 +310,14 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
 
                       final tmp = controller.text;
                       controller.text = "";
-                      reply = await gpt.sendMessage(tmp);
-
+                      final reply = gpt.sendMessage(tmp);
+                      /*if(reply["command"]!=""){
+                        runCmdAlart(context, reply["command"]);
+                      }*/
                       print(controller.text);
                       print(reply);
                       upd();
-                      if(reply["command"]!=""){
-                        runCmdAlart(context, reply["command"]);
-                      }
+                      showGPTResultDialog(context, reply);
                     },
                     child: const Text("実行"),
                   ),
