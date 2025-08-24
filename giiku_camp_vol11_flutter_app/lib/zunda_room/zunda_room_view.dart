@@ -49,6 +49,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   void nextRoom(List<RoomDirs> rooms) {
     setState(() {
       selectedObj = null;
+      vm.controller.zundamon.status = Status.look;
       if (currentRoomIndex < rooms.length - 1) {
         currentRoomIndex++;
         if(currentRoomIndex==rooms.length-1) {
@@ -65,6 +66,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   void _prevRoom() {
     setState(() {
       selectedObj = null;
+      vm.controller.zundamon.status = Status.look;
       if (currentRoomIndex > 0) {
         currentRoomIndex--;
         if(currentRoomIndex==0) {
@@ -240,6 +242,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                     final currentPath = p.dirname(DirDatabaseRepository.target.path);
                     await store.changeTarget(currentPath);
                     ZundaRoomViewModel.currentHome = store.getCurrentHomeType(currentPath);
+                    vm.controller.zundamon.status = Status.look;
                     upd();
                   },
                 ),
