@@ -26,6 +26,22 @@ class DirDatabaseRepository extends ChangeNotifier{
     return DirDatabaseRepository._(t, [],null);
   }
 
+  Future<List<FileSystemEntity>> fetchAllEntities([Directory? root]) async {
+  final dir = root ?? target; // 引数があればそれを使う
+  List<FileSystemEntity> allEntities = [];
+
+  try {
+    // 非同期で全ての子孫ファイル/ディレクトリを列挙
+    await for (var entity in dir.list(recursive: true, followLinks: false)) {
+      allEntities.add(entity);
+    }
+  } catch (e) {
+    print("ディレクトリ読み込みエラー: $e");
+  }
+
+  return allEntities;
+}
+
   void fetchDirectory([Directory? t]){ /* ディレクトリ情報を同期 */
     if(t!=null) target = t;
     try{
