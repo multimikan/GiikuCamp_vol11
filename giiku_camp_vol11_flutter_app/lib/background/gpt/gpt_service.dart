@@ -34,13 +34,13 @@ class GPTTerminal {
           {"role": "system", "content": "ユーザーが対話を求めた際はコマンドを生成せず、JSON形式でずんだもんらしく返答のこと。{\"command\": \"\",\"res\": \"お話ししてあげるのだ！！\"}"},
           {"role": "user", "content": message},
         ],
-        "max_completion_tokens": 1000,
+        //"max_completion_tokens": 1000,
       }),
     );
 
     if(response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      final dataDart = data["choices"][0]["message"]["content"];
+      final dataDart = data["choices"][0]["message"]["content"] as String;
       final dataDartMap = jsonDecode(dataDart);
       print(dataDartMap);
       return dataDartMap;
