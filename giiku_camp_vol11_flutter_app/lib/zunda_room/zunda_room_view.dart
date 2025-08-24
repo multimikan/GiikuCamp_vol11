@@ -32,13 +32,33 @@ class ZundaRoomView extends StatefulWidget {
 class _ZundaRoomViewState extends State<ZundaRoomView> {
   bool loaded = false;
   final vm = ZundaRoomViewModel();
+
+  Obj? selectedObj;
   final gpt = GPTTerminal();
   final TextEditingController controller = TextEditingController();
+
 
   @override
   void initState() {
     super.initState();
     _loadObjects();
+  }
+
+  void upd() {
+    setState(() {
+      zundamonNeutral();
+      currentRoomIndex = 0;
+      ZundaRoomViewModel.currentHomeDirection = RoomDirection.left;
+      vm.fetchRoomDirs();
+    });
+  }
+
+  void zundamonNeutral(){
+    setState(() {
+      selectedObj = null;
+      vm.controller.zundamon.status = Status.look;
+    });
+    
   }
 
   Future<void> _loadObjects() async {
@@ -51,6 +71,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   }
   void nextRoom(List<RoomDirs> rooms) {
     setState(() {
+      zundamonNeutral();
       if (currentRoomIndex < rooms.length - 1) {
         currentRoomIndex++;
         if(currentRoomIndex==rooms.length-1) {
@@ -66,6 +87,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   }
   void _prevRoom() {
     setState(() {
+      zundamonNeutral();
       if (currentRoomIndex > 0) {
         currentRoomIndex--;
         if(currentRoomIndex==0) {
@@ -85,16 +107,9 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   final vm = context.watch<ZundaRoomViewModel>();
   final home = ZundaRoomViewModel.home!.image;
 
-  void upd() {
-    setState(() {
-      currentRoomIndex = 0;
-      ZundaRoomViewModel.currentHomeDirection = RoomDirection.left;
-      vm.fetchRoomDirs();
-      vm.controller.fetch();
-    });
+  if(context.watch<ZundaMoveController>().localJobList.isNotEmpty) {
+    
   }
-
-  if(context.watch<ZundaMoveController>().localJobList.isNotEmpty) vm.controller.move(ZundaRoomViewModel.zundamon.have!);
 
   if (ZundaRoomViewModel.rooms.isEmpty) {
     return Scaffold(
@@ -159,12 +174,14 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                 },
                 onDoubleTap: () async {
                   await store.changeTarget(o.path);
-                  ZundaRoomViewModel.currentHome = Random().nextBool() ? HomeType.home2 : HomeType.home1;
+                  ZundaRoomViewModel.currentHome = store.getCurrentHomeType(o.path);
+
                   upd();
                   print(o.path);
                 },
               ),
             ),
+
           for(var o in currentRoom.files) // ファイル配置
             Positioned(
               left: (o.location.x).toDouble(),
@@ -173,30 +190,48 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                 key: ValueKey(o.path),
                 obj: o,
                 onTap: () async {
+                  ZundaMoveController.jobList.add(Job(Location(0,0),o.location,o));
+                  vm.controller.fetch();
+                  selectedObj = o;
                   showFileItemMenu(context, o, upd);
                   print(o.path);
                 },
                 onDoubleTap: () {},
               ),
             ),
-          AnimatedPositioned(
-            duration: const Duration(seconds: 2),
-            left: context.watch<ZundaMoveController>().zundamon.location.x.toDouble() - ZUNDAMON_IMAGE_PADDING,
-            top: context.watch<ZundaMoveController>().zundamon.location.y.toDouble() - ZUNDAMON_IMAGE_PADDING,
+
+            AnimatedPositioned(
+            duration: const Duration(seconds: 3),
+            curve: Curves.easeInOut,
+            left: vm.controller.zundamon.location.x.toDouble() - ZUNDAMON_IMAGE_PADDING,
+            top:  vm.controller.zundamon.location.y.toDouble() - ZUNDAMON_IMAGE_PADDING,
             child: Stack(
               clipBehavior: Clip.none, // はみ出しを許可
               children: [
-                Column(
-                  children: [
                 ZundamonWidget(),
-                ]
-                )
               ],
             ),
             onEnd: () {
-              vm.controller.completer!.complete();
+              vm.controller.completeIfNeeded(Status.values.byName("surprize${Random().nextInt(3)+1}"));
             },
           ),
+
+          if(selectedObj!=null)
+            Positioned(
+              left: (selectedObj!.location.x).toDouble(),
+              top: (selectedObj!.location.y).toDouble(),
+              child: ObjIcon(
+                key: ValueKey(selectedObj!.path),
+                obj: selectedObj,
+                onTap: () async {
+                  ZundaMoveController.jobList.add(Job(Location(0,0),selectedObj!.location,selectedObj!));
+                  vm.controller.fetch();
+                  showFileItemMenu(context, selectedObj!, upd);
+                  print(selectedObj!.path);
+                },
+                onDoubleTap: () {},
+              ),
+            ),
 
           LayoutBuilder(builder: (context,constraints){
             /*print({"constraints.maxWidth:${constraints.maxWidth}"});
@@ -208,7 +243,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
           Align(
             alignment: Alignment.centerLeft,/* 部屋を左に移動 */
             child: IconButton(
-              onPressed: _prevRoom,
+              onPressed: (_prevRoom),
               icon: const Icon(Icons.chevron_left, size: 48),
             ),
           ),
@@ -227,8 +262,12 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                 IconButton(
                   icon: const Icon(Icons.arrow_downward, size: 32),
                   onPressed: () async {
-                    await store.changeTarget(p.dirname(DirDatabaseRepository.target.path));
-                    ZundaRoomViewModel.currentHome = Random().nextBool() ? HomeType.home2 : HomeType.home1;
+                    selectedObj = null;
+                    final currentPath = p.dirname(DirDatabaseRepository.target.path);
+                    await store.changeTarget(currentPath);
+                    ZundaRoomViewModel.currentHome = store.getCurrentHomeType(currentPath);
+                    vm.controller.zundamon.status = Status.look;
+
                     upd();
                   },
                 ),

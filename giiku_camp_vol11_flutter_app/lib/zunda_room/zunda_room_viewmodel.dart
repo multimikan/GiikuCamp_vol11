@@ -79,15 +79,16 @@ class ZundaRoomViewModel extends ChangeNotifier{
     final image =imageIte.iterator;
     image.moveNext();
     var location = Location(AppConfig.windowWidth.toInt(),AppConfig.windowHeight.toInt());
-    zundamon  = Zundamon(location, image.current, LookAxis.left, Status.walk);
+    zundamon  = Zundamon(location, image.current, LookAxis.left, Status.look);
     controller = ZundaMoveController(zundamon);
 
     Timer.periodic(Duration(milliseconds: 500), (_) {
-      final newLocation = controller.location??Location(AppConfig.windowWidth.toInt(),AppConfig.windowHeight.toInt());
+      final newLocation = controller.zundamon.location??Location(AppConfig.windowWidth.toInt(),AppConfig.windowHeight.toInt());
       location = newLocation;
       _showFirst = !_showFirst; //0.5sごとにshowFirstが切り替わる
       image.moveNext(); //ジェネレータ.next()
       zundamon.skin = image.current;
+      controller.fetch();
       notifyListeners();
     });
   }
@@ -229,7 +230,6 @@ enum moveStatus{
 class ZundaMoveController extends ChangeNotifier{
   static List<Job> jobList = [];
   var localJobList = [];
-  Location? location;
   Zundamon zundamon;
   bool isMoveing = false;
   moveStatus status = moveStatus.start;
@@ -237,41 +237,32 @@ class ZundaMoveController extends ChangeNotifier{
 
   Completer<void>? completer;
   
-  ZundaMoveController(this.zundamon){
-    location = Location(zundamon.location.x, zundamon.location.y);
-  }
+  ZundaMoveController(this.zundamon){}
 
   void fetch(){
     localJobList = jobList;
+    move();
     notifyListeners();
   }
 
-  Future<void> move(Obj obj) async{
-    if(!isMoveing) return;
-    if(jobList.isNotEmpty){
-      isMoveing = true;
-      zundamon.have = obj;
-      Job job = _popJobList();
-      _setmove(job.middle);
-      status = moveStatus.start;
-      zundamon.status = Status.stop;
-      notifyListeners();
-      //middleまで待つ
-      await sleep(1);
-      zundamon.status = Status.walk;
-      _setmove(job.goal);
-      status = moveStatus.end;
-      notifyListeners();
-      await sleep(1);
-      move(job.target);
-    }
-    else{
-      print("全ての動作が完了しました");
-      isMoveing = false;
-    }
+  Future<void> move() async {
+  if (isMoveing) return;
+  if (jobList.isNotEmpty) {
+    print("move start");
+    isMoveing = true;
+    Job job = _popJobList();
+    
+    await _setmove(job.middle); // middle に移動
+    await Future.delayed(Duration(seconds: 1));
+    completer?.complete(); // ← 中継地点到達で完了
+    
+    isMoveing = false;
+    fetch(); // 次のジョブがあれば続行
   }
+}
   
-  void completeIfNeeded() { /* コンプリタが呼ばれたら */
+  void completeIfNeeded(Status? status) { /* コンプリタが呼ばれたら */
+    if(status!=null) zundamon.status = status;
     if (completer != null && !completer!.isCompleted) {
       completer!.complete();
       completer = null;
@@ -290,10 +281,18 @@ class ZundaMoveController extends ChangeNotifier{
     return tmp;
   }
 
-  Future<void> _setmove(Location destination){
-    location = destination;
-    zundamon.status = Status.walk;
-    notifyListeners();
-    return completer!.future;
+  Future<void> _setmove(Location destination) {
+  completer = Completer<void>(); // ← 毎回初期化
+  zundamon.status = Status.walk;
+  if(zundamon.location.x>destination.x){
+    zundamon.axis = LookAxis.left;
   }
+  else{
+    zundamon.axis = LookAxis.right;
+  }
+  zundamon.location = destination;
+  notifyListeners();
+  return completer!.future;
+}
+
 }

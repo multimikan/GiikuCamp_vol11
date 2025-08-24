@@ -36,8 +36,15 @@ class Obj{ /* Model */
   }
 }
 
+class History{
+  String path;
+  List<Obj> objects;
+  HomeType homeType;
+  History(this.path,this.objects,this.homeType);
+}
+
 class ObjDatabaseStore{
-  static Map<String,List<Obj>> history = {};
+  static List<History> history = [];
   static List<Obj> objects = [];
   late DirDatabaseRepository repo;
 
@@ -62,12 +69,13 @@ class ObjDatabaseStore{
     1.オブジェクトリストにない新規fileをオブジェクトリストに追加
     2.オブジェクトリストにはあるがディレクトリ情報にないものをオブジェクトリストから削除
     */
-
-    if(history.containsKey(target.path)) objects = history[target.path]!; //hitstoryにターゲットパスが存在すればobjectsを置き換え
+    final existing = history.indexWhere((h) => h.path == target!.path);
+    if(existing!=-1) objects = history[existing].objects;//hitstoryにターゲットパスが存在すればobjectsを置き換え
 
     _convertDirListToObjList(repo.dirList); // 1 & 2
 
-    history[target.path] = objects; //path:objects
+    if(existing!=-1) {history[existing].objects = objects;} //path:objects
+    else {history.add(History(target.path, objects, HomeType.values.byName("home${Random().nextInt(2)+1}")));}
 
     for(var i = 0; i< objects.length; i++){
       print(objects[i].path);
@@ -78,6 +86,11 @@ class ObjDatabaseStore{
 
   Future<void> changeTarget(String targetPass) async { /* 引数の型は扱いやすいように変えて良い */
     await fetchObjects(Directory(targetPass));
+  }
+
+  HomeType getCurrentHomeType(String target){
+    final existing = history.indexWhere((h) => h.path == target);
+    return history[existing].homeType;
   }
 
   /*
