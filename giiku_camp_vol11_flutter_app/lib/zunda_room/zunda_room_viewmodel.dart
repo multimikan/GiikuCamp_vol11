@@ -228,6 +228,7 @@ enum moveStatus{
 }
 class ZundaMoveController extends ChangeNotifier{
   static List<Job> jobList = [];
+  var localJobList = [];
   Location? location;
   Zundamon zundamon;
   bool isMoveing = false;
@@ -238,6 +239,11 @@ class ZundaMoveController extends ChangeNotifier{
   
   ZundaMoveController(this.zundamon){
     location = Location(zundamon.location.x, zundamon.location.y);
+  }
+
+  void fetch(){
+    localJobList = jobList;
+    notifyListeners();
   }
 
   Future<void> move(Obj obj) async{
