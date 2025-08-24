@@ -36,6 +36,8 @@ class GPTTerminal {
           {"role": "user", "content": message},
         ],
         //"max_completion_tokens": 1000,
+        "temperature": 0.7,   // 0.0 = 固い / 1.0以上 = ランダム
+        "top_p": 1.0,         // nucleus sampling。1.0なら無効、0.9なら上位90%まで
       }),
     );
 
