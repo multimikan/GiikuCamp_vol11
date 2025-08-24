@@ -264,6 +264,7 @@ class ZundaMoveController extends ChangeNotifier{
   void completeIfNeeded(Status? status) { /* コンプリタが呼ばれたら */
     if(status!=null) zundamon.status = status;
     if (completer != null && !completer!.isCompleted) {
+      zundamon.axis = LookAxis.right;
       completer!.complete();
       completer = null;
     }
