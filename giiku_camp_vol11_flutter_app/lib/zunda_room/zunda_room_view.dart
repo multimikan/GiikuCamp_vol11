@@ -156,23 +156,24 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
               ),
             ),
 
-          if(selectedObj!=null)
+          for(var o in currentRoom.files) // ファイル配置
             Positioned(
-              left: (selectedObj!.location.x).toDouble(),
-              top: (selectedObj!.location.y).toDouble(),
+              left: (o.location.x).toDouble(),
+              top: (o.location.y).toDouble(),
               child: ObjIcon(
-                key: ValueKey(selectedObj!.path),
-                obj: selectedObj,
+                key: ValueKey(o.path),
+                obj: o,
                 onTap: () async {
-                  ZundaMoveController.jobList.add(Job(Location(0,0),selectedObj!.location,selectedObj!));
-                  showFileItemMenu(context, selectedObj!, upd);
-                  print(selectedObj!.path);
+                  ZundaMoveController.jobList.add(Job(Location(0,0),o.location,o));
+                  selectedObj = o;
+                  showFileItemMenu(context, o, upd);
+                  print(o.path);
                 },
                 onDoubleTap: () {},
               ),
             ),
 
-          AnimatedPositioned(
+            AnimatedPositioned(
             duration: const Duration(seconds: 3),
             curve: Curves.easeInOut,
             left: vm.controller.zundamon.location.x.toDouble() - ZUNDAMON_IMAGE_PADDING,
@@ -188,19 +189,17 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
             },
           ),
 
-
-          for(var o in currentRoom.files) // ファイル配置
+          if(selectedObj!=null)
             Positioned(
-              left: (o.location.x).toDouble(),
-              top: (o.location.y).toDouble(),
+              left: (selectedObj!.location.x).toDouble(),
+              top: (selectedObj!.location.y).toDouble(),
               child: ObjIcon(
-                key: ValueKey(o.path),
-                obj: o,
+                key: ValueKey(selectedObj!.path),
+                obj: selectedObj,
                 onTap: () async {
-                  ZundaMoveController.jobList.add(Job(Location(0,0),o.location,o));
-                  selectedObj = o;
-                  showFileItemMenu(context, o, upd);
-                  print(o.path);
+                  ZundaMoveController.jobList.add(Job(Location(0,0),selectedObj!.location,selectedObj!));
+                  showFileItemMenu(context, selectedObj!, upd);
+                  print(selectedObj!.path);
                 },
                 onDoubleTap: () {},
               ),
