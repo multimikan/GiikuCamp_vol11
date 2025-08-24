@@ -48,7 +48,7 @@ void showRenameOverlay(BuildContext context, Obj obj, void Function() upd) {
                     children: [
                       TextField(
                         decoration: const InputDecoration(
-                          hintText: "新しい名前を入力",
+                          hintText: "新しい名前を入力するのだ",
                           border: OutlineInputBorder(),
                           isDense: true,
                         ),

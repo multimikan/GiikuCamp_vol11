@@ -30,7 +30,7 @@ void showMoveOverlay(BuildContext context, Obj obj, void Function() upd) {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "この場所にしますか？",
+                  "この場所に動かすのだ？",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),

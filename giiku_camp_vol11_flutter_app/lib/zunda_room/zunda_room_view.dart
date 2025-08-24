@@ -102,13 +102,21 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
         child: Stack(
           children: [
             SizedBox.expand(child: home,),
-            Text("からっぽの部屋です..."),
-            IconButton(
-              icon: const Icon(Icons.arrow_downward, size: 32),
-              onPressed: () async {
-                await store.changeTarget(p.dirname(DirDatabaseRepository.target.path));
-                upd();
-              },
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("からっぽの部屋なのだ..."),
+                  IconButton(
+                    icon: const Icon(Icons.arrow_downward, size: 32),
+                    onPressed: () async {
+                      await store.changeTarget(p.dirname(DirDatabaseRepository.target.path));
+                      upd();
+                    },
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -242,7 +250,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
           Align(
             alignment: Alignment.topLeft, // 左上
             child: SizedBox(
-              width: 250,
+              width: 400,
               child: Row(
                 children: [
                   Expanded( // ← 追加！ TextField に幅を与える
