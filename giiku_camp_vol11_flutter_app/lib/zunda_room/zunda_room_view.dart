@@ -20,6 +20,7 @@ import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dar
 
 late ObjDatabaseStore store;
 int currentRoomIndex = 0;
+String reply = "";
 
 class ZundaRoomView extends StatefulWidget {
   const ZundaRoomView({super.key});
@@ -33,7 +34,6 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   final vm = ZundaRoomViewModel();
   final gpt = GPTTerminal();
   final TextEditingController controller = TextEditingController();
-  String reply = "";
 
   @override
   void initState() {
@@ -253,13 +253,13 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
               width: 400,
               child: Row(
                 children: [
-                  Expanded( // ← 追加！ TextField に幅を与える
+                  Expanded(
                     child: TextField(
                       decoration: const InputDecoration(
                         hintText: "やってほしいことを教えてほしいのだ",
                         border: OutlineInputBorder(),
                         isDense: true,
-                        filled: true,              // ← 背景を塗りつぶす指定
+                        filled: true,
                         fillColor: Colors.white,
                       ),
                       controller: controller,
@@ -269,8 +269,10 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                   ElevatedButton(
                     onPressed: () async {
                       reply = await gpt.sendMessage(controller.text);
+                      print(controller.text);
                       print(reply);
                       upd();
+                      showGPTResultDialog(context, reply);
                     },
                     child: const Text("実行"),
                   ),
@@ -284,6 +286,41 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   }
 }
 
+Future<void> showGPTResultDialog(BuildContext context, String text) async {
+  return showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                text,
+                style: const TextStyle(fontSize: 16),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
 
 class ObjIcon extends StatefulWidget {
   final Obj? obj;
