@@ -42,7 +42,7 @@ class GPTTerminal {
       final data = jsonDecode(response.body);
       final dataDart = data["choices"][0]["message"]["content"];
       final dataDartMap = jsonDecode(dataDart);
-      print(dataDartMap["res"]);
+      print(dataDartMap);
       return dataDartMap;
     } else {
       throw Exception("Failed to load response: ${response.body}");
