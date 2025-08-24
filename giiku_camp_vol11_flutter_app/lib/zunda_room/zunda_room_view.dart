@@ -323,7 +323,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
     );
   }
 }
-
+/*
 Future<void> showGPTResultDialog(BuildContext context, Map<String, dynamic> text) async {
   return showDialog(
     context: context,
@@ -359,6 +359,56 @@ Future<void> showGPTResultDialog(BuildContext context, Map<String, dynamic> text
     },
   );
 }
+*/
+
+Future<void> runCmdAlart(BuildContext context, String cmd) {
+  return showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start, // 左寄せ
+            children: [
+              Text(
+                "実行確認",
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // 中身（例: コマンド表示）
+              Text("実行コマンド: $cmd"),
+
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("キャンセル"),
+                  ),TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("実行"),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
 
 class ObjIcon extends StatefulWidget {
   final Obj? obj;
