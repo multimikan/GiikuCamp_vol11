@@ -14,7 +14,7 @@ class GPTTerminal {
     "ping", "curl", "wget", "ifconfig", "netstat"
   ];
 
-  Future<String> sendMessage(String message) async{
+  Future<Map<String, dynamic>> sendMessage(String message) async{
     const endpoint = "https://api.openai.com/v1/chat/completions";
 
     final response = await http.post(
@@ -37,7 +37,10 @@ class GPTTerminal {
 
     if(response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      return data["choices"][0]["message"]["content"];
+      final dataDart = data["choices"][0]["message"]["content"];
+      final dataDartMap = jsonDecode(dataDart);
+      print(dataDartMap["res"]);
+      return dataDartMap;
     } else {
       throw Exception("Failed to load response: ${response.body}");
     }
