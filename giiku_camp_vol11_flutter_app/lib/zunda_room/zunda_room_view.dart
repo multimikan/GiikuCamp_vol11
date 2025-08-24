@@ -209,6 +209,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                 obj: selectedObj,
                 onTap: () async {
                   ZundaMoveController.jobList.add(Job(Location(0,0),selectedObj!.location,selectedObj!));
+                  vm.controller.fetch();
                   showFileItemMenu(context, selectedObj!, upd);
                   print(selectedObj!.path);
                 },
