@@ -310,7 +310,9 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
                       print(controller.text);
                       print(reply);
                       upd();
-                      runCmdAlart(context, reply["command"]);
+                      if(reply["command"]!=""){
+                        runCmdAlart(context, reply["command"]);
+                      }
                     },
                     child: const Text("実行"),
                   ),
