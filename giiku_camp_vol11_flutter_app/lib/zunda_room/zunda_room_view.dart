@@ -20,7 +20,7 @@ import 'package:giiku_camp_vol11_flutter_app/zunda_room/zunda_room_viewmodel.dar
 
 late ObjDatabaseStore store;
 int currentRoomIndex = 0;
-String reply = "";
+Map<String, dynamic> reply = {};
 
 class ZundaRoomView extends StatefulWidget {
   const ZundaRoomView({super.key});
@@ -28,7 +28,6 @@ class ZundaRoomView extends StatefulWidget {
   @override
   _ZundaRoomViewState createState() => _ZundaRoomViewState();
 }
-
 class _ZundaRoomViewState extends State<ZundaRoomView> {
   bool loaded = false;
   final vm = ZundaRoomViewModel();
@@ -325,7 +324,7 @@ class _ZundaRoomViewState extends State<ZundaRoomView> {
   }
 }
 
-Future<void> showGPTResultDialog(BuildContext context, String text) async {
+Future<void> showGPTResultDialog(BuildContext context, Map<String, dynamic> text) async {
   return showDialog(
     context: context,
     barrierDismissible: false,
@@ -350,7 +349,7 @@ Future<void> showGPTResultDialog(BuildContext context, String text) async {
               ),
               const SizedBox(height: 8),
               Text(
-                text,
+                text["res"] ?? "表示失敗なのだ...",
                 style: const TextStyle(fontSize: 16),
               ),
             ],
